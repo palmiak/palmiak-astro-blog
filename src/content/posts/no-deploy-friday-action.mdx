@@ -14,13 +14,17 @@ import PostImage from '../../components/mdx/PostImage.astro';
 import YouTube from '../../components/mdx/YouTube.astro';
 import Alert from '../../components/mdx/Alert.astro';
 
-At some point, **Volkan Özçelik** mentioned an idea about preventing deployments on Friday. In general, it''s straightforward to add such an action. 
+At some point, **Volkan Özçelik** mentioned an idea about preventing deployments on Friday. In general, it's straightforward to add such an action.
 
 ## Buddy
 
 We just have to a local shell action with:
 
-and that''s it. In the end, our pipeline would look like this:
+```bash
+if [[ $(date +%u) == 5 ]]; then echo 'Do not deploy on Friday.' && exit 1; fi;
+```
+
+and that's it. In the end, our pipeline would look like this:
 
 <PostImage src="/assets/arts/friday/9e4ea497-6081-4431-8984-a3525e1ed09a.png" width="narrow" />
 
@@ -28,8 +32,19 @@ and that''s it. In the end, our pipeline would look like this:
 
 If you are more into GHA, then just add something like this before the deploy action:
 
+```yaml
+jobs:
+  example-job:
+    runs-on: ubuntu-latest
+    name: Block on Friday
+    steps:
+      - shell: bash
+        run: |
+          if [[ $(date +%u) == 5 ]]; then echo 'Do not deploy on Friday.' && exit 1; fi;
+```
+
 ## Time to sum up
 
-Will this work? Of course, it will. Should you use it? Rather not - it''s a bit of a joke. Things like this should be handled at the organizational level.
+Will this work? Of course, it will. Should you use it? Rather not - it's a bit of a joke. Things like this should be handled at the organizational level.
 
-But if for some reason you see that Friday deployments are a problem at your company - then don''t hesitate to add this to your pipelines.
+But if for some reason you see that Friday deployments are a problem at your company - then don't hesitate to add this to your pipelines.

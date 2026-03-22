@@ -3,11 +3,13 @@ import { getCollection } from 'astro:content';
 import type { GetStaticPaths, Page } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import BlogCard from '../../components/BlogCard.astro';
+import PostRow from '../../components/PostRow.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
 import NewsletterBox from '../../components/NewsletterBox.astro';
+import GradBar from '../../components/GradBar.astro';
 
 export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
-  const posts = (await getCollection('posts')).sort(
+  const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
   );
   return paginate(posts, { pageSize: 10 });
@@ -20,44 +22,75 @@ type Props = {
 const { page } = Astro.props;
 ---
 <Layout title="Blog">
-  <h3 class="container mx-auto px-5 text-center text-white text-xl font-bold font-palmiak-font-title m-0 mt-10">
-    Latest posts
-  </h3>
+  <div class="col">
+    <SectionHeader label="Writing" title="Latest posts" />
+  </div>
 
-  <div class="container mx-auto max-w-[1400px] px-5 grid grid-cols-1 min-[1024px]:grid-cols-2 gap-7 mt-10">
-    {page.data.map((post, i) => (
-      <BlogCard
+  <div class="posts-list col">
+    {page.data.map((post) => (
+      <PostRow
         title={post.data.title}
         slug={post.slug}
-        thumbnail={post.data.thumbnail}
         tags={post.data.tags}
         excerpt={post.data.description}
         pubDate={post.data.pubDate}
-        lazy={i > 1}
       />
     ))}
   </div>
 
-  {page.total > 10 && (
-    <div class="container mx-auto max-w-[1400px] px-5 mt-10 text-center flex flex-nowrap items-center justify-center gap-7">
+  {page.lastPage > 1 && (
+    <div class="pagination col">
       {page.url.prev && (
-        <a href={page.url.prev} class="h-[62px] flex rounded-full bg-palmiak_lightdark p-[2px]">
-          <div class="text-white text-base font-bold font-palmiak-font-title tracking-wide flex rounded-full h-full items-center justify-center bg-palmiak_bg back px-6 transition-all duration-150 hover:bg-opacity-50 text-[15px]">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-white mr-2" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-            Prev
-          </div>
-        </a>
+        <a href={page.url.prev} class="pag-btn">← Previous</a>
       )}
+      <span class="pag-count">{page.currentPage} / {page.lastPage}</span>
       {page.url.next && (
-        <a href={page.url.next} class="h-[62px] flex rounded-full bg-linear-to-r from-palmiak_pink via-palmiak_green to-palmiak_blue p-[2px]">
-          <div class="text-white text-base font-bold font-palmiak-font-title tracking-wide flex rounded-full h-full items-center justify-center bg-palmiak_bg back px-6 transition-all duration-150 hover:bg-opacity-80 text-[15px]">
-            Next
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-white ml-2" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
-          </div>
-        </a>
+        <a href={page.url.next} class="pag-btn">Next →</a>
       )}
     </div>
   )}
 
-  <NewsletterBox />
+  <GradBar />
+  <NewsletterBox variant="home" />
 </Layout>
+
+<style>
+.col {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.posts-list {
+  border-bottom: 1px solid var(--bd);
+  overflow: hidden;
+}
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: center;
+  padding: 40px 24px;
+}
+.pag-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 9px 20px;
+  border-radius: 4px;
+  border: 1px solid var(--bd2);
+  color: var(--mid);
+  background: transparent;
+  text-decoration: none;
+  transition: color 0.15s, border-color 0.15s;
+}
+.pag-btn:hover {
+  color: var(--hi);
+  border-color: rgba(255,255,255,0.25);
+}
+.pag-count {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: 0.08em;
+}
+</style>

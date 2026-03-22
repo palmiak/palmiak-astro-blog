@@ -117,7 +117,7 @@ Sadly, while **TipTap** is amazing, moving structured data to it isn't as straig
 
 ## WordPress preparations
 
-Before we start, we'll need to install the `wp-rest-blocks` plugin by **Jonny Harris. **You can find it on [GitHub](https://github.com/spacedmonkey/wp-rest-blocks). There is also a similar plugin called [VIP Block Data API ](https://github.com/Automattic/vip-block-data-api)by Automattic, but I prefer the one by Jonny.
+Before we start, we'll need to install the `wp-rest-blocks` plugin by **Jonny Harris.**You can find it on [GitHub](https://github.com/spacedmonkey/wp-rest-blocks). There is also a similar plugin called [VIP Block Data API ](https://github.com/Automattic/vip-block-data-api)by Automattic, but I prefer the one by Jonny.
 
 Thanks to this, we'll get this nice structured data in the REST API. After the installation, you'll get access to the `block_data` node inside your API.
 
@@ -304,7 +304,7 @@ With the `parseDefaultBlock` method we're grabbing the rendered block HTML conte
 
 ## Creating sets
 
-**TipTap **has a way to create custom sets. Sadly, it focuses on parsing HTML to grab data. A step that we don't need because we already have structured data. 
+**TipTap** has a way to create custom sets. Sadly, it focuses on parsing HTML to grab data. A step that we don't need because we already have structured data. 
 
 That is why, I had to reverse-engineer the whole process a bit. Let's go step by step. 
 
@@ -416,7 +416,7 @@ class ImportWordPress extends Command
         $tmp_value = (new \Tiptap\Editor)
             ->setContent([
                 'type' => 'set',
-                'content' => '',
+                'content' => ',
                 'attrs' => [
                     'values' => [
                         'type' => 'test_data',

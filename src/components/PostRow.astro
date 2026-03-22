@@ -1,0 +1,116 @@
+---
+import Tag from './Tag.astro';
+
+interface Props {
+  title: string;
+  slug: string;
+  tags?: string[];
+  excerpt?: string;
+  pubDate: Date;
+}
+
+const { title, slug, tags = [], excerpt, pubDate } = Astro.props;
+
+const dateStr = pubDate.toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+});
+---
+<a class="post-row" href={`/blog/${slug}`}>
+  <div class="post-row-inner">
+    <div class="post-row-top">
+      {tags.slice(0, 1).map((tag) => <Tag tag={tag} />)}
+      {tags.length > 0 && <span class="dot-sep">·</span>}
+      <span class="post-date">{dateStr}</span>
+    </div>
+    <div class="post-row-title">{title}</div>
+    {excerpt && <div class="post-row-excerpt">{excerpt}</div>}
+    <div class="read-more">
+      <span class="rm-dot"></span>
+      Read more
+    </div>
+  </div>
+</a>
+
+<style>
+.post-row {
+  border-top: 1px solid var(--bd);
+  cursor: pointer;
+  transition: background 0.15s;
+  text-decoration: none;
+  display: block;
+  color: inherit;
+  margin: 0 -20px;
+}
+.post-row:last-child {
+  border-bottom: 1px solid var(--bd);
+}
+.post-row:hover {
+  background: var(--bg1);
+}
+.post-row-inner {
+  padding: 28px 20px;
+  transition: transform 0.18s ease;
+}
+.post-row:hover .post-row-inner {
+  transform: translateX(4px);
+}
+.post-row-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.dot-sep {
+  color: var(--dim);
+  font-size: 10px;
+}
+.post-date {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--mid);
+  letter-spacing: 0.05em;
+}
+.post-row-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--hi);
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+.post-row-excerpt {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--mid);
+  font-weight: 300;
+  margin-bottom: 14px;
+}
+.read-more {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--mid);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.12s;
+}
+.post-row:hover .read-more {
+  color: var(--hi);
+}
+.rm-dot {
+  width: 12px;
+  height: 1px;
+  background: linear-gradient(90deg, #ff2d78, #a855f7);
+  display: inline-block;
+  margin-bottom: 1px;
+  flex-shrink: 0;
+  transition: width 0.2s ease;
+}
+.post-row:hover .rm-dot {
+  width: 24px;
+}
+</style>

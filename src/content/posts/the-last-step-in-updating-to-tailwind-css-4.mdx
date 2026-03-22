@@ -38,7 +38,7 @@ If not - don't worry. It is difficult to spot. Before I will tell you what went 
 
 ## Enters regression testing
 
-I decided to use **Playwright**, but you can use other solutions like **Cypress**, **Percy**, or whatever you like.  
+I decided to use **Playwright**, but you can use other solutions like **Cypress**,**Percy**, or whatever you like.  
 
 After installation, I added two tests:
 
@@ -70,7 +70,7 @@ They are quite straightforward - we visit a page, take a screenshot, and compare
   
 Of, course you should add more URLs and screen resolutions, to make sure you'll test everything.
 
-You should run the test for the first time **before** you even start your migration process. This way you'll have the snapshot created from the **Tailwind CSS 3 version**. The first test **will fail** because there is no snapshot to compare with. From this point, the snapshot will remain the same until you run the test with the `--update-snapshots` parameter.
+You should run the test for the first time **before** you even start your migration process. This way you'll have the snapshot created from the **Tailwind CSS 3 version**. The first test** will fail** because there is no snapshot to compare with. From this point, the snapshot will remain the same until you run the test with the `--update-snapshots` parameter.
 
 In my case, after the migration, the article test failed with this diff image:
 

@@ -1,17 +1,182 @@
 ---
+interface Props {
+  variant?: 'home' | 'post';
+}
+const { variant = 'home' } = Astro.props;
 ---
-<div class="container mx-auto px-5" id="newsletter_box">
-  <div class="p-10 max-[700px]:p-7 bg-linear-to-r from-palmiak_blue via-palmiak_green to-palmiak_pink rounded-2xl justify-start items-center grid grid-cols-1 min-[1024px]:grid-cols-2 gap-7 mt-10">
-    <div class="grow shrink basis-0 flex-col justify-start items-start gap-5 inline-flex">
-      <div class="text-white text-2xl md:text-4xl font-bold font-palmiak-font-title">Subscribe to my newsletter and stay updated.</div>
-      <div class="self-stretch text-white text-lg font-normal font-palmiak-font leading-loose">
-        Get an weekly email with news from around the web<br />
-        Get updated about new blog posts<br />
-        No spam
+
+{variant === 'home' ? (
+  <div class="nl-home">
+    <div class="col">
+      <div class="nl-label"><span class="nl-dot"></span>Newsletter</div>
+      <div class="nl-title">Stay in the loop</div>
+      <div class="nl-sub">Weekly signal from the WordPress and web world. No noise, no spam — just things worth reading.</div>
+      <div class="nl-form">
+        <input class="nl-input" type="email" placeholder="your@email.com" aria-label="Email address" />
+        <button class="nl-btn" type="submit">Subscribe →</button>
+      </div>
+      <div class="nl-note">Unsubscribe anytime · No spam</div>
+    </div>
+  </div>
+) : (
+  <div class="nl-post col">
+    <div class="nl-inner">
+      <div>
+        <div class="nl-label"><span class="nl-dot"></span>Newsletter</div>
+        <div class="nl-title-sm">Enjoyed this post?</div>
+        <div class="nl-sub-sm">Get new posts straight to your inbox. No spam, ever.</div>
+      </div>
+      <div class="nl-form-sm">
+        <input class="nl-input-sm" type="email" placeholder="your@email.com" aria-label="Email address" />
+        <button class="nl-btn-sm" type="submit">Subscribe →</button>
       </div>
     </div>
-    <div data-supascribe-embed-id="477626130232" data-supascribe-subscribe></div>
   </div>
-</div>
+)}
 
-<script src="https://js.supascribe.com/v1/loader/atNvGZ99IeORH0hvPzGMREaQF8z1.js" async></script>
+<style>
+/* Home variant */
+.nl-home {
+  padding: 52px 0;
+  border-bottom: 1px solid var(--bd);
+}
+.col {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.nl-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: var(--mid);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nl-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff2d78, #a855f7);
+  flex-shrink: 0;
+}
+.nl-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--hi);
+  margin-bottom: 10px;
+}
+.nl-sub {
+  font-size: 15px;
+  color: var(--mid);
+  line-height: 1.7;
+  font-weight: 300;
+  margin-bottom: 24px;
+}
+.nl-form {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.nl-input {
+  flex: 1;
+  background: var(--bg1);
+  border: 1px solid var(--bd);
+  border-radius: 4px;
+  padding: 11px 16px;
+  font-size: 14px;
+  color: var(--hi);
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: border-color 0.15s;
+  max-width: 340px;
+}
+.nl-input::placeholder { color: var(--dim); }
+.nl-input:focus { border-color: rgba(168,85,247,0.35); }
+.nl-btn {
+  font-size: 11px;
+  padding: 11px 20px;
+  border-radius: 4px;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.08em;
+  border: 1px solid rgba(168,85,247,0.4);
+  color: #c084fc;
+  background: rgba(168,85,247,0.07);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, background 0.15s;
+}
+.nl-btn:hover { border-color: rgba(168,85,247,0.65); background: rgba(168,85,247,0.12); }
+.nl-note {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+  margin-top: 12px;
+}
+
+/* Post variant */
+.nl-post {
+  padding: 48px 24px;
+  border-bottom: 1px solid var(--bd);
+}
+.nl-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.nl-title-sm {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--hi);
+  margin-bottom: 6px;
+}
+.nl-sub-sm {
+  font-size: 14px;
+  color: var(--mid);
+  font-weight: 300;
+  line-height: 1.6;
+}
+.nl-form-sm {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.nl-input-sm {
+  background: var(--bg1);
+  border: 1px solid var(--bd);
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--hi);
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  width: 200px;
+  transition: border-color 0.15s;
+}
+.nl-input-sm::placeholder { color: var(--dim); }
+.nl-input-sm:focus { border-color: rgba(168,85,247,0.35); }
+.nl-btn-sm {
+  font-size: 11px;
+  padding: 10px 18px;
+  border-radius: 4px;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.08em;
+  border: 1px solid rgba(168,85,247,0.4);
+  color: #c084fc;
+  background: rgba(168,85,247,0.07);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, background 0.15s;
+}
+.nl-btn-sm:hover { border-color: rgba(168,85,247,0.65); background: rgba(168,85,247,0.12); }
+</style>

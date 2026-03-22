@@ -11,7 +11,18 @@ const posts = defineCollection({
     thumbnail: z.string().optional(),
     ogImage: z.string().optional(),
     tags: z.array(z.string()).default([]),
+    draft: z.boolean().default(false),
   }),
 });
 
-export const collections = { posts };
+const talks = defineCollection({
+  type: 'data',
+  schema: z.object({
+    title: z.string(),
+    event: z.string(),
+    year: z.number(),
+    url: z.string().optional(),
+  }),
+});
+
+export const collections = { posts, talks };

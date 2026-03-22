@@ -17,44 +17,174 @@ import Alert from '../../components/mdx/Alert.astro';
 
 I already wrote an article about this for [Buddy](https://buddy.works/guides/statamic-rest-api) on using headless Statamic. If you want to learn a thing or two about head there first.
 
-## Why it''s a problem?
+## Why it's a problem?
 
-**Astro, **by default, is a Static Site Generator, which means that every time we change something in our content, we must rebuild the whole website. And this would mean waiting for each change.
+**Astro**, by default, is a Static Site Generator, which means that every time we change something in our content, we must rebuild the whole website. And this would mean waiting for each change.
 
 ## Server Side Rendering to the rescue
 
-**Astro **introduced SSR some time ago and using this, we can create previews (and many other cool things) without rebuilding everything. We''ll just need one extra server where SSR will work (e.g., Netlify).
+**Astro** introduced SSR some time ago and using this, we can create previews (and many other cool things) without rebuilding everything. We'll just need one extra server where SSR will work (e.g., Netlify).
 
-Also, it''s worth mentioning that we can use a similar method not only for Astro but also for other Jamstack frameworks that have the option to use SSR.
+Also, it's worth mentioning that we can use a similar method not only for Astro but also for other Jamstack frameworks that have the option to use SSR.
 
-Let''s imagine that our page looks like this:
+Let's imagine that our page looks like this:
+
+```astro
+---
+const API_URL = 'YOUR_DOMAIN';
+let post = {};
+
+export async function getStaticPaths() {
+
+    const res = await fetch( `${API_URL}/collections/pages/entries/` );
+    const posts = res.json();
+    return posts.data.map((post) => {
+		return {
+			params: { slug: post.slug },
+			props: { post } };
+		}
+	);
+}
+
+const {post} = Astro.props;
+---
+<html>
+	<head>
+		<title>{post.title}</title>
+	</head>
+
+	<body>
+		<main>
+			<article>
+				<h1>{post.title}</h1>
+				<div set:html={post.content}></div>
+			</article>
+		</main>
+	</body>
+</html>
+```
 
 Simple, right?
 
-Let''s add some simple **SSR**:
+Let's add some simple **SSR**:
 
-Let''s take a look at what happened here. 
+```astro
+---
+const API_URL = `YOUR DOMAIN`;
+//let's store is_preview as an environmental variable
+const is_preview = import.meta.env.PREVIEW;
+let post = {};
 
-First of all, we add `is_preview`, thanks to setting it as true or false, we''ll be able to populate data with correct values.
+export async function getStaticPaths() {
+    const res = await fetch( `${API_URL}/collections/pages/entries/` );
+    const posts = res.json();
+    return posts.data.map((post) => {
+		return {
+			params: { slug: post.slug },
+			props: { post } };
+		}
+	);
+}
 
-Also, it''s essential to know that `getStaticPaths` is ignored when running in SSR mode.
+// if true - SSR
+if ( is_preview ) {
+	post = await fetch( `${API_URL}/collections/pages/entries/` + `${Astro.params.slug}` );
+	const res = await post.json();
+	post = await res.data;
+} else {
+	const {post} = Astro.props;
+}
+---
+
+<html>
+	<head>
+		<title>{post.title}</title>
+	</head>
+
+	<body>
+		<main>
+			<article>
+				<h1>{post.title}</h1>
+				<div set:html={post.content}></div>
+			</article>
+		</main>
+	</body>
+</html>
+```
+
+Let's take a look at what happened here.
+
+First of all, we add `is_preview`, thanks to setting it as true or false, we'll be able to populate data with correct values.
+
+Also, it's essential to know that `getStaticPaths` is ignored when running in SSR mode.
 
 Looks ok? More or less - time to go to **Statamic**.
 
 ## Live previews in Statamic
 
-**Statamic **has a cool feature that lets us change the URL of the live preview. Go to [this page](https://statamic.dev/live-preview#preview-targets) to learn more.
+**Statamic** has a cool feature that lets us change the URL of the live preview. Go to [this page](https://statamic.dev/live-preview#preview-targets) to learn more.
 
 So, in our case, we should just set our link to our server with SSR enabled (for example, **Netlify**).
 
-It''s also worth mentioning that **Statamic **adds two extra parameters to the URL `live-preview` and `token`. Thanks to them, **Statamic** can deal with non-saved data.
+It's also worth mentioning that **Statamic** adds two extra parameters to the URL `live-preview` and `token`. Thanks to them,**Statamic** can deal with non-saved data.
 
-So, after connecting everything, we can see that... the data doesn''t refresh.
+So, after connecting everything, we can see that... the data doesn't refresh.
+
+<PostImage src="/assets/arts/statamic-astro-previews/statamic-astro.gif" alt="Statamic live preview not refreshing" />
 
 Why? Because we forgot about passing the `live-preview` and `token` parameters. The fix is straightforward:
+
+```astro
+---
+const API_URL = 'YOUR DOMAIN';
+const is_preview = import.meta.env.PREVIEW;
+let post = {};
+
+export async function getStaticPaths() {
+    const res = await fetch( `${API_URL}/collections/pages/entries/` );
+    const posts = res.json();
+    return posts.data.map((post) => {
+		return {
+			params: { slug: post.slug },
+			props: { post } };
+		}
+	);
+}
+
+if ( is_preview ) {
+	const url = new URL(Astro.request.url);
+	const params = new URLSearchParams(url.search);
+
+	post = await fetch( `${API_URL}/collections/pages/entries/` + `${Astro.params.slug}` + '?token=' + `${params.get('token')}` + '&live-preview=' + `${params.get('live-preview')}` );
+	const res = await post.json();
+	post = await res.data;
+} else {
+	const {post} = Astro.props;
+}
+---
+<html>
+	<head>
+		<title>{post.title}</title>
+	</head>
+
+	<body>
+		<main>
+			<article>
+				<h1>{post.title}</h1>
+				<div set:html={post.content}></div>
+			</article>
+		</main>
+	</body>
+</html>
+```
 
 Now, everything should work.
 
 ## What should the final setup look like?
 
 In my case, it looks like this:
+
+- Server with **Statamic**
+- One **Netlify** account where I have the final** static** version of the website
+- One more free **Netlify** account where I have the **SSR** version
+- And, of course, **Buddy** to automate all of this.

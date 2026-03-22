@@ -29,7 +29,7 @@ Hard-coding secrets in code is a common practice, especially in small personal p
 
 Using `.env` files to store credentials has also become popular, but it's not the most secure method as it's just plain text. Cloud providers offer **Key Vaults** to store sensitive information securely. These vaults encrypt your data and authenticate users through **Identity and Access Management (IAM)** systems. This way, even if an attacker gains access to your source code, they won't have the necessary authentication to access the vault contents.
 
-The number of Git users is increasing rapidly, with **GitHub** alone gaining millions of users in recent years. As more people learn Git, they might not know the best practices for securing sensitive information. It's important to adopt secure methods like using **Key Vaults** and** IAM** to protect your secrets and prevent data breaches.
+The number of Git users is increasing rapidly, with **GitHub** alone gaining millions of users in recent years. As more people learn Git, they might not know the best practices for securing sensitive information. It's important to adopt secure methods like using **Key Vaults** and **IAM** to protect your secrets and prevent data breaches.
 
 Many developers are learning to use version control systems like **Git** as they go, which can lead to secret sprawl and hard-coded credentials ending up in shared repositories. This growing problem can be mitigated with proper education and the use of **Git hooks**, such as pre-commit, pre-push, and pre-receive hooks, to check for hard-coded credentials.
 

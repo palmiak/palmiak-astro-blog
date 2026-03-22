@@ -24,7 +24,6 @@ const imgMetadata = !isGif && images[lookupKey]
   ? (await images[lookupKey]()).default
   : null;
 
-// Match original Glide output widths
 const imgWidths = width === 'wide'
   ? [800, 1110]
   : width === 'narrow'
@@ -37,7 +36,7 @@ const imgClass = width === 'narrow'
   ? ''
   : 'max-w-[860px] w-full';
 ---
-<div class={`image ${width} palmiak-image`}>
+<figure class={`post-figure image ${width}`}>
   {imgMetadata ? (
     <Image
       src={imgMetadata}
@@ -57,8 +56,26 @@ const imgClass = width === 'narrow'
     <img src={src} alt={alt} loading="lazy" class={imgClass} />
   )}
   {caption && (
-    <figcaption class="mb-8">
-      <p class="mb-0 text-sm text-zinc-300">{caption}</p>
-    </figcaption>
+    <figcaption class="post-figcaption">{caption}</figcaption>
   )}
-</div>
+</figure>
+
+<style>
+.post-figure {
+  margin: 36px 0;
+}
+.post-figure img {
+  width: 100%;
+  border-radius: 6px;
+  display: block;
+  border: 1px solid var(--bd);
+}
+.post-figcaption {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--dim);
+  text-align: center;
+  margin-top: 10px;
+}
+</style>

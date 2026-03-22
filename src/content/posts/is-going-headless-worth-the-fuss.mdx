@@ -1,7 +1,7 @@
 ---
 title: "Is going headless worth the fuss"
-intro: "Headless is one of the buzzwords that we keep hearing around. Very often it''s described as something that will change our world, make the birds sing, and let the sun shine."
-description: "Headless is one of the buzzwords that we keep hearing around. Very often it''s described as something that will change our world, make the birds sing, and let the sun shine."
+intro: "Headless is one of the buzzwords that we keep hearing around. Very often it's described as something that will change our world, make the birds sing, and let the sun shine."
+description: "Headless is one of the buzzwords that we keep hearing around. Very often it's described as something that will change our world, make the birds sing, and let the sun shine."
 pubDate: 2022-11-01
 updatedDate: 2022-11-07
 thumbnail: "rectangle-11.png"
@@ -15,13 +15,15 @@ import PostImage from '../../components/mdx/PostImage.astro';
 import YouTube from '../../components/mdx/YouTube.astro';
 import Alert from '../../components/mdx/Alert.astro';
 
-I was always a bit skeptical about **headless**, and I disagreed with the most popular pros of such an approach. I always saw headless as a waste of time or an excuse to play with new shiny toys. But things change, and more and more, I''m leaning towards the headless approach.
+I was always a bit skeptical about **headless**, and I disagreed with the most popular pros of such an approach. I always saw headless as a waste of time or an excuse to play with new shiny toys. But things change, and more and more, I'm leaning towards the headless approach.
 
-## Why I didn''t become a fan of headless from day one?
+## Why I didn't become a fan of headless from day one?
 
 In the **WordPress** world, the term "headless" became popular primarily thanks to **GatsbyJS**. Suddenly everyone started converting their websites to Gatsby and tweeted about how fast they had become.
 
-The speed argument was the one that always **annoyed me**. Some of those devs didn''t understand that they just saved their WP site as static HTML. It''s challenging to have a slowly working HTML. Especially since WP already had multiple solutions to convert a website to static or to cache it (which works almost the same). Also, I know how to optimize a website, so in my case, Gatsby **always had a worse PageSpeed score**.
+The speed argument was the one that always **annoyed me**. Some of those devs didn't understand that they just saved their WP site as static HTML. It's challenging to have a slowly working HTML. Especially since WP already had multiple solutions to convert a website to static or to cache it (which works almost the same). Also, I know how to optimize a website, so in my case, Gatsby** always had a worse PageSpeed score**.
+
+<PostImage src="/assets/ob1.gif" alt="PageSpeed comparison gif" />
 
 Another popular argument was the one about how unique components are. Of course, but `include` in PHP works similarly (at some level).
 
@@ -29,11 +31,11 @@ In the end, "headless" annoyed me as hell, but I knew it was here to stay.
 
 ## What changed?
 
-First of all, **Astro **happened. **Astro** was the first Jamstack SSG I liked, and it helped me understand many concepts of Jamstack. It''s simple and easy to learn.
+First of all, **Astro** happened.**Astro** was the first Jamstack SSG I liked, and it helped me understand many concepts of Jamstack. It's simple and easy to learn.
 
-Also, **WordPress** is pushing more toward the low-code/no-code direction. This caused my bigger interest in what is happening outside of WordPress. That''s also the reason why this blog is created with **Statamic**.
+Also, **WordPress** is pushing more toward the low-code/no-code direction. This caused my bigger interest in what is happening outside of WordPress. That's also the reason why this blog is created with **Statamic**.
 
-And what''s most important, I understood that headless can give us much more freedom. I like using WordPress as a CMS, but I don''t like the direction in which the rest is going (block themes, Full Site Editing, etc.). Until some point, I tried not to care, but lately, I started to feel that I was fighting against the modern WordPress vision.
+And what's most important, I understood that headless can give us much more freedom. I like using WordPress as a CMS, but I don't like the direction in which the rest is going (block themes, Full Site Editing, etc.). Until some point, I tried not to care, but lately, I started to feel that I was fighting against the modern WordPress vision.
 
 I even had a talk about this with **Filip Rakowski**
 
@@ -41,16 +43,24 @@ I even had a talk about this with **Filip Rakowski**
 
 ## Off goes the head
 
-Some would say - _just change the CMS_. But CMS is something more than just a toy for developers. In many cases, CMS is the workplace for marketing teams. We can''t just change it when we find a new one (even if the new one is technically superior). On the other hand - our clients don''t care which CMS we use. The whole front-end experience is what matters to them.
+Some would say - _just change the CMS_. But CMS is something more than just a toy for developers. In many cases, CMS is the workplace for marketing teams. We can't just change it when we find a new one (even if the new one is technically superior). On the other hand - our clients don't care which CMS we use. The whole front-end experience is what matters to them.
 
-That''s why going headless is an excellent way to:
+That's why going headless is an excellent way to:
+
+- keep the CMS which our team loves
+- separate the front-end
+- and very often hide the rotten core under the layer of new paint
 
 **Headless** will also give us more flexibility in case of changing the technology underneath. We are no longer glued to a specific technology like in a monolith approach.
 
 ## There are tradeoffs
 
-Of course, **headless** also has its tradeoffs. You aren''t maintaining one codebase that does everything, but at least two (the CMS and the front-end). Also, there is a big chance that developing a headless website will be more expensive.
+Of course, **headless** also has its tradeoffs. You aren't maintaining one codebase that does everything, but at least two (the CMS and the front-end). Also, there is a big chance that developing a headless website will be more expensive.
 
-And let''s not forget that it will be a bit more complicated:
+And let's not forget that it will be a bit more complicated:
+
+- How the front-end will know when to rebuild itself after publishing new content?
+- How to orchestrate the builds and deployments?
+- How to take care of live-previews
 
 So, before going headless, think about if you really need it.

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maciek Palmowski — Homepage</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@1&family=IBM+Plex+Mono:wght@300;400&family=Inter:wght@300;400&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  --bg:#0b0b0e;
+  --bg1:#111116;
+  --bd:rgba(255,255,255,0.07);
+  --bd2:rgba(255,255,255,0.14);
+  --hi:#eaeaf0;
+  --mid:#9898b0;
+  --dim:#52526a;
+  background:var(--bg);
+  color:var(--hi);
+  font-family:'Inter',sans-serif;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+
+.grad-bar{height:1px;background:linear-gradient(90deg,#ff2d78,#a855f7,#00ffb3);}
+.grad-text{
+  background:linear-gradient(90deg,#ff2d78,#a855f7,#00ffb3);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+/* NAV */
+.nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:54px;border-bottom:1px solid var(--bd);
+  position:sticky;top:0;background:rgba(11,11,14,0.95);
+  backdrop-filter:blur(12px);z-index:10;
+}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-text{
+  font-family:'Unbounded',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:0.01em;
+  color:var(--hi);line-height:1.4;
+}
+.nav-r{display:flex;align-items:center;gap:28px;}
+.na{font-size:13px;color:var(--mid);cursor:pointer;text-decoration:none;transition:color 0.15s;}
+.na:hover{color:var(--hi);}
+.nav-cta{
+  font-size:10px;font-family:'IBM Plex Mono',monospace;letter-spacing:0.06em;
+  padding:7px 15px;border-radius:4px;cursor:pointer;
+  border:1px solid rgba(168,85,247,0.45);
+  color:#c084fc;background:rgba(168,85,247,0.07);
+  text-decoration:none;
+  transition:border-color 0.15s,background 0.15s;
+}
+.nav-cta:hover{border-color:rgba(168,85,247,0.7);background:rgba(168,85,247,0.12);}
+
+.col{max-width:680px;margin:0 auto;padding:0 24px;}
+
+/* HERO */
+.hero{padding:84px 0 76px;border-bottom:1px solid var(--bd);}
+.h-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:30px;}
+.h-pip{display:flex;gap:3px;align-items:center;}
+.h-pip span{display:block;border-radius:99px;}
+.h-pip span:nth-child(1){width:18px;height:3px;background:#ff2d78;}
+.h-pip span:nth-child(2){width:10px;height:3px;background:#a855f7;}
+.h-pip span:nth-child(3){width:6px;height:3px;background:#00ffb3;}
+.h-eyebrow-text{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);
+}
+.h-name{
+  font-family:'Unbounded',sans-serif;
+  font-size:40px;font-weight:800;letter-spacing:-0.03em;
+  line-height:1.05;margin-bottom:2px;color:var(--hi);
+}
+.h-sub{
+  font-family:'Instrument Serif',serif;
+  font-size:42px;font-weight:400;font-style:italic;
+  letter-spacing:-0.01em;line-height:1.1;margin-bottom:36px;
+}
+.h-bio{
+  font-size:15px;line-height:1.8;color:var(--mid);
+  font-weight:300;max-width:520px;margin-bottom:32px;
+}
+.h-bio strong{color:var(--hi);font-weight:400;}
+
+.h-actions{display:flex;gap:10px;margin-bottom:40px;}
+.btn-p{
+  font-size:10px;font-weight:400;padding:9px 18px;border-radius:4px;
+  border:1px solid rgba(0,255,179,0.4);color:#4dffd6;
+  background:rgba(0,255,179,0.06);cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:0.07em;
+  transition:border-color 0.15s,background 0.15s;
+  text-decoration:none;
+}
+.btn-p:hover{border-color:rgba(0,255,179,0.65);background:rgba(0,255,179,0.1);}
+.btn-g{
+  font-size:10px;font-weight:400;padding:9px 18px;border-radius:4px;
+  border:1px solid var(--bd2);color:var(--mid);
+  background:transparent;cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:0.07em;
+  transition:color 0.15s,border-color 0.15s;
+  text-decoration:none;
+}
+.btn-g:hover{color:var(--hi);border-color:rgba(255,255,255,0.25);}
+
+/* SOCIALS */
+.h-socials{
+  display:flex;align-items:center;gap:8px;
+  padding-top:32px;border-top:1px solid var(--bd);
+  flex-wrap:wrap;
+}
+.soc{
+  display:flex;align-items:center;gap:7px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;letter-spacing:0.06em;
+  padding:8px 14px;border-radius:4px;
+  border:1px solid var(--bd2);
+  color:var(--mid);background:transparent;
+  cursor:pointer;transition:color 0.15s,border-color 0.15s,background 0.15s;
+  text-decoration:none;
+}
+.soc:hover{color:var(--hi);border-color:rgba(255,255,255,0.25);background:var(--bg1);}
+.soc svg{flex-shrink:0;}
+.soc.bsky:hover{color:#74b9ff;border-color:rgba(116,185,255,0.35);background:rgba(116,185,255,0.05);}
+.soc.tw:hover{color:#e8eaf0;border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.04);}
+.soc.li:hover{color:#60a5fa;border-color:rgba(96,165,250,0.35);background:rgba(96,165,250,0.05);}
+.soc.gh:hover{color:#c084fc;border-color:rgba(192,132,252,0.35);background:rgba(192,132,252,0.05);}
+
+/* SECTION LABELS */
+.sec-wrap{padding:52px 0 24px;}
+.sec-label{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;
+  letter-spacing:0.16em;text-transform:uppercase;color:var(--mid);
+  display:flex;align-items:center;gap:8px;margin-bottom:10px;
+}
+.sec-dot{width:5px;height:5px;border-radius:50%;background:linear-gradient(135deg,#ff2d78,#a855f7);flex-shrink:0;}
+.sec-title{
+  font-family:'Unbounded',sans-serif;
+  font-size:18px;font-weight:700;letter-spacing:-0.03em;color:var(--hi);
+}
+
+/* POSTS */
+.posts{border-bottom:1px solid var(--bd);}
+.post{border-top:1px solid var(--bd);cursor:pointer;transition:background 0.12s;text-decoration:none;display:block;color:inherit;}
+.post:last-child{border-bottom:1px solid var(--bd);}
+.post:hover{background:var(--bg1);}
+.post-inner{padding:28px 0;}
+.post-top{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.tag{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;
+  letter-spacing:0.1em;text-transform:uppercase;
+  padding:3px 8px;border-radius:3px;
+}
+.tag.conf{color:#c084fc;border:1px solid rgba(168,85,247,0.3);background:rgba(168,85,247,0.07);}
+.tag.sec{color:#f472b6;border:1px solid rgba(255,45,120,0.3);background:rgba(255,45,120,0.07);}
+.tag.ast{color:#4dffd6;border:1px solid rgba(0,255,179,0.3);background:rgba(0,255,179,0.06);}
+.tag.wp{color:#c084fc;border:1px solid rgba(168,85,247,0.3);background:rgba(168,85,247,0.07);}
+.dot-sep{color:var(--dim);font-size:10px;}
+.date{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--mid);letter-spacing:0.05em;}
+.post-title{
+  font-family:'Unbounded',sans-serif;
+  font-size:15px;font-weight:600;letter-spacing:-0.025em;
+  color:var(--hi);line-height:1.4;margin-bottom:10px;
+}
+.post-excerpt{font-size:14px;line-height:1.75;color:var(--mid);font-weight:300;max-width:580px;margin-bottom:14px;}
+.read-more{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.1em;
+  color:var(--mid);display:flex;align-items:center;gap:6px;transition:color 0.12s;
+}
+.post:hover .read-more{color:var(--hi);}
+.rm-dot{width:12px;height:1px;background:linear-gradient(90deg,#ff2d78,#a855f7);display:inline-block;margin-bottom:1px;flex-shrink:0;}
+
+/* ABOUT */
+.about{padding:52px 0;border-bottom:1px solid var(--bd);}
+.about-body{font-size:15px;line-height:1.85;color:var(--mid);font-weight:300;margin-bottom:24px;}
+.about-body strong{color:var(--hi);font-weight:400;}
+.about-link{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.1em;
+  cursor:pointer;color:var(--mid);display:inline-flex;align-items:center;gap:8px;
+  transition:color 0.15s;text-decoration:none;
+}
+.about-link:hover{color:var(--hi);}
+.about-link-dash{width:16px;height:1px;background:linear-gradient(90deg,#a855f7,#00ffb3);flex-shrink:0;}
+
+/* TALKS */
+.talks{padding:0 0 52px;border-bottom:1px solid var(--bd);}
+.talk{border-top:1px solid var(--bd);padding:20px 0;display:flex;justify-content:space-between;align-items:baseline;cursor:pointer;}
+.talk:hover .talk-title{color:var(--hi);}
+.talk-title{
+  font-family:'Unbounded',sans-serif;
+  font-size:12px;font-weight:500;color:var(--mid);
+  letter-spacing:-0.02em;margin-bottom:5px;transition:color 0.12s;line-height:1.4;
+}
+.talk-event{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.06em;}
+.talk-year{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);flex-shrink:0;margin-left:32px;}
+
+/* NEWSLETTER */
+.nl{padding:52px 0;border-bottom:1px solid var(--bd);}
+.nl-title{
+  font-family:'Unbounded',sans-serif;
+  font-size:18px;font-weight:700;letter-spacing:-0.03em;
+  color:var(--hi);margin-bottom:10px;
+}
+.nl-sub{font-size:14px;color:var(--mid);line-height:1.7;font-weight:300;margin-bottom:24px;}
+.nl-form{display:flex;gap:8px;}
+.nl-input{
+  flex:1;background:var(--bg1);border:1px solid var(--bd);border-radius:4px;
+  padding:10px 14px;font-size:13px;color:var(--hi);font-family:'Inter',sans-serif;
+  outline:none;transition:border-color 0.15s;max-width:320px;
+}
+.nl-input::placeholder{color:var(--dim);}
+.nl-input:focus{border-color:rgba(168,85,247,0.35);}
+.nl-btn{
+  font-size:10px;padding:10px 18px;border-radius:4px;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:0.08em;
+  border:1px solid rgba(168,85,247,0.4);color:#c084fc;
+  background:rgba(168,85,247,0.07);cursor:pointer;white-space:nowrap;
+  transition:border-color 0.15s,background 0.15s;
+}
+.nl-btn:hover{border-color:rgba(168,85,247,0.65);background:rgba(168,85,247,0.12);}
+.nl-note{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.1em;margin-top:12px;}
+
+/* FOOTER */
+.foot{padding:22px 0;}
+.foot-inner{display:flex;align-items:center;justify-content:space-between;}
+.foot-l{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.08em;}
+.foot-links{display:flex;gap:20px;}
+.foot-a{font-size:11px;color:var(--dim);cursor:pointer;transition:color 0.15s;font-family:'IBM Plex Mono',monospace;letter-spacing:0.04em;text-decoration:none;}
+.foot-a:hover{color:var(--mid);}
+</style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="logo">
+      <svg width="26" height="20" viewBox="0 0 28 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ff2d78"/>
+            <stop offset="100%" stop-color="#a855f7"/>
+          </linearGradient>
+          <linearGradient id="lg2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#a855f7"/>
+            <stop offset="100%" stop-color="#00ffb3"/>
+          </linearGradient>
+        </defs>
+        <polyline points="9,2 2,11 9,20" stroke="url(#lg1)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <polyline points="19,2 26,11 19,20" stroke="url(#lg2)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <div class="logo-text">maciek<br>palmowski</div>
+    </div>
+    <div class="nav-r">
+      <a class="na" href="#">Blog</a>
+      <a class="na" href="#">Speaking</a>
+      <a class="na" href="#">Newsletter</a>
+      <a class="nav-cta" href="#">Contact →</a>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="col">
+      <div class="h-eyebrow">
+        <div class="h-pip"><span></span><span></span><span></span></div>
+        <span class="h-eyebrow-text">Developer · Speaker · Open Source</span>
+      </div>
+      <div class="h-name">Maciek Palmowski</div>
+      <div class="h-sub grad-text">Developer &amp; Speaker</div>
+      <p class="h-bio">mVDP Growth Manager at <strong>Patchstack</strong>. Writing about WordPress security, headless CMS, and Astro. Host of the <strong>Code &amp; Coffee Show</strong>.</p>
+      <div class="h-actions">
+        <a class="btn-p" href="#">Read the blog →</a>
+        <a class="btn-g" href="#">View talks</a>
+      </div>
+
+      <div class="h-socials">
+        <a class="soc bsky" href="https://bsky.app/profile/maciekpalmowski.dev">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.204-.659-.299-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8z"/></svg>
+          Bluesky
+        </a>
+        <a class="soc tw" href="https://x.com/maciekpalmowski">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.261 5.636L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          X / Twitter
+        </a>
+        <a class="soc li" href="https://linkedin.com/in/maciekpalmowski">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+        <a class="soc gh" href="https://github.com/palmiak">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="grad-bar"></div>
+
+  <div class="sec-wrap"><div class="col">
+    <div class="sec-label"><span class="sec-dot"></span>Writing</div>
+    <div class="sec-title">Latest posts</div>
+  </div></div>
+
+  <div class="posts"><div class="col">
+
+    <a class="post" href="#">
+      <div class="post-inner">
+        <div class="post-top"><span class="tag conf">Conferences</span><span class="dot-sep">·</span><span class="date">Nov 6, 2025</span></div>
+        <div class="post-title">Why Every Tech Event Needs Pre-Conference Feedback Sessions</div>
+        <div class="post-excerpt">Pre-conference feedback sessions give speakers a safe space to practice, reduce stress, and polish their talks.</div>
+        <div class="read-more"><span class="rm-dot"></span>Read more</div>
+      </div>
+    </a>
+
+    <a class="post" href="#">
+      <div class="post-inner">
+        <div class="post-top"><span class="tag wp">WordPress</span><span class="dot-sep">·</span><span class="date">Sep 5, 2025</span></div>
+        <div class="post-title">From Polish-Only to Bilingual: Lessons from WordCamp Gdynia</div>
+        <div class="post-excerpt">How WordCamp Gdynia became Poland's first bilingual WordPress conference — the challenges and the wins.</div>
+        <div class="read-more"><span class="rm-dot"></span>Read more</div>
+      </div>
+    </a>
+
+    <a class="post" href="#">
+      <div class="post-inner">
+        <div class="post-top"><span class="tag sec">Security</span><span class="dot-sep">·</span><span class="date">May 25, 2025</span></div>
+        <div class="post-title">What the Hell Is an mVDP?</div>
+        <div class="post-excerpt">I changed roles at Patchstack. A lot of people asked what an mVDP actually is. Time to explain it properly.</div>
+        <div class="read-more"><span class="rm-dot"></span>Read more</div>
+      </div>
+    </a>
+
+    <a class="post" href="#">
+      <div class="post-inner">
+        <div class="post-top"><span class="tag ast">Astro</span><span class="dot-sep">·</span><span class="date">May 9, 2025</span></div>
+        <div class="post-title">Content Layer API in Astro — How to Create a CMS-Agnostic Website</div>
+        <div class="post-excerpt">One of the promises of headless was simple CMS switching. In reality, it's not that simple — until now.</div>
+        <div class="read-more"><span class="rm-dot"></span>Read more</div>
+      </div>
+    </a>
+
+    <a class="post" href="#">
+      <div class="post-inner">
+        <div class="post-top"><span class="tag sec">Security</span><span class="dot-sep">·</span><span class="date">Feb 26, 2025</span></div>
+        <div class="post-title">How We Removed (Almost) 1000 Plugins from the WordPress Repository</div>
+        <div class="post-excerpt">Patchstack's bug bounty program led to 1571 vulnerability reports affecting 7M+ installs. Here's what happened.</div>
+        <div class="read-more"><span class="rm-dot"></span>Read more</div>
+      </div>
+    </a>
+
+  </div></div>
+
+  <div class="about"><div class="col">
+    <div class="sec-label" style="margin-bottom:20px;"><span class="sec-dot"></span>About</div>
+    <p class="about-body">
+      I'm a web developer and <strong>mVDP Growth Manager at Patchstack</strong> — the WordPress security company. Over 7+ years I've gone deep on WordPress, PHP, headless architecture, and Astro. I write and speak about all of it.<br><br>
+      I co-organise <strong>CMS Conf 2026</strong> in Gdynia, Poland. When I'm not at a keyboard I'm on a gravel bike or brewing filter coffee with a Commandante.
+    </p>
+    <a class="about-link" href="#"><span class="about-link-dash"></span>Full bio</a>
+  </div></div>
+
+  <div class="grad-bar"></div>
+
+  <div class="talks"><div class="col">
+    <div class="sec-wrap" style="padding-bottom:24px;">
+      <div class="sec-label"><span class="sec-dot"></span>Speaking</div>
+      <div class="sec-title">Selected talks</div>
+    </div>
+    <div class="talk"><div><div class="talk-title">WordPress Security: The Swiss Cheese Model</div><div class="talk-event">Checkout Summit</div></div><div class="talk-year">2026</div></div>
+    <div class="talk"><div><div class="talk-title">Migrating to Astro — a Real-World Story</div><div class="talk-event">CloudFest</div></div><div class="talk-year">2026</div></div>
+    <div class="talk"><div><div class="talk-title">WordPress Architecture Decision Framework</div><div class="talk-event">WordCamp Europe</div></div><div class="talk-year">2026</div></div>
+    <div class="talk"><div><div class="talk-title">Security Research at Scale with mVDP</div><div class="talk-event">CyberWiseCon, Vilnius</div></div><div class="talk-year">2025</div></div>
+    <div class="talk"><div><div class="talk-title">Headless vs Static vs Traditional WordPress</div><div class="talk-event">Open Source Day, Florence</div></div><div class="talk-year">2025</div></div>
+  </div></div>
+
+  <div class="nl"><div class="col">
+    <div class="sec-label" style="margin-bottom:16px;"><span class="sec-dot"></span>Newsletter</div>
+    <div class="nl-title">Stay in the loop</div>
+    <div class="nl-sub">Weekly signal from the WordPress and web world. No noise, no spam — just things worth reading.</div>
+    <div class="nl-form">
+      <input class="nl-input" type="email" placeholder="your@email.com">
+      <button class="nl-btn">Subscribe →</button>
+    </div>
+    <div class="nl-note">Unsubscribe anytime · No spam</div>
+  </div></div>
+
+  <div class="grad-bar"></div>
+
+  <div class="foot"><div class="col">
+    <div class="foot-inner">
+      <div class="foot-l">© 2025 Maciek Palmowski · Łódź, Poland</div>
+      <div class="foot-links">
+        <a class="foot-a" href="#">Blog</a>
+        <a class="foot-a" href="#">Speaking</a>
+        <a class="foot-a" href="#">Newsletter</a>
+      </div>
+    </div>
+  </div></div>
+
+</body>
+</html>

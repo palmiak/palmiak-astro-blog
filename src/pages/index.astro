@@ -1,41 +1,36 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
-import BlogCard from '../components/BlogCard.astro';
-import NewsletterBox from '../components/NewsletterBox.astro';
 import Hero from '../components/Hero.astro';
+import GradBar from '../components/GradBar.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import PostRow from '../components/PostRow.astro';
+import NewsletterBox from '../components/NewsletterBox.astro';
 
-const allPosts = (await getCollection('posts')).sort(
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
+const recentPosts = allPosts.slice(0, 8);
 
-const latestPosts = allPosts.slice(0, 2);
-const morePosts = allPosts.slice(2, 8);
-
-// Popular tags — same order and images as the original Statamic publication globals
-const popularTags = [
-  { slug: 'headless',     label: 'Headless',    image: '/assets/popular-tags/headless.png' },
-  { slug: 'astro',        label: 'Astro',       image: '/assets/popular-tags/astro.png' },
-  { slug: 'cicd',         label: 'CI/CD',       image: '/assets/popular-tags/automation.png' },
-  { slug: 'development',  label: 'Development', image: '/assets/popular-tags/development.png' },
-  { slug: 'conferences',  label: 'Conferences', image: '/assets/popular-tags/conference.png' },
-];
+const talks = (await getCollection('talks')).sort(
+  (a, b) => b.data.year - a.data.year
+);
 ---
 <Layout title="Home">
   <Hero />
 
-  <!-- Latest posts (first 2) -->
-  <h2 class="container mx-auto px-5 text-center text-white text-xl font-bold font-palmiak-font-title m-0 mt-10">
-    Latest posts
-  </h2>
-  <hr class="gradient-line mx-auto" />
+  <GradBar />
 
-  <div class="container mx-auto max-w-[1400px] px-5 grid grid-cols-1 min-[1024px]:grid-cols-2 gap-7">
-    {latestPosts.map((post) => (
-      <BlogCard
+  <!-- Writing section -->
+  <div class="col">
+    <SectionHeader label="Writing" title="Latest posts" />
+  </div>
+
+  <div class="posts-list col">
+    {recentPosts.map((post) => (
+      <PostRow
         title={post.data.title}
         slug={post.slug}
-        thumbnail={post.data.thumbnail}
         tags={post.data.tags}
         excerpt={post.data.description}
         pubDate={post.data.pubDate}
@@ -43,53 +38,202 @@ const popularTags = [
     ))}
   </div>
 
-  <NewsletterBox />
-
-  <!-- Popular topics -->
-  <h2 class="container mx-auto px-5 text-center text-white text-xl font-bold font-palmiak-font-title m-0 mt-10">
-    Popular blog topics
-  </h2>
-  <hr class="gradient-line mx-auto" />
-
-  <div class="container mx-auto max-w-[1400px] px-5 justify-center items-start gap-7 flex flex-wrap">
-    {popularTags.map((tag) => (
-      <a
-        href={`/tags/${tag.slug}`}
-        class="px-4 pr-6 py-3 bg-palmiak_bg border border-indigo-950 border-opacity-50 rounded-full justify-start items-center gap-7 flex hover:bg-palmiak_lightdark transition-all duration-150 hover:bg-opacity-50"
-      >
-        <img
-          class="w-16 h-16 rounded-full"
-          src={tag.image}
-          alt={`Tag - ${tag.label}`}
-          width="66"
-          height="66"
-          loading="lazy"
-        />
-        <div class="text-white text-md font-bold font-palmiak-font-title">{tag.label}</div>
-      </a>
-    ))}
-  </div>
-
-  <!-- More posts (3-8) -->
-  <div class="container mx-auto max-w-[1400px] px-5 grid grid-cols-1 min-[1024px]:grid-cols-2 gap-7 mt-10">
-    {morePosts.map((post) => (
-      <BlogCard
-        title={post.data.title}
-        slug={post.slug}
-        thumbnail={post.data.thumbnail}
-        tags={post.data.tags}
-        excerpt={post.data.description}
-        pubDate={post.data.pubDate}
-        lazy={true}
-      />
-    ))}
-  </div>
-
-  <div class="container mx-auto px-5 text-center mt-10">
-    <a href="/blog" class="h-[62px] inline-flex rounded-full bg-linear-to-r from-palmiak_pink via-palmiak_green to-palmiak_blue p-[1px]">
-      <div class="text-white text-base font-bold font-palmiak-font-title tracking-wide inline-flex rounded-full h-full items-center justify-center bg-palmiak_bg back px-5 transition-all duration-150 hover:bg-opacity-80 text-[15px]">
-        load more articles
-      </div>
+  <!-- Read more button -->
+  <div class="all-posts-link">
+    <a href="/blog" class="view-all-btn">
+      Read all {allPosts.length} posts →
     </a>
   </div>
+
+  <!-- About section -->
+  <div class="about col">
+    <div class="about-inner">
+      <div class="about-eyebrow"><span class="sec-dot"></span>About me</div>
+      <p class="about-body">
+        I'm a web developer and <strong>mVDP Growth Manager at Patchstack</strong> — the WordPress security company.
+        Over 7+ years I've gone deep on WordPress, PHP, headless architecture, and Astro. I write and speak about all of it.<br /><br />
+        I co-organise <strong>CMS Conf 2026</strong> in Gdynia, Poland. When I'm not at a keyboard I'm on a gravel bike
+        or brewing filter coffee with a Commandante.
+      </p>
+      <a class="about-link" href="/contact-me">
+        Get in touch →
+      </a>
+    </div>
+  </div>
+
+  <GradBar />
+
+  <!-- Talks section -->
+  <div id="speaking" class="talks-section col">
+    <SectionHeader label="Speaking" title="Selected talks" />
+    <div class="talks-list">
+      {talks.map((talk) => (
+        <div class="talk-row">
+          <div>
+            <div class="talk-title">{talk.data.title}</div>
+            <div class="talk-event">{talk.data.event}</div>
+          </div>
+          <div class="talk-year">{talk.data.year}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <NewsletterBox variant="home" />
+
+  <GradBar />
 </Layout>
+
+<style>
+.col {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.posts-list {
+  border-bottom: 1px solid var(--bd);
+  overflow: hidden;
+}
+
+/* Read all posts button */
+.all-posts-link {
+  padding: 40px 24px;
+  border-bottom: 1px solid var(--bd);
+  display: flex;
+  justify-content: center;
+}
+.view-all-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--hi);
+  text-decoration: none;
+  padding: 14px 32px;
+  border-radius: 4px;
+  border: 1px solid rgba(168, 85, 247, 0.5);
+  background: rgba(168, 85, 247, 0.08);
+  transition: border-color 0.15s, background 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+.view-all-btn:hover {
+  border-color: rgba(168, 85, 247, 0.8);
+  background: rgba(168, 85, 247, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.2);
+}
+
+/* About */
+.about {
+  padding: 52px 24px;
+  border-bottom: 1px solid var(--bd);
+}
+.about-inner {
+  background: var(--bg1);
+  border: 1px solid var(--bd);
+  border-left: 2px solid transparent;
+  border-image: linear-gradient(180deg, #ff2d78, #a855f7, #00ffb3) 1;
+  border-radius: 0;
+  padding: 36px 32px;
+  position: relative;
+}
+.about-inner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, #ff2d78, #a855f7, #00ffb3);
+}
+.about-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.sec-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff2d78, #a855f7);
+  flex-shrink: 0;
+}
+.about-body {
+  font-size: 18px;
+  line-height: 1.8;
+  color: var(--mid);
+  font-weight: 300;
+  margin-bottom: 32px;
+  max-width: 580px;
+}
+.about-body strong {
+  color: var(--hi);
+  font-weight: 500;
+}
+.about-link {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--hi);
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 255, 179, 0.4);
+  background: rgba(0, 255, 179, 0.06);
+  display: inline-block;
+  transition: border-color 0.15s, background 0.15s, color 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+.about-link:hover {
+  border-color: rgba(0, 255, 179, 0.7);
+  background: rgba(0, 255, 179, 0.1);
+  color: #00ffb3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 255, 179, 0.15);
+}
+
+/* Talks */
+.talks-section {
+  padding: 0 24px 52px;
+  border-bottom: 1px solid var(--bd);
+}
+.talk-row {
+  border-top: 1px solid var(--bd);
+  padding: 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  transition: padding-left 0.18s ease;
+}
+.talk-row:hover {
+  padding-left: 8px;
+}
+.talk-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--mid);
+  letter-spacing: -0.02em;
+  margin-bottom: 5px;
+  line-height: 1.4;
+  transition: color 0.12s;
+}
+.talk-row:hover .talk-title { color: var(--hi); }
+.talk-event {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: 0.06em;
+}
+.talk-year {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--dim);
+  flex-shrink: 0;
+  margin-left: 32px;
+}
+</style>

@@ -55,7 +55,7 @@ Time for some fun 🎉
 
 ## Title Case
 
-In my case, I created a **Bard Set **"website", that has 4 fields:
+In my case, I created a **Bard Set**"website", that has 4 fields:
 
 - URL
 - title
@@ -69,7 +69,7 @@ So, before we even start creating a field action, we have to create a function t
 ```
 function titleCase(str) {
     if (!str) {
-        return '';
+        return ';
     }
     const splitStr = str.toLowerCase().split(' ');
     for (var i = 0; i < splitStr.length; i++) {
@@ -100,7 +100,7 @@ And it works:
 
 Done? Almost there. While it's cool and it works, we can improve this. There are two things we want to add:
 
-- right now we have to click the "..." first and then select an action - let''s create a quick action and save ourselves one click
+- right now we have to click the "..." first and then select an action - let's create a quick action and save ourselves one click
 - this action also shows up on the URL field, and we don't need it there - let's fix that too
 
 Luckily, in both cases **Statamic** has us covered.
@@ -135,7 +135,7 @@ Statamic.$fieldActions.add('text-fieldtype', {
 By adding conditions in `visiblity` we can select where we want it to show. 
 
 <Alert>
-If you want to learn how to make visibility more flexible, check Jack''s article <strong><a class="underline" href="https://jacksleight.dev/posts/adding-actions-to-specific-statamic-fields" target="blank">Adding actions to specific Statamic fields</a></strong>.
+If you want to learn how to make visibility more flexible, check Jack's article <strong><a class="underline" href="https://jacksleight.dev/posts/adding-actions-to-specific-statamic-fields" target="blank">Adding actions to specific Statamic fields</a></strong>.
 </Alert>
 
 And now we're done.

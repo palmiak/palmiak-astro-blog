@@ -1,0 +1,100 @@
+---
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths, Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import PostRow from '../../../components/PostRow.astro';
+import SectionHeader from '../../../components/SectionHeader.astro';
+import GradBar from '../../../components/GradBar.astro';
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
+
+  return tags.flatMap((tag) => {
+    const tagPosts = posts
+      .filter((p) => p.data.tags.includes(tag))
+      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+    return paginate(tagPosts, { params: { tag }, pageSize: 10 });
+  });
+};
+
+type Props = {
+  page: Page<CollectionEntry<'posts'>>;
+};
+
+const { tag } = Astro.params;
+const { page } = Astro.props;
+---
+<Layout title={`#${tag}`} description={`All posts tagged with ${tag}`}>
+  <div class="col">
+    <SectionHeader label="Tag" title={`#${tag}`} />
+  </div>
+
+  <div class="posts-list col">
+    {page.data.map((post) => (
+      <PostRow
+        title={post.data.title}
+        slug={post.slug}
+        tags={post.data.tags}
+        excerpt={post.data.description}
+        pubDate={post.data.pubDate}
+      />
+    ))}
+  </div>
+
+  {page.lastPage > 1 && (
+    <div class="pagination col">
+      {page.url.prev && (
+        <a href={page.url.prev} class="pag-btn">← Previous</a>
+      )}
+      <span class="pag-count">{page.currentPage} / {page.lastPage}</span>
+      {page.url.next && (
+        <a href={page.url.next} class="pag-btn">Next →</a>
+      )}
+    </div>
+  )}
+
+  <GradBar />
+</Layout>
+
+<style>
+.col {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.posts-list {
+  border-bottom: 1px solid var(--bd);
+  overflow: hidden;
+}
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: center;
+  padding: 40px 24px;
+}
+.pag-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 9px 20px;
+  border-radius: 4px;
+  border: 1px solid var(--bd2);
+  color: var(--mid);
+  background: transparent;
+  text-decoration: none;
+  transition: color 0.15s, border-color 0.15s;
+}
+.pag-btn:hover {
+  color: var(--hi);
+  border-color: rgba(255,255,255,0.25);
+}
+.pag-count {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: 0.08em;
+}
+</style>

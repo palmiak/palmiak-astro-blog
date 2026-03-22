@@ -1,7 +1,7 @@
 ---
 title: "Deploying WordPress with confidence using CI/CD"
-intro: "Deploying WordPress seems to be a pretty easy task, but if we won''t pay enough attention you''ll end up publishing fatal errors on production."
-description: "Deploying WordPress seems to be a pretty easy task, but if we won''t pay enough attention you''ll end up publishing fatal errors on production."
+intro: "Deploying WordPress seems to be a pretty easy task, but if we won't pay enough attention you'll end up publishing fatal errors on production."
+description: "Deploying WordPress seems to be a pretty easy task, but if we won't pay enough attention you'll end up publishing fatal errors on production."
 pubDate: 2022-06-06
 updatedDate: 2022-06-11
 thumbnail: "mohammad-rahmani-W-LQbAUhE64-unsplash.jpg"
@@ -15,49 +15,49 @@ import PostImage from '../../components/mdx/PostImage.astro';
 import YouTube from '../../components/mdx/YouTube.astro';
 import Alert from '../../components/mdx/Alert.astro';
 
-During WordCamp Europe, I had the pleasure of hosting workshops about deploying WordPress. I showed how, thanks to adding some tests, we can ensure that we won''t push bugs and errors to our production server. While the workshop recording isn''t available online yet, you can still read this article and learn almost everything that I have shown.
+During WordCamp Europe, I had the pleasure of hosting workshops about deploying WordPress. I showed how, thanks to adding some tests, we can ensure that we won't push bugs and errors to our production server. While the workshop recording isn't available online yet, you can still read this article and learn almost everything that I have shown.
 
 ## Basic example
 
-Let''s start with the most straightforward approach. We''ll just push everything to production
+Let's start with the most straightforward approach. We'll just push everything to production
 
 <PostImage src="/assets/arts/workshops/simple_sftp.png" width="narrow" />
 
-While this approach will move our files, we can''t be sure about the result. Every time we have to wait until the deployment is finished to check if our website is still working.
+While this approach will move our files, we can't be sure about the result. Every time we have to wait until the deployment is finished to check if our website is still working.
 
-Also, if we deployed a critical error it will reach the production server making the website non-usable for users. So let''s fix it.
+Also, if we deployed a critical error it will reach the production server making the website non-usable for users. So let's fix it.
 
 ## Adding a staging server
 
-The best way to make sure that our code won''t reach the production is to use a staging server first. Thanks to this approach we''ll first deploy our code to a non-production server, run some tests and deploy only if everything is working.
+The best way to make sure that our code won't reach the production is to use a staging server first. Thanks to this approach we'll first deploy our code to a non-production server, run some tests and deploy only if everything is working.
 
-For now, let''s just test if our server is responding after deploying code to staging.
+For now, let's just test if our server is responding after deploying code to staging.
 
 <PostImage src="/assets/staging_sftp.png" width="narrow" />
 
-That''s much better. Thanks to this approach we can be a bit more confident about our deployments. Also, we can make it much better just by adding more tests.
+That's much better. Thanks to this approach we can be a bit more confident about our deployments. Also, we can make it much better just by adding more tests.
 
 ## Adding more tests
 
-Right now, we are just checking of our website is alive after deploying all the changes. That''s something, but we can do much better. It''s time to start adding some other different tests and checks that will check the quality of our code.
+Right now, we are just checking of our website is alive after deploying all the changes. That's something, but we can do much better. It's time to start adding some other different tests and checks that will check the quality of our code.
 
 ### Code Sniffers and linters
 
-If you are working as a part of a team, it''s very important to make sure that your code follows some rules. It''s really horrible to look at a code where every developer wrote his part in a bit different way. Thanks to code sniffers and linters we can first set a coding standard that all developers will have to follow. The cool part is, that there are also tools that can automatically format your code according to the standard.
+If you are working as a part of a team, it's very important to make sure that your code follows some rules. It's really horrible to look at a code where every developer wrote his part in a bit different way. Thanks to code sniffers and linters we can first set a coding standard that all developers will have to follow. The cool part is, that there are also tools that can automatically format your code according to the standard.
 
-While tools like **PHP_CodeSniffer** or **ESLint** won''t check the logic of your code, they will take care of its consistency. Also, they are very simple to configure.
+While tools like **PHP_CodeSniffer** or **ESLint** won't check the logic of your code, they will take care of its consistency. Also, they are very simple to configure.
 
 ### Static analysis tools
 
-If you had a chance to write something in Java, C, or even Turbo Pascal you probably remember that compilers were able to detect a lot of errors even before running the code. **Static analysis tools **for PHP work almost the same - they try to find errors like:
+If you had a chance to write something in Java, C, or even Turbo Pascal you probably remember that compilers were able to detect a lot of errors even before running the code. **Static analysis tools** for PHP work almost the same - they try to find errors like:
 
-Tools like **PHP Stan **or **Psalm **will really make sure that the quality of your code is good. 
+Tools like **PHP Stan** or **Psalm** will really make sure that the quality of your code is good. 
 
 ### Unit tests
 
 Time for something more complicated. Unit tests will help you test every method in isolation. Thanks to them we can learn if each of our methods works correctly on its own. 
 
-While it''s a very powerful thing it requires us to write all the tests. So it''s up to us to cover as many edge cases as possible. The good news is that having a good testing suite will help you a lot in long-term maintenance and refactoring.
+While it's a very powerful thing it requires us to write all the tests. So it's up to us to cover as many edge cases as possible. The good news is that having a good testing suite will help you a lot in long-term maintenance and refactoring.
 
 There are many tools you can use - I would recommend using Pest (for PHP) and Jest (for JS).
 
@@ -71,13 +71,13 @@ When it comes to the tooling you can also use Pest for it - big thanks to **Deni
 
 ### E2E tests
 
-E2E testing is all about running a browser in a headless mode and giving it orders. Thanks to this we can mimic the real user behavior. While this is very useful, those tests are slow and won''t help you too much in pinpointing the error (you''ll only know that the error exists).
+E2E testing is all about running a browser in a headless mode and giving it orders. Thanks to this we can mimic the real user behavior. While this is very useful, those tests are slow and won't help you too much in pinpointing the error (you'll only know that the error exists).
 
-Still, it''s very important to run for example Cypress to check some crucial functionality on your website.
+Still, it's very important to run for example Cypress to check some crucial functionality on your website.
 
 ### Git checks
 
-It''s a good practice to also check if your git repository doesn''t contain files that are or the `gitignore` list or if some git conflicts haven''t been pushed to the code base.
+It's a good practice to also check if your git repository doesn't contain files that are or the `gitignore` list or if some git conflicts haven't been pushed to the code base.
 
 ### How your pipeline may look like
 
@@ -89,4 +89,4 @@ It looks scary, but it will probably save you from deploying any bug.
 
 ## Time to sum up
 
-Using a staging server and benefiting from different testing tools is a great recipe for spending less time quick fixing on production. It''s not easy to learn how to write good tests, but it''s something really worth learning.
+Using a staging server and benefiting from different testing tools is a great recipe for spending less time quick fixing on production. It's not easy to learn how to write good tests, but it's something really worth learning.

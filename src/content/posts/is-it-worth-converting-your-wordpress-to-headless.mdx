@@ -29,7 +29,7 @@ In the traditional WordPress setup, it functions as a **monolith**, with the adm
 
 <PostImage src="/assets/arts/headless-wp/monolith.png" width="narrow" caption="Monolith WordPress" />
 
-However, with a **headless** WordPress approach, the front end is completely separate, functioning as an independent application like **Next.js, Astro, or Laravel**. For both to communicate, we need to introduce some API. We can either use the built-in **REST API **or install the **GraphQL API** plugin.
+However, with a **headless **WordPress approach, the front end is completely separate, functioning as an independent application like **Next.js, Astro, or Laravel**. For both to communicate, we need to introduce some API. We can either use the built-in **REST API** or install the **GraphQL API** plugin.
 
 <PostImage src="/assets/arts/headless-wp/headless.png" width="narrow" caption="Headless WordPress" />
 
@@ -51,7 +51,7 @@ Now it's time to list some of the most popular reasons why we are told we should
 
 Very often, we hear that going headless will make our website faster. And sometimes, that is true, especially when we decouple our CMS and convert to static. And while it's true that static HTML will always be faster than dynamic PHP, we don't need to change the architecture to achieve that. There are plugins that can do the same (**WP2Static** or **Simply Static**), or we can use a more aggressive cache.
 
-Another popular argument is related to** loading only the resources we need and having full control over them**. Personally, I think that both WP and headless give us similar control over what we are loading. The biggest difference lies in the way how we do this. In the headless approach, we explicitly have to add the resource we want to use. In WP, we often have to remove it from certain pages (especially when using plugins). So, it's more of an Opt-in vs. opt-out thing.
+Another popular argument is related to **loading only the resources we need and having full control over them**. Personally, I think that both WP and headless give us similar control over what we are loading. The biggest difference lies in the way how we do this. In the headless approach, we explicitly have to add the resource we want to use. In WP, we often have to remove it from certain pages (especially when using plugins). So, it's more of an Opt-in vs. opt-out thing.
 
 Let's also don't forget that some JS frontends load quite a lot of not needed JS. Take a look at [this page](https://www.zachleat.com/web/site-generator-review/) to see the differences between frameworks. Next.js loads **210 KB of JS**, if you want it or not.
 
@@ -75,7 +75,7 @@ But sometimes it's more expensive:
 
 ### Simplicity
 
-This a weird argument, but let''s try to tackle it too. Overall I see it as an ultimate "old" PHP vs. "modern" JS argument. In short - they are trying to convince us that just by switching to modern JS, all our problems will be gone. And that''s not true. There is a cost to this modern JS approach. Go and check out this [great article](https://dev.to/oxharris/rethinking-the-modern-web-5cn1) by **Oxford Harrison**.
+This a weird argument, but let's try to tackle it too. Overall I see it as an ultimate "old" PHP vs. "modern" JS argument. In short - they are trying to convince us that just by switching to modern JS, all our problems will be gone. And that's not true. There is a cost to this modern JS approach. Go and check out this [great article](https://dev.to/oxharris/rethinking-the-modern-web-5cn1) by **Oxford Harrison**.
 
 Also, as WP developers, we often use plugins to do some of our work, and it may turn out that our favorite plugin isn't supporting the API we need to use. Then we have to write this integration ourselves. 
 

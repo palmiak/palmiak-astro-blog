@@ -1,19 +1,65 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import GradBar from '../components/GradBar.astro';
 ---
 <Layout title="Contact me" description="Ways to get in touch with Maciek Palmowski">
-  <article class="container mx-auto max-w-[1400px] grid grid-cols-1 justify-start gap-8">
-    <div class="w-full max-w-3xl grid grid-cols-1 gap-7 px-5">
-      <h1 class="text-2xl md:text-6xl font-bold font-palmiak-font-title m-0 leading-tight text-white">Contact me</h1>
-      <hr class="gradient-line" />
+  <div class="contact-header">
+    <div class="col">
+      <div class="sec-label"><span class="sec-dot"></span>Contact</div>
+      <h1 class="page-title">Get in touch</h1>
     </div>
+  </div>
 
-    <div class="px-5 prose-post max-w-3xl w-full">
-      <p>If you want to contact me, there are a few ways to do so:</p>
-      <ul>
-        <li>write me an email - at <a href="mailto:hi@maciekpalmowski.dev">hi@maciekpalmowski.dev</a></li>
-        <li>go to Twitter and send me a DM - <a href="https://twitter.com/palmiak_fp" target="_blank" rel="noopener">@palmiak_fp</a></li>
-      </ul>
-    </div>
-  </article>
+  <div class="contact-body col prose-post">
+    <p>If you want to contact me, there are a few ways to do so:</p>
+    <ul>
+      <li>Write me an email at <a href="mailto:hi@maciekpalmowski.dev">hi@maciekpalmowski.dev</a></li>
+      <li>Send me a DM on <a href="https://twitter.com/palmiak_fp" target="_blank" rel="noopener">Twitter / X</a></li>
+      <li>Connect on <a href="https://www.linkedin.com/in/maciekpalmowski/" target="_blank" rel="noopener">LinkedIn</a></li>
+    </ul>
+  </div>
+
+  <GradBar />
 </Layout>
+
+<style>
+.col {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.contact-header {
+  padding: 56px 0 32px;
+  border-bottom: 1px solid var(--bd);
+}
+.sec-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mid);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.sec-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff2d78, #a855f7);
+  flex-shrink: 0;
+}
+.page-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--hi);
+}
+.contact-body {
+  padding: 44px 24px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+</style>

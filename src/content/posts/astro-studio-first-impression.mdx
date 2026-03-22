@@ -21,10 +21,10 @@ Finally, the 12th of March happened, so I could test it on my own.
 As I mentioned, I wasn't sure what to expect. I was guessing something between:
 
 - **Nuxt Studio** - a CMS layer
-- **HygraphCMS **- a layer to manage multiple data sources and convert those into collections
+- **HygraphCMS**- a layer to manage multiple data sources and convert those into collections
 - **Airtable/Directus** - a very rich and flexible database that can be both a DB and a CMS at the same time
 
-All of those, aren't what **Astro Studio **is. Which was disappointing for a moment, until I realized it was my fault as I was imagining things :D 
+All of those, aren't what **Astro Studio** is. Which was disappointing for a moment, until I realized it was my fault as I was imagining things :D 
 
 ## What Astro Studio really is
 
@@ -34,7 +34,7 @@ It has some cool features:
 
 - **it scales perfectly** - you can see how great it works on [The PrimeTime](https://www.youtube.com/watch?v=h5SiumTDRIU) where did a nice stress test. I didn't do any serious benchmarks yet, but seeing that I'm sure that performance won't be a problem.
 - **it is designed with Astro in mind** - you can feel the same developer experience that made me fall in love in Astro. Everything is straightforward.
-- **it has a cool schema management **- with just a few simple lines of code, you can define your DB structure and relations.
+- **it has a cool schema management**- with just a few simple lines of code, you can define your DB structure and relations.
 - it has great local development features. You can use the `seed.ts` file to fill the DB with data. Together with Faker.js, you can create a lot of interesting test data.
 - and it has a **visual data viewer**
 
@@ -103,7 +103,7 @@ But what if, I would like to push this data to the production database? That's s
 
 ### Querying
 
-**Astro DB **integrates Drizzle ORM, so if you would like to get all the posts just run:
+**Astro DB** integrates Drizzle ORM, so if you would like to get all the posts just run:
 
 ```
 ---
@@ -149,11 +149,11 @@ const posts = await db.select().from(Posts).orderBy(Posts.title);
 
 ## Things that I hope to see
 
-In its current state, **Astro Studio **is an amazing foundation for growth. From the technical point of view, it does exactly what it should and does it perfectly. 
+In its current state, **Astro Studio** is an amazing foundation for growth. From the technical point of view, it does exactly what it should and does it perfectly. 
 
 Some things can be better thought:
 
-- **Only GitHub support **at the moment. From the practical point of view, I understand such a decision was made, but I hope that we'll see GitLab, BitBucket, and custom Git too.
+- **Only GitHub support** at the moment. From the practical point of view, I understand such a decision was made, but I hope that we'll see GitLab, BitBucket, and custom Git too.
 - The **visual editor is lacking** at the moment. It would be great if it would respect relations (so I don't have to enter let's say category ID but pick it from a dropdown field) or edit longer texts.
 - When creating tables, the **autoincrement keyword is missing**. On the other hand, leaving the ID empty or filling it with a NULL in the visual data editor throws an error that the field is required, while leaving it null in `seed.ts` works fine.
 - **The SQL console requires some work**. I mean it works, but that's it. There is no autocomplete, or table view of data.
@@ -161,7 +161,7 @@ Some things can be better thought:
 
 ## To sum up
 
-There is no other JS framework I trust so much as I trust **Astro**. That means that even with those shortcomings that I mentioned above I see a huge potential of **Studio **and I'm sure that it will just get better and better.
+There is no other JS framework I trust so much as I trust **Astro**. That means that even with those shortcomings that I mentioned above I see a huge potential of **Studio** and I'm sure that it will just get better and better.
 
 I still have some hopes that Astro Studio will take a step towards content editing. Either directly or maybe via some additional tool. 
 
