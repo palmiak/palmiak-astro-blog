@@ -1,0 +1,80 @@
+---
+title: "When using Statamic over WordPress is a good idea"
+intro: "I built many WordPress-based websites over the years, yet lately, I prefer working with Statamic. Here are a few key differences between them."
+description: "I built many WordPress-based websites over the years, yet lately, I prefer working with Statamic. Here are a few key differences between them."
+pubDate: 2023-02-05
+updatedDate: 2023-02-06
+thumbnail: "statamicvswordpress.png"
+ogImage: "post-cover-(6).png"
+tags:
+  - "wordpress"
+  - "statamic"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+I spent most of my career inside the **WordPress** bubble. If you follow my blog, you probably saw that I've been trying new CMSs and experimenting with my stack a bit more lately, and **Statamic** has become one of my favorites. In this article, I would like to compare **WordPress** and **Statamic**, so you can see the main differences and similarities.
+
+## Data storage
+
+**WordPress** requires a database. By default, it should be MySQL, but there is also an [SQLite plugin](https://wordpress.org/plugins/sqlite-database-integration/). And while it's not a problem to find a hosting with MySQL, exporting/importing data can be a tedious process. 
+
+**Statamic,** on the other hand, is a flat-file CMS by default. This is great because you can store all the data inside your Git repository. It's worth pointing out that converting it to use an SQL database is easy. There is even an [addon](https://statamic.com/addons/duncanmcclean/runway) that makes it very simple.
+
+In my case - I love the flat file approach. Most websites I work on are quite small, so this stack is perfect for me. 
+
+## Writing experience
+
+**WordPress** gives us a lot of flexibility here. We can pick from many page builders, or we can use the native Gutenberg, or we can use the classic editor, or... there are so many ways to do so. I use Gutenberg and Advanced Custom Fields (for custom blocks and additional data fields). The problem with this approach is that while it works, you can feel that ACF is a plugin. There is some traction, and the experience isn't seamless. Also, WordPress always had relatively poor MarkDown support.
+
+On the other hand, everyone knows **WordPress**, so the admin panel feels familiar to everyone - and this is very important while working with clients.
+
+When it comes to **Statamic**, everything related to modeling content is there as part of the CMS core. This changes the general vibe, and it feels much more natural. I also like the possibility of creating blocks inside of Bard editor.
+
+There are also some minor things that I totally adore, like more advanced image management or great MarkDown support.
+
+When it comes to writing, I prefer **Statamic**. The only thing that is missing is converting text to link on pasting. I got so used to this.
+
+<PostImage src="/assets/group-1.png" width="wide" />
+
+## Plugins and themes
+
+Let's compare the numbers. **WordPress** has 60k plugins in the official repository vs. 103 **Statamic** addons. In the themes department, the situation is quite similar, 10k vs. 21.
+
+And while **Statamic** has more tools built into the CMS core (forms, custom fields, or post type management), it still doesn't change the fact that if you are looking for an easy way to integrate an LMS or a more advanced e-commerce with just a few clicks, then WordPress will probably be better.
+
+I mostly use a limited amount of plugins (ACF, Yoast SEO, and Timber). This means that Statamic covers most of it without any additional add-ons. But, if I had a client that requires something more complicated (e-commerce, LMS, etc.), I would definitely go with WordPress.
+
+## Developer experience
+
+**Statamic** is built on top of **Laravel**. If you want to extend Statamic, you need to know Laravel. Most developers will be OK with this - especially since Laravel is the most popular PHP framework. 
+
+When it comes to creating templates - Statamic can either use **Blade** or **Antlers**. Both are really great (but personally, I prefer Antlers as it's more similar to Twig).
+
+And it's also worth mentioning [excellent documentation](https://statamic.dev/) and a very helpful community.
+
+**WordPress** code is right now in a weird place. On the one hand, we have legacy PHP, but we also have bleeding-edge React (used in Gutenberg). 
+
+Themes have multiple flavors - we can use a no-code approach (Gutenberg or page builders), we can use plain PHP, and we can also use Blade or Twig. 
+
+The documentation is sometimes lacking, but thanks to the vast community, we can be sure that we'll always find an answer to our question. 
+
+## Security
+
+**WordPress** most significant problem is not the core itself but [plugins and themes](https://ithemes.com/blog/the-2022-wordpress-vulnerability-annual-report/). It's also the most popular CMS, so it's constantly under attack. The good news is that keeping your WordPress secure is not difficult.  
+
+**Statamic**, on the other hand, is built on top of a very secure framework. It has a higher entry barrier (which means you have to be more capable of writing any additional code), and it's far less popular. 
+
+Of course, comparing them is problematic because the market share itself causes a massive disproportion. If we want 100% security, in both cases, we can convert our website to static (either by converting the website page by page or using a headless approach).
+
+## Which CMS is better?
+
+Let me use the image from the** Statamic** website, as it's the best summary I can think of:
+
+<PostImage src="/assets/arts/wp-vs-statamic/przechwytywanie-zawartosci-sieci-web_2-2-2023_03822_statamic.com.jpeg" width="wide" caption="source - statamic.com" />
+
+It all goes down to what we need and who will use it. In my case, I see more and more situations where Statamic fits my needs better - I don't have to use any add-ons, and I can store all my content inside a git repository. 
+
+But when I'm doing some work for others - in those cases, I will probably use WordPress because almost everyone is familiar with it. Also, I don't like maintaining projects for too long (I get bored), and finding a replacement for a developer familiar with Statamic is much more difficult. 

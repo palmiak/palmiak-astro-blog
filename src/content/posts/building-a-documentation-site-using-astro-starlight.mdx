@@ -1,0 +1,118 @@
+---
+title: "Building a documentation site using Astro Starlight"
+intro: "While working at Patchstack, we decided to change our documentation a bit. Both from the content perspective and the engine perspective."
+description: "While working at Patchstack, we decided to change our documentation a bit. Both from the content perspective and the engine perspective."
+pubDate: 2024-02-21
+updatedDate: 2024-02-21
+thumbnail: "arts/starlight/starlight.png"
+ogImage: "arts/starlight/post-cover--twitter-(21).png"
+tags:
+  - "astro"
+  - "work"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+Currently, we're using **readme.com**, but after some discussions, we saw that we are paying too much for it, and we don't get enough in return. I saw this as a great opportunity to see if Astro Starlight would be a good fit. Long, story short - we are in the middle of the rewriting process. 
+
+In this article, I want to explain what we loved from the beginning and what were the pain points.
+
+I also decided that there is no sense in writing a step-by-step tutorial. Why? **Starlight's** documentation is perfect. I would just write the same thing but probably worse. 
+
+## What is Astro Starlight?
+
+[Starlight](https://starlight.astro.build/) is a template built on top of **Astro** with one, simple purpose - creating an amazing documentation website. Something like **Docusaurus**, but in **Astro**. There are many examples in the wild, but the most important is the official [Astro documentation](https://docs.astro.build/en/getting-started/).
+
+<PostImage src="/assets/arts/starlight/astro.png" width="wide" />
+
+## What is so cool about it?
+
+I will start with a short story - the whole project started with my demo that had:
+
+- migrated content from readme.com
+- some basic styling
+- sidebar menu
+
+This demo became the fundament of the project. This shows how much **Starlight** offers by default.
+
+### It's Astro
+
+It's a trivial reason, but I know what **Astro** can do, how to modify it, and its philosophy. But this also means that I won't need to spend hours learning it from scratch.
+
+Also, I know the limitations and how far we can push it forward.
+
+### A lot of goodies inside
+
+Starlight is packed with goodies:
+
+- **MD** and **MDX** support
+- search engine
+- a lot of components to make the documentation better (ToC, asides, and more)
+
+With all those things inside the only thing we had to add was the lightbox for images.
+
+### Configuration file
+
+The configuration file gives you a lot of control. Just by modifying it, you can already customize your website a lot. I recommend visiting [this page](https://starlight.astro.build/reference/configuration/) to see all the possibilities.
+
+## What were the pain points?
+
+Let me start with one statement. While I had to spend some time on those problems, they weren't dealbreakers in any case. Just things we had to work on for a moment.
+
+### Overwriting components
+
+While most of the things worked out of the box. There were some situations when we had to add some custom JS globally. While there is an API for that, it's limited and in some cases just annoying. Luckily there is a possibility of [overwriting components](https://starlight.astro.build/guides/overriding-components/) which is quite simple.
+
+While it works, I felt that some slot system would be a better idea. Luckily, it's something that is planned [for the future](https://github.com/withastro/starlight/discussions/1443). Until that moment we will have a few overwritten components.
+
+```
+components: {
+	ThemeProvider: './src/components/ThemeProvider.astro',
+	ThemeSelect: './src/components/ThemeSelect.astro',
+	Head: './src/components/Head.astro'
+},
+```
+
+### Open Graph Images support
+
+In short - this is a part we had to do manually. Luckily, there is a package called [astro-og-canvas](https://github.com/delucis/astro-og-canvas/tree/latest/packages/astro-og-canvas) that, together with overwriting components gives you the possibility to add dynamic Open Graph Images.
+
+### Sidebar menu generation and ordering
+
+**Starlight** gives us an easy way to autogenerate menus based on folders and files. It looks like this:
+
+```
+{
+	label: 'Getting started',
+	collapsed: true,
+	autogenerate: { directory: 'getting-started', collapsed: true },
+},
+{
+	label: 'Patchstack App',
+	collapsed: true,
+	autogenerate: { directory: 'patchstack-app', collapsed: true },
+},
+```
+
+Simple, right? The problems start when you start ordering stuff. You have to use:
+
+```
+sidebar:
+  order: 5
+```
+
+With more content, it might become tricky. Not blaming **Starlight** as this is a common problem with markdown-based documentation. 
+
+Some scripts offer the possibility to prefix filenames, but that introduces another problem of fixing links in the content.
+
+This is just something we have to live with.
+
+## Summary
+
+They say that one picture is worth a thousand words - take a look at this sneak peek:
+
+<PostImage src="/assets/arts/starlight/zrzut-ekranu-2024-02-21-021236.png" width="wide" />
+
+Cool, right? And also easy to build. There is still some work ahead of us, but if you are planning to build documentation for your project you should consider **Starlight** for sure. It's younger than Docusaurus (which means some features are missing) and it's still in a phase where updates will happen often, but it's stable enough to try it out.

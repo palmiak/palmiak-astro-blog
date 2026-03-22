@@ -1,0 +1,107 @@
+---
+title: "Playing around with Sanity.io"
+intro: "Sanity.io is one of the new cool kids regarding headless CMSs. I decided to give it a try and create almost precisely the same blog as the one you are reading."
+description: "Sanity.io is one of the new cool kids regarding headless CMSs. I decided to give it a try and create almost precisely the same blog as the one you are reading."
+pubDate: 2022-12-12
+updatedDate: 2022-12-15
+thumbnail: "astronity.png"
+ogImage: "post-cover-(1)-1671062502.png"
+tags:
+  - "astro"
+  - "headless"
+  - "sanityio"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+## What is Sanity.io
+
+First of all, Sanity.io is a **headless CMS**. This means it's only responsible for storing the data, and it's up to us to connect it with a front end. We can use whatever we want here. 
+
+The CMS is fully configurable. Thanks to **Sanity Studio,** we can configure our CMS how we want - we just need to create schemas.
+
+<PostImage src="/assets/arts/sanity/sanity-admin-panel.png" width="wide" />
+
+Sanity also gives us two ways to communicate with our application: **GraphQL **or **GROQ**. I just want to say that **GROQ **quickly became my favorite. It's like SQL and GraphQL had a baby.
+
+Now that we know what **Sanity.io **is, it's time to code.
+
+## The plan
+
+I plan to create a blog like the one you are just reading. This means we will need the following:
+
+There are also some things that I decided not to add because it's just an experiment:
+
+Time to start modeling this content using **Sanity Studio**
+
+## Installation and some groundwork
+
+Installation is pretty simple. Just follow the steps from the [official guide](https://www.sanity.io/docs/create-a-sanity-project), and everything should be up and running in a few minutes.
+
+In my case, I also installed one addon - the [markdown input field](https://www.sanity.io/plugins/sanity-plugin-markdow). 
+
+And here is the [code repository](https://github.com/palmiak/astronity). In the **studio** folder, you'll find everything related to **Sanity**. Apart from this folder, everything else is associated with **Astro**.
+
+## Adding schemas
+
+My schema structure looks like this:
+
+The **document **folder is for post types, and the **objects **folder is for small bits that we will reuse from time to time.
+
+For example, let me show you how to create a category schema. First, create an empty file `category.js` inside the `schemas/documents` folder. Then add this code inside:
+
+As you can see, it consists of two fields - Title and Slug.
+
+Next, it's time to import it the `index.js` file:
+
+And is how our admin panel will look like:
+
+<PostImage src="/assets/arts/sanity/control-v-(4).png" width="wide" />
+
+You can browse the rest of the fields in the [GitHub repo.](https://github.com/palmiak/astronity) 
+
+## Connecting Sanity.io with Astro
+
+Now, it's time to connect **Sanity.io** with **Astro**. 
+
+I won't go step-by-step because everything becomes simple if you understand how the GROQ language works.
+
+First, we need to install the [Sanity + Astro](https://www.sanity.io/plugins/astro-sanity) plugin. Kudos to Jaydan Urwin for all his hard work. After installing the plugin, I created a `/src/utils/sanityHelper.js` file to add all the helper functions I need.
+
+So, let's get the navigation. First of all, I created a helper:
+
+It fetches all the posts from the `nav` post type and the passed navigation id.
+
+Next, in my `header` component I'm doing something like this:
+
+... and that's it :)
+
+Fetching posts is similar. There are some gotchas.
+
+### Images
+
+In the helper file, you'll find the `urlForImage` function. To use, you have to use:
+
+Also, check the [sanity/image-url](https://www.sanity.io/docs/image-url) documentation. You'll learn more about all its possibilities.
+
+### Markdown fields
+
+**Astro**, by default, doesn't have any method to show markdown data that was fetched from an API. To fix this, we have you use the `marked` package. This is how I displayed post content:
+
+### Querying references
+
+When I wanted to display category names in every post, I hit a small bump on the road. Luckly it was easy to solve.
+
+This is what my initial query looked like:
+
+to get all the data related to each category, I had to add `[]->`
+
+Check out [this page](https://www.sanity.io/docs/how-queries-work) for more information.
+
+## That's it
+
+I hope you'll also find **Sanity.io** as friendly and easy to use as me. Of course, this article just scratches the surface of what **Sanity.io** can do and how we can configure it.
+
+Don't forget to share what you have done using **Sanity.io**.

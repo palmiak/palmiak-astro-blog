@@ -1,0 +1,102 @@
+---
+title: "Trying out the brand new Drupal CMS 1.0"
+intro: "Drupal CMS 1.0 just got released. I decided to install it, check what is it, and why Drupal is back to 1.0."
+description: "Drupal CMS 1.0 just got released. I decided to install it to check what is it and why Drupal is back to 1.0."
+pubDate: 2025-01-16
+updatedDate: 2025-01-16
+thumbnail: "arts/trying-out-drupal-cms-10/drupal.png"
+ogImage: "arts/trying-out-drupal-cms-10/post-cover--twitter-(40).png"
+tags:
+  - "cms"
+  - "drupal"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+Seeing that we're starting 2025 with the release of **Drupal CMS 1.0** got me a bit confused. I was sure that they already reached a higher version. After a bit of reading, it all became clear. There are:
+
+- **Drupal Core (version 11)** - it's, quote, the open source foundation you need to build powerful digital experiences. Perfect for developers and advanced users.
+- **Drupal CMS (version 1)** - and it, quote, empowers marketers and site builders to create stunning websites with ease—no advanced skills required. Ideal for most projects.
+
+So **Drupal Core** is for developers who know exactly what and how they want to do stuff and **Drupal CMS** is for the rest.
+
+I like this approach: a minimalistic and extensible core and an opinionated version of it that is preconfigured and simpler to start using. WordPress could also follow this approach.
+
+## Before we continue
+
+My knowledge of **Drupal** is limited. I tried it many years ago, but it didn't click. On the other hand, I follow them because their community is very interesting and pushing some interesting initiatives. 
+
+On the other hand, if you are a Drupal expert and at some point you'll have a \"Christ, the guy who wrote this is an idiot\" moment. Then you're right - I don't know too much about Drupal. I'm writing this because I saw that **Drupal CMS** should empower people like me to build websites with ease.
+
+## Installation
+
+I use **DDEV**, so the installation was a breeze. I just had to run one script and magic happened. And, while it wasn't a problem for me, if you are not a developer you might quickly hit a wall.
+
+I see you can spin up an installation on **Acquia, Pantheon, **or **Platform.sh**, but it doesn't change the fact that it should be simpler. And I know that Drupal is working hard on the WASM edition, so maybe soon we'll see an ability to run Drupal CMS in a similar way that we can launch WP in a browser thanks to WordPress Playground.
+
+The installation wizard was cool. It helps with picking what types of content you'll need and it will install proper modules. This part was really good and I see a lot of potential in pushing it even further. It's a great help for beginners. 
+
+Also, those types of content are made thanks to **recipes**. That's a great way to create repeatable parts you will be able to reuse over many installations. You can learn more about those [here](https://www.drupal.org/docs/extending-drupal/drupal-recipes).
+
+<PostImage src="/assets/arts/trying-out-drupal-cms-10/zrzut-ekranu_16-1-2025_05852_drupal-cms-1.ddev.site.jpeg" width="wide" />
+
+## Admin panel
+
+"It looks really fancy" - that was more or less my first impression. A moment later I discovered there was a dark mode, so from that moment I got ecstatic. 
+
+<PostImage src="/assets/arts/trying-out-drupal-cms-10/zrzut-ekranu_16-1-2025_1955_drupal-cms-1.ddev.site.jpeg" width="wide" />
+
+Very quickly I also discovered there are a lot of options in there. Out of the box we get:
+
+- custom field management
+- content type configuration
+- layout editor
+- caching
+- workflows
+- cool AI features
+
+and a lot more. While this is amazing, it also can make your head a bit dizzy.
+
+<PostImage src="/assets/arts/trying-out-drupal-cms-10/zrzut-ekranu_16-1-2025_11747_drupal-cms-1.ddev.site.jpeg" width="wide" caption="The list here is huge" />
+
+There are a few things I wanted to check a bit more than the rest.
+
+### Custom fields
+
+I would place the experience somewhere in between vanilla WordPress (there is no field management) and what ACF offers. While technically it does the same - you can define field types, fill them with data, and show them on your website. The UX is just lacking. It has this - "designed by an engineer" vibe. 
+
+It's far from being bad though - there are just other solutions that offer a bit nicer experience. Not only ACF but also Statamic or CraftCMS made this more user-friendly.
+
+<PostImage src="/assets/arts/trying-out-drupal-cms-10/zrzut-ekranu_16-1-2025_2252_drupal-cms-1.ddev.site.jpeg" width="wide" />
+
+### Content Editor
+
+The content editor feels almost exactly like Classic Editor + ACF. There are just the defined inputs where you enter the data and that's it. Is this good? Well, that depends on the person. Many of us got used to a more block-style approach. Mostly thanks to tools like **Notion**.
+
+<PostImage src="/assets/arts/trying-out-drupal-cms-10/zrzut-ekranu_16-1-2025_12326_drupal-cms-1.ddev.site.jpeg" width="narrow" />
+
+### Layout Editor
+
+I'm not a fan of layout editors, page builders, etc. So, I was skeptical from the beginning. And it seems I will remain that way. While the layout editor is quite powerful the biggest problem again lies in the UX. It just feels clunky.
+
+Also, when we compare it with what Webflow or Wix offer (and those solutions are great for marketing teams) I can't imagine many people not familiar with Drupal to quickly fall in love with the Layout Editor.
+
+<PostImage src="/assets/arts/trying-out-drupal-cms-10/zrzut-ekranu-2025-01-16-032927.png" width="wide" />
+
+### AI features
+
+Chat is a really amazing feature - not only you can ask for guidance, but it can also help you build stuff. I won't bore you with details - just check out this demo:
+
+<YouTube url="https://www.youtube.com/embed/d77uudOXgiE?si=P9HNSKv_tgmPexcF" />
+
+## So you don't like it?
+
+**Wrong.** I'm positively surprised with how Drupal evolved. It looks much better than it used to, it offers a lot of options and it uses Twig for templating. As a developer, if I would invest more time in it, I would probably like it even more.
+
+Also, with the current WordPress unstable situation, I can imagine some developers giving Drupal a try. Especially since the **Drupal CMS** can be a great starting point for new developers.
+
+But... I feel that **Drupal CMS **fails to fully deliver part of the "create stunning websites with ease - no advanced skills required" promise. It still does require quite a lot of skills to get started. 
+
+But even with all those downsides that I mentioned - I think that this is the easiest to use Drupal ever. There is still a long way to go, to make it simple for everybody, but Drupal CMS 1.0 is a huge milestone. I already can't wait to see **Drupal CMS 2.0**.

@@ -1,0 +1,71 @@
+---
+title: "Converting Statamic to use Vite"
+intro: "Vite is new and hot frontend build tooling. I decided to give it a try and moved from Laravel Mix to Vite on this blog."
+description: "Vite is new and hot frontend build tooling. I decided to give it a try and moved from Laravel Mix to Vite on this blog."
+pubDate: 2022-08-17
+updatedDate: 2023-09-07
+thumbnail: "arts/vite/vite-statamic-cover.png"
+ogImage: "arts/vite/image-(4).png"
+tags:
+  - "development"
+  - "statamic"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+## What is Vite
+
+According to their website, Vite is "a build tool that aims to provide a **faster** and leaner development experience for modern web projects". And believe me - it''s fast. Also, because Laravel announced **Vite** as their default build tool since **Laravel 9**. Converting your tooling to use Vite is very simple.
+
+## Is it worth it?
+
+Well, that depends on how important are the build times for you. In my case building, a production version dropped from ~9 seconds to ~4 seconds. I know it's a small and simple blog, but you find a lot of compartments over the internet proving that Vite is a lot faster.
+
+## How to convert your Statamic website to use Vite?
+
+First, it's important to some preparations. By preparations, I mean:
+
+- Update your **Statamic **to at least **3.3.18**
+- Update the **Laravel** version to at least 9
+
+Having those out the way, let's start updating some files. Let's start with `package.json`. We have to remove the `laravel-mix` package (and other mix plugins, if you have them) and add `vite` and `laravel-vite-plugin`. 
+
+Also, while we're in the package.json file, it's also worth replacing our build scripts with something like this:
+
+```
+\"dev\": \"vite\",\r\n\"watch\": \"vite build --watch\",\r\n\"prod\": \"vite build\"
+```
+
+Next, we have to create a `postcss.config.js` file. The simplest one would look like this:
+
+```
+module.exports = {\r\n    plugins: {\r\n        'postcss-import': {},\r\n        tailwindcss: {},\r\n        autoprefixer: {},\r\n    },\r\n};
+```
+
+And a `vite.config.js` file:
+
+```
+import laravel from 'laravel-vite-plugin'\r\nimport {defineConfig} from 'vite'\r\n\r\nexport default defineConfig({\r\n    plugins: [\r\n        laravel([\r\n            'resources/css/web.css',\r\n            'resources/js/site.js',\r\n        ]),\r\n    ],\r\n});
+```
+
+  
+Of course, change the file paths or names according to the ones you require.
+
+We have one more step to go - it's time to visit our `layout.antlers.html` file and our files. We can do it using the `vite` tag:
+
+```
+vite src="resources/css/web.css|resources/js/site.js"
+```
+
+  
+And that's it. From now you can experience a much faster building experience.
+
+## Further reading
+
+It's also worth checking out some additional articles:
+
+- [Building assets (Vite)](https://laravel.com/docs/9.x/vite)
+- [Laravel Vite](https://laravel-vite.dev/)
+- [Vite Starter Kit](https://statamic.com/starter-kits/joschuba/vite)

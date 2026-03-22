@@ -1,0 +1,119 @@
+---
+title: "Let's talk about closed plugins in the WordPress repository"
+intro: "Have you ever wondered about closed plugins in the WordPress repository? Me neither until 3 weeks ago, when some inner discussion with Darius sparked my curiosity."
+description: "You have a WordPress website and installed some plugins from the official plugin repository. You are using the official repository because it's official, so it's THE repository. You feel a bit safer, also it informs you about the new versions so everything seems OK.\n\nBut what will happen if a plugin is vulnerable? In most cases, it will be closed - no one will be able to download it and there will be a nice explanation of why it happened."
+pubDate: 2024-06-18
+updatedDate: 2024-06-18
+thumbnail: "arts/closed-plugins/hacker-wp.png"
+ogImage: "arts/closed-plugins/post-cover--twitter-(28).png"
+tags:
+  - "wordpress"
+  - "security"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+You have a WordPress website and installed some plugins from the official plugin repository. You are using the official repository because it's official, so it's **THE repository**. You feel a bit safer, also it informs you about the new versions so everything seems OK.
+
+But what will happen if a plugin is vulnerable? In most cases, it will be closed - no one will be able to download it and there will be a nice explanation of why it happened. 
+
+<PostImage src="/assets/arts/closed-plugins/zrzut-ekranu-2024-06-18-114639.png" width="narrow" />
+
+So where is the problem? Please, take a look at the plugin listing and tell me which plugin is the closed one. 
+
+<PostImage src="/assets/arts/closed-plugins/zrzut-ekranu-2024-06-18-114916.png" width="wide" />
+
+Let's also check the Site Health screen because there are some security tests
+
+<PostImage src="/assets/arts/closed-plugins/zrzut-ekranu-2024-06-18-115026.png" width="" />
+
+Yes - it's impossible to guess which ones are closed without checking plugin after plugin manually.
+
+## Why is it so important?
+
+There is one, critical reason - **security**. Such plugins are a potential threat to the user because they:
+
+- have a vulnerability
+- user might not have a clue that something is wrong with the plugin
+
+WordPress usually informs you about updates, so not having any information about an update gives a false sense of security. You feel that everything is OK because there is no message that something is wrong.
+
+And it's not that I'm making things up - take a look at [this article](https://patchstack.com/articles/the-wordpress-zombie-plugins-pandemic-affects-1-6-million-websites/) by **Darius Sveikauskas**:
+
+> As we checked our data, we noticed some worrying numbers**. We had 404 vulnerabilities on our database that were disclosed, but not patched.** These are all hosted in the wordpress.org plugins repository.
+
+As you see - that is a problem. So why isn't it solved?
+
+There was a [trac ticket](https://core.trac.wordpress.org/ticket/48190) about it 5 years ago, but back then it wasn't possible because of API limitations.
+
+## How to check if a plugin is closed
+
+It turns out, it is quite simple - there is an official API for this:
+
+```
+https://api.wordpress.org/plugins/info/1.0/patchstack.json
+```
+
+or, if you want to see a closed one:
+
+```
+https://api.wordpress.org/plugins/info/1.0/easy-registration-forms.json
+```
+
+As you can see the second example returns something like this:
+
+```
+{
+    "error": "closed",
+    "name": "Easy Registration Forms",
+    "slug": "easy-registration-forms",
+    "description": "This plugin has been closed as of November 12, 2021 and is not available for download. Reason: Security Issue.",
+    "closed": true,
+    "closed_date": "2021-11-12 19:35:55",
+    "reason": "security-issue",
+    "reason_text": "Security Issue"
+}
+```
+
+So we can it status, reason, and date when it was closed. Seems the only blocker is the fact that we have to make a request to the API from time to time. So the question is - what's more important security or additional requests?
+
+## A small Proof of Concept
+
+I decided to play around a bit and create a small Proof of Concept. Right now it just shows up it runs as a test in Site Health. It only checks the plugins from the official repository. It will probably fail if you have more plugins installed (as it runs all the requests at once).
+
+Check the code [here](https://github.com/palmiak/closed-plugin-checker/). 
+
+Here is what it does:
+
+<PostImage src="/assets/arts/closed-plugins/zrzut-ekranu-2024-06-18-115325.png" width="narrow" />
+
+As I mentioned, it's a proof of concept - the API querying part should be solved in the background, probably using Cron or a library similar to the [WP Background Process](https://github.com/deliciousbrains/wp-background-processing). But this doesn't matter at the moment. What matters now is to talk about the problem and start a discussion about it. 
+
+And on WordCamp Europe, the discussion has started. [**Torsten Landsiedel**](https://x.com/zodiac1978) asked Matt about this problem and there is some [movement already](https://twitter.com/palmiak_fp/status/1802002525609922927). In Basel, I hope we'll have a chance to thank Matt for keeping his word.
+
+## Where else should this be visible?
+
+I think that the status for closed plugins should be visible at:
+
+- **Site Health**
+- **Plugin Listing** 
+- **WP-CLI** - there should also be a separate command for this
+- the **plugin screen** as it is today
+
+Why? As I said already - security matters and every WordPress user approaches this topic a bit differently. That's why we should cover a lot of ground. 
+
+Will my plugin do all of those? I don't know - maybe it will grow, or maybe it will end as this PoC. I prefer the plugin to die and have those features in the core.
+
+## How do I think we should approach it
+
+First of all the `update-plugins` should return the status if the plugin is closed or not. We are already pinging this endpoint constantly, so if it could return additional data, it would solve a lot of problems for us.
+
+Having this solved we should take care of the UI and the messages. Why? Because we don't want to scare people too much or give a false sense of security (no closed plugins don't mean that everything is good - it means exactly that no plugin from the official is repository closed).
+
+## To sum up
+
+Let's fix this - it's crucial to make sure that people using WP know about the status of the plugins they are using. It won't solve all the plugin-related security issues, but it will be the first step.
+
+Also, let's remember - it only covers the aspect of closed plugins - if you want to be informed about vulnerabilities, you should use plugins like [**Patchstack**](https://patchstack.com/)**.**

@@ -1,0 +1,51 @@
+---
+title: "Buying a bicycle using Playwright"
+intro: "There is a time in every cyclist's life when they decide to change their bike. This year I felt it was my turn to do so. That's why I used e2e testing, wrote Telegram bots, and set up GH Actions."
+description: "There is a time in every cyclist's life when they decide to change their bike. This year I felt it was my turn to do so. That's why I used e2e testing, wrote Telegram bots, and set up GH Actions."
+pubDate: 2023-03-20
+updatedDate: 2023-03-20
+thumbnail: "arts/playwright/playwright-bicycle.png"
+ogImage: "arts/playwright/post-cover--twitter-(1).png"
+tags:
+  - "cicd"
+  - "testing"
+  - "bicycle"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+This year I decided I wanted a new bicycle. I still love my **Giant Contend but **decided to switch to [**Canyon Grizl**](https://www.canyon.com/en-pl/gravel-bikes/bike-packing/grizl/al/grizl-6/2708.html?dwvar_2708_pv_rahmenfarbe=GN). Sadly, buying it wasn't that easy. On the other hand, I was just after JS World and wanted to try some stuff out. Good news - I did it thanks to e2e testing, GitHub Action, and a Telegram bot.
+
+<PostImage src="/assets/arts/playwright/canyon-bikes-grizl-family-06-(1).jpg" width="wide" />
+
+## The problem
+
+The problem was simple - availability. There is only a limited time frame to preorder those bikes. First, I just signed up for their official newsletter - it should ping me when the bicycle is in stock. Luckily a friend at the bike store warned me that it may not work and it will better to check it manually every day at 6AM. 
+
+I hate waking at 6AM, and I love automating stuff, which leads to...
+
+## The solution
+
+### e2e testing
+
+Checking availability was relatively easy. I had to go to a specific URL and see if one button had a particular class. 
+
+As I mentioned, I just came back from the JS World. [**Debbie O'Brien**](https://twitter.com/debs_obrien) showed how amazing [Playwright](https://playwright.dev/) is, so I tried it. In the end, the real test looked like this:
+
+The `URL` and `SIZE` were stored in the `.env` file. Simple, right?
+
+### Executing this every hour
+
+I usually would use **Buddy** for this, but I tried GitHub Actions. 
+
+The moment when the class was gone, I would get a notification on **Telegram**. And that is what happened on the **27th of February at 15:06** :) 5 minutes later, the bike was mine.
+
+What's interesting - I never got the official notification, and all the bikes were gone later that day.
+
+<PostImage src="/assets/arts/playwright/platform-grizl-al-canyon-10.jpg" width="wide" caption="It's so beautiful" />
+
+## The moral
+
+Logical thinking and problem-solving can be crucial in many situations. I used a more developer approach but could do this without code tools. There is a bigger chance that I would have to pay something for them.

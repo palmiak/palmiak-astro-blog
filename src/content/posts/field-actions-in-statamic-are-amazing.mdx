@@ -1,0 +1,204 @@
+---
+title: "Field Actions in Statamic are Amazing"
+intro: "Are Fields Actions the most useful thing that happened to Statamic this year? Yes - not only do they help to solve a lot of problems, but they also do it in a very simple way."
+description: "Are Fields Actions the most useful thing that happened to Statamic this year? Yes - not only do they help to solve a lot of problems, but they also do it in a very simple way."
+pubDate: 2024-12-13
+updatedDate: 2024-12-15
+thumbnail: "arts/field-actions-in-statamic-are-amazing/statamic-actions.png"
+ogImage: "arts/field-actions-in-statamic-are-amazing/post-cover--twitter-(36).png"
+tags:
+  - "statamic"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+When [**Jack Sleight**](https://jacksleight.dev/) mentioned field actions on Twitter or Bluesky for the first time, I decided to drop everything and try it. Why? What I missed in Statamic (and WordPress, too) was a way to convert the data in a specific field or populate other fields based on some field with a click of a button.
+
+Let me explain using a more practical example. I have a website on which I collect links to interesting websites. Each post consists of:
+
+- link
+- article title
+- author
+- my comment
+
+While I could do everything manually (and that's what working on [my newsletter](https://newsletter.maciekpalmowski.dev) looks like) it would be cool to automate two things:
+
+- grab the title and author based on the URL
+- make sure that the title and author are written in Title Case
+
+Thanks to **Field Actions**, it's really simple to achieve.
+
+## Preparations
+
+First of all - check the documentation about [Field Actions](https://statamic.dev/extending/field-actions) - there you'll find all the information you need.
+
+After you understand the basics it's time to create a `resources/js/field-actions.js` file and add it to `vite.config.js`: 
+
+```
+export default defineConfig({
+    plugins: [
+        laravel({
+            input: [
+                'resources/css/site.css',
+                'resources/js/site.js',
+                'resources/js/field-actions.js',
+            ],
+            refresh: true,
+        }),
+    ],
+});
+```
+
+Time for some fun 🎉
+
+## Title Case
+
+In my case, I created a **Bard Set **"website", that has 4 fields:
+
+- URL
+- title
+- author
+- comment
+
+All the examples in this article will be based on this setup.
+
+So, before we even start creating a field action, we have to create a function that will convert our string into a Title Case one:
+
+```
+function titleCase(str) {
+    if (!str) {
+        return '';
+    }
+    const splitStr = str.toLowerCase().split(' ');
+    for (var i = 0; i < splitStr.length; i++) {
+        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+    }
+    return splitStr.join(' ');
+}
+```
+
+This function first converts everything to lowercase, then splits based on spaces, and finally converts the first letter of every word to uppercase.
+
+Having this we can create our action:
+
+```
+Statamic.$fieldActions.add('text-fieldtype', {
+    title: 'Convert to Title Case',
+    run: ({config, value, update}) => {
+        update(titleCase(value));
+    },
+});
+```
+
+And it works:
+
+<YouTube url="https://www.youtube.com/embed/DmihU4NwNG4" />
+
+<PostImage src="/assets/arts/field-actions-in-statamic-are-amazing/giphy-(1).gif" width="narrow" />
+
+Done? Almost there. While it's cool and it works, we can improve this. There are two things we want to add:
+
+- right now we have to click the "..." first and then select an action - let''s create a quick action and save ourselves one click
+- this action also shows up on the URL field, and we don't need it there - let's fix that too
+
+Luckily, in both cases **Statamic** has us covered.
+
+```
+Statamic.$fieldActions.add('text-fieldtype', {
+    title: 'Convert to Title Case',
+    run: ({config, value, update}) => {
+        update(titleCase(value));
+    },
+    quick: true,
+    icon: 'light/text'
+});
+```
+
+By adding `quick` and picking a nice SVG icon we added it as a quick action. Now, when we hover on the field the icon shows up.
+
+```
+Statamic.$fieldActions.add('text-fieldtype', {
+    title: 'Convert to Title Case',
+    run: ({config, value, update}) => {
+        update(titleCase(value));
+    },
+    visible: ({config}) => {
+        return config.handle == 'title' || config.handle == 'author';
+    },
+    quick: true,
+    icon: 'light/text'
+});
+```
+
+By adding conditions in `visiblity` we can select where we want it to show. 
+
+<Alert>
+If you want to learn how to make visibility more flexible, check Jack''s article <strong><a class="underline" href="https://jacksleight.dev/posts/adding-actions-to-specific-statamic-fields" target="blank">Adding actions to specific Statamic fields</a></strong>.
+</Alert>
+
+And now we're done.
+
+<YouTube url="https://www.youtube.com/embed/D100iWJGDGA" />
+
+## Grabbing the title and the author
+
+This one is a bit more tricky because it will take a bit more time. That's why we are going to use the promise mechanism.
+
+First, let's focus on grabbing the data itself. Because I'm lazy, I used to **corsproxy.io** to take care of CORS problems. 
+
+```
+async function grabOGData({values, update}) {
+    const url = encodeURI(values.url);
+    const proxyurl = 'https://corsproxy.io/?url=' + url;
+    try {
+        const response = await fetch(proxyurl);
+
+        const html = await response.text();
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        const title = doc.querySelector('meta[property="og:title"]')?.content;
+        const author = doc.querySelector('meta[name="author"]')?.content;
+
+        update('title', title);
+        update('author', author);
+
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+```
+
+What we are doing here is passing our URL to **corsproxy.io**, parsing the HTML, and grabbing the content of `og:title` and `author` meta fields. In the end, we're updating those fields in our set.
+
+Now, we have to connect it to field action:
+
+```
+Statamic.$fieldActions.add('bard-fieldtype-set', {
+    title: 'Grab data',
+    run: ({values, update }) => {
+        return new Promise(resolve => {
+            grabOGData({values, update});
+            resolve();
+        });
+    },
+    visible: ({config}) => {
+        return config.handle == 'website';
+    },
+});
+```
+
+All together it works like this:
+
+<YouTube url="https://www.youtube.com/embed/fNBeSLDegqI" />
+
+<PostImage src="/assets/arts/field-actions-in-statamic-are-amazing/giphy-(2).gif" width="narrow" />
+
+## Let's sum up
+
+Field actions are **AMAZING**. I have so many ideas on how we can use those. For example, generating a summary for SEO using AI or adding a proper emoji to a section title (again, using AI).
+
+I'm sure that this will be one of my favorite features in Statamic.

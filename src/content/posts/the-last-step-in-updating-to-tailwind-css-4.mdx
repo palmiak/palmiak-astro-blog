@@ -1,0 +1,83 @@
+---
+title: "The last step in updating to Tailwind CSS 4"
+intro: "Some time ago I migrated from Tailwind CSS 3 to 4. The whole process went quite smoothly, but after a few days, I realized I overlooked a minor bug."
+description: "Ensure a smooth Tailwind CSS v4 migration with regression testing. Learn how Playwright can catch subtle UI bugs before they hit production. Avoid invisible changes and keep your design intact. Read the full guide!"
+pubDate: 2025-03-02
+updatedDate: 2025-03-02
+thumbnail: "arts/last-step-in-updating-to-tailwind-css-4/regression-testing.png"
+ogImage: "arts/last-step-in-updating-to-tailwind-css-4/post-cover--twitter-(42).png"
+tags:
+  - "testing"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+## Migration
+
+Overall the migration went smoothly. Running  `npx @tailwindcss/upgrade` took care of most of the heavy lifting. I just had to change a few class names in the CSS file and I was done.
+
+You should check [this guide](https://tailwindcss.com/docs/upgrade-guide) before running the migration as it answers most of the questions.
+
+## Great success
+
+After the migration, I checked if everything was fine - it looked so, so I pushed it to production. Afterward, I even published a post on social media mentioning how simple everything was:
+
+<PostImage src="/assets/arts/last-step-in-updating-to-tailwind-css-4/twittershots-palmiak_fp-1892520615883710836.png" width="narrow" />
+
+But...
+
+## I missed something
+
+After a few days, while checking something on my website I realized I missed something. Take a look at both versions side-by-side. Are you able to see the bug?
+
+<PostImage src="/assets/arts/last-step-in-updating-to-tailwind-css-4/both_versions.png" width="wide" />
+
+If not - don't worry. It is difficult to spot. Before I will tell you what went wrong - I will show you how to make sure you won't miss anything during your migration.
+
+## Enters regression testing
+
+I decided to use **Playwright**, but you can use other solutions like **Cypress**, **Percy**, or whatever you like.  
+
+After installation, I added two tests:
+
+```
+const { test, expect } = require('@playwright/test');
+
+test.describe.configure({ mode: 'parallel' });
+
+test('home screenshot testing', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForTimeout(5000); 
+
+    const screenshot = await page.screenshot({ fullPage: true });
+
+    expect(screenshot).toMatchSnapshot(screenshot);
+});
+
+test('article screenshot testing', async ({ page }) => {
+    await page.goto('/blog/trying-out-drupal-cms-10');
+    await page.waitForTimeout(5000);
+
+    const screenshot = await page.screenshot({ fullPage: true });
+
+    expect(screenshot).toMatchSnapshot(screenshot);
+});
+```
+
+They are quite straightforward - we visit a page, take a screenshot, and compare it with a previous version.  
+  
+Of, course you should add more URLs and screen resolutions, to make sure you'll test everything.
+
+You should run the test for the first time **before** you even start your migration process. This way you'll have the snapshot created from the **Tailwind CSS 3 version**. The first test **will fail** because there is no snapshot to compare with. From this point, the snapshot will remain the same until you run the test with the `--update-snapshots` parameter.
+
+In my case, after the migration, the article test failed with this diff image:
+
+<PostImage src="/assets/arts/last-step-in-updating-to-tailwind-css-4/diff.png" width="narrow" />
+
+As you can see, the links in the content were the problem. In the TWv4 version, they were almost invisible.
+
+## The moral
+
+Use **regression testing**, especially when you're updating a CSS framework that you use. Sometimes the differences are tiny and easy to overlook. But thanks to regression testing you'll see all of them quickly and you'll be able to fix them before reaching production.

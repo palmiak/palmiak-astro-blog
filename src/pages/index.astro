@@ -1,0 +1,95 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import BlogCard from '../components/BlogCard.astro';
+import NewsletterBox from '../components/NewsletterBox.astro';
+import Hero from '../components/Hero.astro';
+
+const allPosts = (await getCollection('posts')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const latestPosts = allPosts.slice(0, 2);
+const morePosts = allPosts.slice(2, 8);
+
+// Popular tags — same order and images as the original Statamic publication globals
+const popularTags = [
+  { slug: 'headless',     label: 'Headless',    image: '/assets/popular-tags/headless.png' },
+  { slug: 'astro',        label: 'Astro',       image: '/assets/popular-tags/astro.png' },
+  { slug: 'cicd',         label: 'CI/CD',       image: '/assets/popular-tags/automation.png' },
+  { slug: 'development',  label: 'Development', image: '/assets/popular-tags/development.png' },
+  { slug: 'conferences',  label: 'Conferences', image: '/assets/popular-tags/conference.png' },
+];
+---
+<Layout title="Home">
+  <Hero />
+
+  <!-- Latest posts (first 2) -->
+  <h2 class="container mx-auto px-5 text-center text-white text-xl font-bold font-palmiak-font-title m-0 mt-10">
+    Latest posts
+  </h2>
+  <hr class="gradient-line mx-auto" />
+
+  <div class="container mx-auto max-w-[1400px] px-5 grid grid-cols-1 min-[1024px]:grid-cols-2 gap-7">
+    {latestPosts.map((post) => (
+      <BlogCard
+        title={post.data.title}
+        slug={post.slug}
+        thumbnail={post.data.thumbnail}
+        tags={post.data.tags}
+        excerpt={post.data.description}
+        pubDate={post.data.pubDate}
+      />
+    ))}
+  </div>
+
+  <NewsletterBox />
+
+  <!-- Popular topics -->
+  <h2 class="container mx-auto px-5 text-center text-white text-xl font-bold font-palmiak-font-title m-0 mt-10">
+    Popular blog topics
+  </h2>
+  <hr class="gradient-line mx-auto" />
+
+  <div class="container mx-auto max-w-[1400px] px-5 justify-center items-start gap-7 flex flex-wrap">
+    {popularTags.map((tag) => (
+      <a
+        href={`/tags/${tag.slug}`}
+        class="px-4 pr-6 py-3 bg-palmiak_bg border border-indigo-950 border-opacity-50 rounded-full justify-start items-center gap-7 flex hover:bg-palmiak_lightdark transition-all duration-150 hover:bg-opacity-50"
+      >
+        <img
+          class="w-16 h-16 rounded-full"
+          src={tag.image}
+          alt={`Tag - ${tag.label}`}
+          width="66"
+          height="66"
+          loading="lazy"
+        />
+        <div class="text-white text-md font-bold font-palmiak-font-title">{tag.label}</div>
+      </a>
+    ))}
+  </div>
+
+  <!-- More posts (3-8) -->
+  <div class="container mx-auto max-w-[1400px] px-5 grid grid-cols-1 min-[1024px]:grid-cols-2 gap-7 mt-10">
+    {morePosts.map((post) => (
+      <BlogCard
+        title={post.data.title}
+        slug={post.slug}
+        thumbnail={post.data.thumbnail}
+        tags={post.data.tags}
+        excerpt={post.data.description}
+        pubDate={post.data.pubDate}
+        lazy={true}
+      />
+    ))}
+  </div>
+
+  <div class="container mx-auto px-5 text-center mt-10">
+    <a href="/blog" class="h-[62px] inline-flex rounded-full bg-linear-to-r from-palmiak_pink via-palmiak_green to-palmiak_blue p-[1px]">
+      <div class="text-white text-base font-bold font-palmiak-font-title tracking-wide inline-flex rounded-full h-full items-center justify-center bg-palmiak_bg back px-5 transition-all duration-150 hover:bg-opacity-80 text-[15px]">
+        load more articles
+      </div>
+    </a>
+  </div>
+</Layout>

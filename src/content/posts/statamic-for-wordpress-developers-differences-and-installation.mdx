@@ -1,0 +1,174 @@
+---
+title: "Statamic for WordPress developers - differences and installation"
+intro: "It's time to start comparing Statamic and WordPress. They are both great CMSs and in many places, they work similarly. On the other hand, some details that make them different."
+description: "It's time to start comparing Statamic and WordPress. They are both great CMSs and in many places, they work similarly. On the other hand, some details that make them differ."
+pubDate: 2024-02-07
+updatedDate: 2024-04-18
+thumbnail: "arts/statamic-for-wp/statamic-2.png"
+ogImage: "arts/statamic-for-wp/post-cover--twitter-(20).png"
+tags:
+  - "statamic-for-wp-devs"
+  - "statamic"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+On the **Statamic** website, you can find the best high-level comparison between those two CMSs:
+
+<PostImage src="/assets/arts/wp-vs-statamic/przechwytywanie-zawartosci-sieci-web_2-2-2023_03822_statamic.com.jpeg" width="narrow" caption="Statamic vs WordPress" />
+
+I think that's the best way to compare them. They both have some features and they won't fit you 100%. And that's perfect - every software has its pros and cons.
+
+But the truth is, it's not that simple, and we have to dive a bit deeper to compare them.
+
+## Differences and similarities 
+
+### Who is it for
+
+**Everyone can use WordPress**. Everyone can install it, and start building a website. Many hosting services will install it for you (and if they don't, you can move all the files via FTP) and you only have to enter your credentials. 
+
+The next steps can be simple too - thanks to **Full Site Editing** or **page builders** you can design and create your website. 
+
+You can also use more advanced methods to install and build websites(hello roots.io stack). Overall, WP can be used by total beginners and by advanced developers.
+
+**Statamic** on the other hand raises the bar a bit higher. It is simple if you are a developer with a basic knowledge of **PHP** and **composer**. Knowing **Laravel** is a nice bonus, but it's not necessary.
+
+When it comes to building websites you'll also need a basic understanding of how templating engines work. 
+
+It also requires a bit of know-how on how to model content.
+
+This means, that if you are a developer, working with both **WP** and **Statamic** will be quite a simple task. Building a website with **Statamic **for non-developers might be a bit more complicated or even impossible.
+
+### Technology underneath
+
+**WordPress **is built with PHP (at the moment PHP 7.4 is the minimum required version). It also uses **React** (especially when you are using the Block Editor) and **jQuery** for a lot of front-end stuff (which is quite OK, because most plugins use it, so we can say that's a standard here).
+
+WP also requires **MySQL/MariaDB**.
+
+**Statamic** is also built with PHP (minimum PHP 8.0.2) and it's created on top of Laravel. The admin panel is built using **VueJS** and on the front, you'll see **Alpine.js** and **Tailwind CSS** very often (but you can bring whatever you want).
+
+### Themes vs Starter Kits
+
+The number of free and premium themes was one of the reasons for **WordPress**' success. With one click you can change how your website looks. At the moment there are 11k free themes in the official repository. In theory, themes should be responsible just for the looks, not the functionality (this is plugin territory). It's worth mentioning that they are easily updateable.
+
+**Statamic** took a slightly different approach. It has **starter kits**, which are sets of initial design and functionality that you install and modify. This means, that opposite to WP's approach:
+
+- you can't change your website look with one click
+- a starter kit isn't updatable (although it depends on how the starter was built)
+
+The official repository has around 40 starter kits, which isn't an impressive number compared to what WP has to offer. On the other hand, it's enough to get you started and to understand how some things work.
+
+<PostImage src="/assets/arts/statamic-for-wp/starter_kits.png" width="wide" />
+
+### Plugins vs Addons
+
+I mentioned that themes were one of the reasons for WordPress' success. **Plugins** were the second one. With one click you can extend it a lot. With over 50k free plugins in the official repository (and a lot more premium plugins living outside of the repository), you can transform WP into an e-commerce site, job listing, LMS, and more.
+
+While the number is impressive, WP plugins are often riddled with security issues. Also, because of the WP DB structure, updates and rollbacks can be sometimes problematic.
+
+Statamic is very similar in this department - it just calls them **addons**. There are around 300 of them in the official repository. While there are many interesting addons there, it's much more difficult to find the ones that will fit your needs, especially if you need something less popular. But that's obvious when you compare 50k to 300.
+
+### What's inside of the box
+
+WordPress, by default, comes a bit barebones. Inside the box, you'll get the **Block Editor** (which you don't need to use), a few **default themes**, **REST API,** and **access to thousands of plugins and themes**. While this is quite useful, because you can make sure you'll only the things that you need, it can also lead to some surprising conflicts between the core and some plugins.
+
+Another side-effect of this approach non-consistent UI of some plugins compared to the core UI. 
+
+**Statamic** is packed with goodies and it may turn out that you won't need any plugins/addons at all:
+
+- you can create your **blueprints**(custom fields) and **collections**(post types) - you don't **Advanced Custom Fields** for this
+- the **asset manager** is much more robust, so you don't any additional gallery management plugin
+- **forms** are also included - no need for CF7 or any similar plugin.
+- both **REST** and **GraphQL APIs** are included (there is a minor catch though - not in the free version, more on that later)
+- **multilingual** - no more WPML (again, only in the pro version)
+- **antlers** or **blade** template engine
+
+The cool part about this approach is that Statamic gives a much better experience when it comes to having a consistent UI. 
+
+<PostImage src="/assets/group-1.png" width="wide" />
+
+### Storing data
+
+**WordPress** uses **MySQL/MariaDB** by default but there is also a plugin (of course there is a plugin) for using **SQLite**. All of them are very common, and it's very easy to find cheap and solid hosting for this. 
+
+The only problem with using those DBs is the moment when you want to use this data on staging or sync it - again, some plugins can help you, but if you are building something more complicated you might run into [some problems ](https://deliciousbrains.com/wp-migrate-db-pro/doc/mergebot/)
+
+**Statamic** gives you much more flexibility - by default, it uses flat files to store data (which is amazing for small/medium websites). Thanks to Laravel underneath it's relatively simple to switch to any type of database - take a [look here](https://statamic.dev/tips/storing-users-in-a-database) for an example.
+
+I love the **flat-file approach** more and more, especially during the development phase (where all developers have the same content inside of a git repository) and for smaller websites where having an SQL server feels like an overkill.
+
+### Pricing
+
+WordPress core is free and it's possible to have your website completely free as well. The only thing you'll end up paying might be just the server and the domain.
+
+Everything changes if you try to add a few premium plugins to match Statamic core:
+
+- **ACF** - $39/year
+- **Gravity Forms **- $59/year
+- **WPML** - $40/year
+
+That gives us around $119/year. 
+
+**Statamic** has both a free version (that doesn't give you APIs, multilingual, or more than 1 form) and a premium one that costs $275/year/site for the first year and $65/year later on (there is also a SaaS type license and a master license if you are building more websites).
+
+This means, that while **Statamic** might look more expensive, with the right amount of time and premium plugins, it may turn out to cost the same as WP with plugins. So it might end in a tie.
+
+## Installation
+
+OK, so we know all the theory. Time to install **Statamic** on our machine and start coding.
+
+The installation process is straightforward if you take care of the basics first:
+
+- Have PHP 8.0.2+ installed (with [those](https://statamic.dev/requirements) extensions)
+- Have composer installed
+
+Got them? Perfect. So let's install the **Statamic CLI**. This is just a one-time operation (just like with **WP-CLI**). To do so, just run in your terminal:
+
+```
+composer global require statamic/cli
+```
+
+Next, run
+
+```
+statamic new project_name
+```
+
+it will create a folder `project_name` and install everything. In the end, it will ask about super admin credentials and that's it. **Statamic **is installed.
+
+The last step remaining is launching the server. There is a reason I didn't mention anything about LAMP or WAMP. Just run:
+
+```
+php artisan serve
+```
+
+If you want to try the PRO version, open `config/statamic/editions.php` and set `'pro' => true`. It will work great on your localhost.
+
+If you want to visit the **Control Panel**, go to `127.0.0.1:8000/cp`.
+
+Here is the video of the installation process:
+
+<YouTube url="https://www.youtube.com/embed/akMouexZGz8?si=rpDGab7PMUAiravH" />
+
+Wasn't that hard, right? 
+
+## Time to sum up
+
+So right now we know those CMSs differ from each other and where they are quite similar. Also, finally, we installed **Statamic** on our machine. From now on we'll dive deeper into more technical things. Next stop - **Control panel, collections, and data modeling**.
+
+## Other chapters
+
+1. [**Intro**](https://maciekpalmowski.dev/blog/statamic-for-wordpress-developers-intro/)
+2. [**Differences and installation**](statamic://entry::baa9e84c-281f-4d34-b01b-3f71cda37a02)
+3. [**Data modeling and collections**](statamic://entry::747874e3-6a00-4c42-905d-e5edac4d24da)
+
+## How not to miss an article?
+
+There are four ways:
+
+- just visit my blog once a week and check if a new article is added (not recommended)
+- write a script that will do it for you (better, but still meh)
+- follow me on [Twitter](https://twitter.com/palmiak_fp) (quite OK, but you might still miss it)
+- [subscribe to my newsletter](https://newsletter.maciekpalmowski.dev/) - not only you'll get notifications about new blog posts, but you'll also receive a cool set of weekly links (highly recommended)

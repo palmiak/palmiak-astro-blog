@@ -1,0 +1,71 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import CircleBg from '../components/CircleBg.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  isPost?: boolean;
+}
+
+const {
+  title,
+  description = 'Web developer, public speaker, Open Source enthusiast.',
+  ogImage,
+  isPost = false,
+} = Astro.props;
+
+const siteName = 'Maciek Palmowski';
+const fullTitle = title ? `${title} | ${siteName}` : siteName;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/fav/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/fav/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/fav/favicon-16x16.png" />
+  <link rel="manifest" href="/assets/fav/site.webmanifest" />
+  <link rel="mask-icon" href="/assets/fav/safari-pinned-tab.svg" color="#18181b" />
+  <meta name="msapplication-TileColor" content="#18181b" />
+  <meta name="theme-color" content="#18181b" />
+
+  <link rel="preload" href="/fonts/unbounded-v7-latin-regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/unbounded-v7-latin-700.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/montserrat-v26-latin-ext-regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/montserrat-v26-latin-ext-italic.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/montserrat-v26-latin-ext-700.woff2" as="font" type="font/woff2" crossorigin />
+
+  <title>{fullTitle}</title>
+
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalUrl} />
+
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonicalUrl} />
+  {ogImage && <meta property="og:image" content={new URL(ogImage, Astro.site)} />}
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:creator" content="@palmiak_fp" />
+  <meta name="twitter:title" content={fullTitle} />
+  <meta name="twitter:description" content={description} />
+  {ogImage && <meta name="twitter:image" content={new URL(ogImage, Astro.site)} />}
+
+  <meta name="view-transition" content="same-origin" />
+  <script data-goatcounter="https://palmiak.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+
+<body class="bg-palmiak_bg font-palmiak-font leading-normal text-zinc-300 grid grid-cols-1 gap-10 pt-[180px] max-[660px]:pt-[104px]">
+  <Header isPost={isPost} />
+  <slot />
+  <Footer />
+  <CircleBg />
+</body>
+</html>

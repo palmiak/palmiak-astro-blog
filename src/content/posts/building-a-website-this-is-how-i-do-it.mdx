@@ -1,0 +1,101 @@
+---
+title: "Building a website? This is how I do it"
+intro: "Apart from being a DevRel, I have quite a lot of experience building websites. With my wife, we created big and small sites for many clients. Here's what I learned over the years."
+description: "there is no ultimate stack that would fit all your needs. You will use something else based on what you are working on and for whom you are working. No matter what tech you choose, you should aim for simplicity and ease of maintenance."
+pubDate: 2023-10-30
+updatedDate: 2023-10-31
+thumbnail: "arts/tech-stacks/tech-stacks.png"
+ogImage: "arts/tech-stacks/post-cover--twitter-(15).png"
+tags:
+  - "cms"
+  - "work"
+  - "development"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+## It depends
+
+Let me start by stating the obvious -  there is no ultimate stack that would fit all your needs. You will use something else based on what you are working on and for whom you are working. No matter what tech you choose, you should aim for simplicity and ease of maintenance.
+
+And remember - I'm writing from the perspective of a single developer (not a team nor agency) who created most websites for small and medium clients.
+
+## WordPress
+
+You can love **WP** or hate it, but it's still the most popular CMS out there. This means most users will be familiar with it (which will make the training easier). Also, [**WordPress**](https://wordpress.org) has a lot of plugins that will allow you to add functionality easily (which is quite important when you are working on your own). There are also a lot of hosting companies that specialize in it.
+
+**WP** is also perfect for MVPs - you can try some ideas quickly to see if they work.
+
+Of course, it's not that simple. There are some downsides, too. Let's be honest - **WordPress** requires constant maintenance on many levels:
+
+- updating **core** and **plugins**
+- making sure that the update didn't break anything (looking at you** Gutenberg**)
+- making sure that your hosting didn't update **PHP**, which also can break something 
+
+In short - it's a regular job to keep **WordPress** alive. Luckily, in most cases, it's really not as bad as it sounds, but sometimes shit happens.
+
+To sum up - I would go with **WP** in most cases when working for someone. WordPress can really be a great tool - it can also be a nightmare if done wrong.
+
+Personally, I always use:
+
+- **Advanced Custom Fields** for content modeling
+- **Timber **for a better developer experience when writing themes
+- **Yoast SEO** for SEO
+
+<PostImage src="/assets/arts/cms-types/screely-1692351218563.png" width="wide" />
+
+## Static or Headless WordPress
+
+I mentioned that **WordPress** has some flaws. Especially the maintenance part doesn't sound too good. We can solve it by going headless or static. I already wrote a bit about this [here](https://maciekpalmowski.dev/is-it-worth-converting-your-wordpress-to-headless/).
+
+But still, this can help a bit. Sadly, it introduces some new problems - you'll have to wait a moment for each deployment to happen, and you have to add some workarounds about forms, comments, and searches.
+
+Personally, I would advise this approach only to more tech-savvy people. Trying to explain the concept of a static website can be quite difficult. On the other hand, sometimes spending some time on education is worth it, especially when the client updates the website once per month. 
+
+I would recommend using the **SimplyStatic** plugin to convert your website to static.
+
+## Statamic
+
+[**Statamic**](https://maciekpalmowski.dev/when-using-statamic-over-wordpress-is-a-good-idea/)[ is my personal favorite](https://maciekpalmowski.dev/when-using-statamic-over-wordpress-is-a-good-idea/) when it comes to CMSs. I really enjoy working with it. Even this blog is created with Statamic. 
+
+It's amazing when it comes to modeling your content, it's built on a strong foundation (Laravel), and it doesn't require a database.
+
+On the other hand, it's not WordPress - some people are really used to it, and introducing something else can be problematic. Also, out-of-the-box, you won't find that many plugins. So, if you know that your client is an adventurous one, fulfilling all his dreams might take a while.
+
+Still - I would recommend it for more tech-savvy people who aren't afraid of using something new and just want something that works. **Statamic** can also be used as static or headless. 
+
+The cool part about Statamic is that you might not need any add-ons because Statamic is already filled with most of the required stuff.
+
+<PostImage src="/assets/arts/cms-types/screely-1692350858678.png" width="wide" />
+
+## Markdown-based CMS together with a fancy SSG
+
+From a developer's perspective, those are amazing. Content is stored in markdown files, all the edit history is stored in Git, and you can choose your perfect editor to write your content. 
+
+But let's be real - for some reason, I never had a client for such a website. Why? Mostly because developers are rarely people who require websites.
+
+Of course, there are solutions that can make working with such a stack simpler (**Frontmatter CMS**, **Tina CMS**, or **Nuxt Studio**), but still, the bar is too high for most users. And believe me - you don't want to waste your time constantly explaining how some things work.
+
+I would use them for my personal projects, though. Such websites require almost no maintenance once you build them. And I love markdown. Together with **Astro **it's a perfect setup in such case.
+
+## SaaS solutions
+
+There are situations where using a SaaS will be the quickest way to go:
+
+- newsletter - maybe **Substack**?
+- CMS - why not **Webflow**?
+- E-commerce - **Shopify**?
+
+They can be expensive, you don't have full control over your content, and sometimes you don't even have an API - but who cares in some cases? 
+
+If a client wants a working website/newsletter/e-commerce quickly, then SaaS solutions are perfect for it. And if their idea will "click" and they will need more flexibility, then you can start talking about introducing something else.
+
+## In the end, it's all about making lives simpler
+
+As engineers, we love to overcomplicate stuff. Adding abstractions (because, at some point, they might be useful), complicated pipelines (for a landing page), etc.
+
+The truth is - our goal is to create a website that will be easy to edit by the user (so you won't have to) and easy to maintain by you (so you won't have to waste your time on it). It's that simple. We can get into CMS/language wars, but most clients don't care about it until everything works.
+
+Let's leave the complicated stacks for complicated applications that really require it. 

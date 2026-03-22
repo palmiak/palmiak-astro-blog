@@ -1,0 +1,60 @@
+---
+title: "Implementing Astro live previews in headless Statamic"
+intro: "Using Astro with different headless CMSs is excellent and relatively easy to achieve. The only problem is dealing with the live previews."
+description: "Using Astro with different headless CMSs is excellent and relatively easy to achieve. The only problem is dealing with the live previews."
+pubDate: 2022-10-23
+updatedDate: 2022-11-07
+thumbnail: "arts/statamic-astro-previews/statamic-astro-previews.png"
+ogImage: "post-cover-(8).png"
+tags:
+  - "statamic"
+  - "astro"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+I already wrote an article about this for [Buddy](https://buddy.works/guides/statamic-rest-api) on using headless Statamic. If you want to learn a thing or two about head there first.
+
+## Why it''s a problem?
+
+**Astro, **by default, is a Static Site Generator, which means that every time we change something in our content, we must rebuild the whole website. And this would mean waiting for each change.
+
+## Server Side Rendering to the rescue
+
+**Astro **introduced SSR some time ago and using this, we can create previews (and many other cool things) without rebuilding everything. We''ll just need one extra server where SSR will work (e.g., Netlify).
+
+Also, it''s worth mentioning that we can use a similar method not only for Astro but also for other Jamstack frameworks that have the option to use SSR.
+
+Let''s imagine that our page looks like this:
+
+Simple, right?
+
+Let''s add some simple **SSR**:
+
+Let''s take a look at what happened here. 
+
+First of all, we add `is_preview`, thanks to setting it as true or false, we''ll be able to populate data with correct values.
+
+Also, it''s essential to know that `getStaticPaths` is ignored when running in SSR mode.
+
+Looks ok? More or less - time to go to **Statamic**.
+
+## Live previews in Statamic
+
+**Statamic **has a cool feature that lets us change the URL of the live preview. Go to [this page](https://statamic.dev/live-preview#preview-targets) to learn more.
+
+So, in our case, we should just set our link to our server with SSR enabled (for example, **Netlify**).
+
+It''s also worth mentioning that **Statamic **adds two extra parameters to the URL `live-preview` and `token`. Thanks to them, **Statamic** can deal with non-saved data.
+
+So, after connecting everything, we can see that... the data doesn''t refresh.
+
+Why? Because we forgot about passing the `live-preview` and `token` parameters. The fix is straightforward:
+
+Now, everything should work.
+
+## What should the final setup look like?
+
+In my case, it looks like this:

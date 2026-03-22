@@ -1,0 +1,110 @@
+---
+title: "Is it worth converting your WordPress to headless?"
+intro: "Many companies are advocating for headless WordPress. But is it really so amazing? Does it solve all the problems that WordPress has? Let's check out."
+description: "Over time we can hear more and more voices advocating for the WordPress headless approach. The question is - is this really the best for WP to go, or maybe it's just another marketing stunt? Spoiler alert - it's a bit of both."
+pubDate: 2023-05-12
+updatedDate: 2023-05-12
+thumbnail: "arts/headless-wp/headless_wp.png"
+ogImage: "arts/headless-wp/post-cover--twitter-(3).png"
+tags:
+  - "wordpress"
+  - "headless"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+Over time we can hear more and more voices advocating for the WordPress headless approach. The question is - is this really the best for WP to go, or maybe it's just another marketing stunt? Spoiler alert - it's a bit of both.
+
+<Alert>
+This article is based on my talks from <strong>Atarim Web Summit</strong> and <strong>WordCamp Gliwice</strong>.
+</Alert>
+
+## A bit of theory
+
+Before diving into the details, let me show you the differences between those architectures.
+
+In the traditional WordPress setup, it functions as a **monolith**, with the admin panel allowing users to create and store data, while the theme is responsible for presenting this data on the front end. The theme interacts directly with the database making it a unified application. 
+
+<PostImage src="/assets/arts/headless-wp/monolith.png" width="narrow" caption="Monolith WordPress" />
+
+However, with a **headless** WordPress approach, the front end is completely separate, functioning as an independent application like **Next.js, Astro, or Laravel**. For both to communicate, we need to introduce some API. We can either use the built-in **REST API **or install the **GraphQL API** plugin.
+
+<PostImage src="/assets/arts/headless-wp/headless.png" width="narrow" caption="Headless WordPress" />
+
+If you look at the graphs explaining what it looks like, you might probably see the most common headless schema looks like a monolith but with an extra step. And that's totally true. The most common example showing how headless architecture works is also one of the worst ones. 
+
+The true power of headless starts when working with more complicated stacks. For example, like the one where our WordPress is the **single source of truth** that powers all our landing pages and mobile apps.
+
+<PostImage src="/assets/arts/headless-wp/advanced-headless-v1.png" width="narrow" caption="Advanced Headless " />
+
+Or when our website is **a hub** that gathers data from multiple data sources.
+
+<PostImage src="/assets/arts/headless-wp/advanced-headless-v2.png" width="narrow" caption="Advanced Headless" />
+
+## What are the most commons reasons to try headless?
+
+Now it's time to list some of the most popular reasons why we are told we should try headless. Also, I will try to counterpoint them where possible.
+
+### Performance
+
+Very often, we hear that going headless will make our website faster. And sometimes, that is true, especially when we decouple our CMS and convert to static. And while it's true that static HTML will always be faster than dynamic PHP, we don't need to change the architecture to achieve that. There are plugins that can do the same (**WP2Static** or **Simply Static**), or we can use a more aggressive cache.
+
+Another popular argument is related to** loading only the resources we need and having full control over them**. Personally, I think that both WP and headless give us similar control over what we are loading. The biggest difference lies in the way how we do this. In the headless approach, we explicitly have to add the resource we want to use. In WP, we often have to remove it from certain pages (especially when using plugins). So, it's more of an Opt-in vs. opt-out thing.
+
+Let's also don't forget that some JS frontends load quite a lot of not needed JS. Take a look at [this page](https://www.zachleat.com/web/site-generator-review/) to see the differences between frameworks. Next.js loads **210 KB of JS**, if you want it or not.
+
+### Security
+
+This is another angle on how headless is advertised. And sometimes, it is true that our headless WordPress will be more secure than in the monolith approach, especially if we are converting our website into static and removing WP from being publicly available over the internet.
+
+But apart from this case, we still have to take care of our WordPress as usual. Moreover, we also have to take care of our frontend application too. 
+
+### Costs
+
+Is headless cheaper than monolithic WP? Sometimes it is:
+
+- We can definitely lower the cost by having a cheap WP server, Cloudflare, and converting our websites into static.
+- when we are using a lot of money because the monolithic architecture slows down the collaboration
+
+But sometimes it's more expensive:
+
+- While Netlify and Vercel are free to start, later it's becoming more and more expensive
+- WP developers are, on average, **cheaper** than ones that specialize in JS
+
+### Simplicity
+
+This a weird argument, but let''s try to tackle it too. Overall I see it as an ultimate "old" PHP vs. "modern" JS argument. In short - they are trying to convince us that just by switching to modern JS, all our problems will be gone. And that''s not true. There is a cost to this modern JS approach. Go and check out this [great article](https://dev.to/oxharris/rethinking-the-modern-web-5cn1) by **Oxford Harrison**.
+
+Also, as WP developers, we often use plugins to do some of our work, and it may turn out that our favorite plugin isn't supporting the API we need to use. Then we have to write this integration ourselves. 
+
+Of course - there are cases when moving to headless will help a lot. But it's more related to **how** we do it and not just because we changed our architecture.
+
+## True reasons to go headless
+
+On the other hand, there are some reasons that are, in my opinion, a bit more important why going headless can be a good choice.
+
+### Freedom
+
+The cool part about headless is that **you aren't a slave of your CMS anymore**. Don't get me wrong - I really love PHP, but not everyone has to. And that's perfectly fine.
+
+Thanks to headless, you can choose a different language on the front end. It can also be very important from a hiring perspective - you can be more flexible in finding talents.
+
+### Replacing parts with ease
+
+Another great power of headless is the way how easily you can replace your parts. It's like playing with LEGOs. You remove a few bricks, change to different ones, and you are done. 
+
+### Developer Experience
+
+**I love WordPress for its user experience**, but the developer experience lacks a bit. 
+
+Using WP just as an API for some more developer-oriented applications also gives us access to this better DevExp and tooling that WordPress often lacks.
+
+## So, is it worth going headless?
+
+It won't be a surprise if I will tell you that **IT DEPENDS**. Why? Because it's just an architecture that will work in some cases and under some circumstances. If you went for Hype Driven Development and adopted headless that way, there is a bigger chance you will fail.
+
+You or your engineers should always evaluate any solution based on your product or company needs, not because some developers on Twitter said that headless is cool or that Google or Facebook is using it.
+
+Don't get me wrong - there are many use cases when headless will fit perfectly, and if you feel that you'll benefit from decoupling your WordPress, go for it. Remember, it's not a silver bullet to solve all your problems.

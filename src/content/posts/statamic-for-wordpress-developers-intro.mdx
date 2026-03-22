@@ -1,0 +1,80 @@
+---
+title: "Statamic for WordPress developers - intro"
+intro: "Over the Christmas table, I got the idea to create a series of articles about Statamic but with WordPress developers in mind. In this part, I want to mostly focus on why I want to write this series and what you can expect from it."
+description: "Statamic vs. WordPress: Embracing both CMS worlds. Unveiling Statamic's unique strengths. Explore admin panels, data modeling, and customization. Discover solutions beyond WordPress."
+pubDate: 2024-01-16
+updatedDate: 2024-04-18
+thumbnail: "arts/statamic-for-wp/statamic-1.png"
+ogImage: "arts/statamic-for-wp/post-cover--twitter-(19).png"
+tags:
+  - "statamic-for-wp-devs"
+  - "statamic"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+## Why do I like Statamic and does this mean I hate WordPress?
+
+Let's start with the second part - I still enjoy **WordPress,** I still love the community around it, I'm constantly observing what is happening there, and tinkering with it. So if you thought, you wouldn't see me at WordCamps, you were wrong.
+
+On the other hand, I also enjoy discovering other CMSs. One of the things I loved in **Statamic**, was the fact that it had this vibe of... my WordPress stack. As some of you know I'm rather conservative about my WordPress stack - this stack on the other hand is quite unorthodox compared to most WordPress installs. It consists of:
+
+- **Bedrock** - so I can use the power of composer in WordPress
+- **Timber **- so I can benefit from Twig in WordPress
+- **Advanced Custom Fields **- so I can prepare more complex data structures
+- **Tailwind CSS**- my wife uses it, so...
+
+All of those things are available in Statatamic:
+
+- it's powered by composer 
+- there is a templating engine called **Antlers**, which is similar to Twig
+- I can build all those complex data structures too (but without any plugin)
+- Laravel developers love Tailwind too, although I can use whatever I want
+
+On the other hand, **Statamic** offers a few more cool features:
+
+- by default it uses files to store data - for most websites that approach (together with git) is much better and safer than using a database
+- it's built on the shoulders of a popular PHP framework - Laravel
+- the developer experience is better
+- it's possible to transform it to your needs
+
+<PostImage src="/assets/group-1.png" width="wide" />
+
+## Why do I want to write this series of articles?
+
+Apart from the fact that I promised myself to write [20 articles on this blog](https://maciekpalmowski.dev/goals/2024/), I think that **Statamic **is just a great CMS that doesn't get all the attention it should get. Also, learning something new and exploring new worlds is valuable for every developer. I hope that even if you don't fall in love with **Statamic** as I did, you'll discover some solutions that WordPress doesn't have and create a plugin to fix it.
+
+## What's the plan?
+
+At the moment I would like to concentrate on:
+
+- Intro - this article
+- Key differences & similarities between those CMSs and installation 
+- The admin panel, collections (post types in WP), and data modeling (the built-in ACF)
+- Taxonomies, navigation, assets, globals
+- Using Antlers AKA building the theme
+- Forms
+- Statamic as a Headless CMS
+- Custom tags
+- Custom fields
+
+I hope you'll enjoy this. I will try to reference how all of those things are done in WordPress, so you can always see the difference. 
+
+On the other hand, I won't dive deeper into Laravel-related stuff. Why? First of all, I don't feel I'm a person for the job here, and also because I don't think it would bring additional value. I won't dive into the addons territory too, the same way I don't like to write about plugins - just pick the ones that fit you best. 
+
+## How not to miss an article?
+
+There are four ways:
+
+- just visit my blog once a week and check if a new article is added (not recommended)
+- write a script that will do it for you (better, but still meh)
+- follow me on [Twitter](https://twitter.com/palmiak_fp) (quite OK, but you might still miss it)
+- [subscribe to my newsletter](https://newsletter.maciekpalmowski.dev/) - not only you'll get notifications about new blog posts, but you'll also receive a cool set of weekly links (highly recommended)
+
+## Other chapters
+
+1. [**Intro**](https://maciekpalmowski.dev/blog/statamic-for-wordpress-developers-intro/)
+2. [**Differences and installation**](statamic://entry::baa9e84c-281f-4d34-b01b-3f71cda37a02)
+3. [**Data modeling and collections**](statamic://entry::747874e3-6a00-4c42-905d-e5edac4d24da) 

@@ -1,0 +1,223 @@
+---
+title: "Flotiq CMS x Astro"
+intro: "Using Astro with headless CMSs is a breeze. I will show you several examples of those CMSs in the upcoming weeks. We're starting with Flotiq. Let's dive in!"
+description: "Using Astro with headless CMSs is a breeze. I will show you several examples of those CMSs in the upcoming weeks. We're starting with Flotiq. Let's dive in!"
+pubDate: 2025-04-07
+updatedDate: 2025-04-07
+thumbnail: "arts/flotiq-cms-astro/floatiq.png"
+ogImage: "arts/flotiq-cms-astro/post-cover--twitter-(44).png"
+tags:
+  - "cms"
+  - "astro"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+## What is Flotiq
+
+[Flotiq](https://flotiq.com/?utm_campaign=flotiq_cms_astro&utm_medium=referral&utm_source=blog_maciejpalmowski) is a fascinating Polish headless CMS. I discovered it somewhat accidentally when Paulina wrote to me on LinkedIn asking about DevRel-related stuff. 
+
+I decided to give it a try and I liked it. It has all the features that a headless CMS needs:
+
+- Custom post types
+- **Tags**
+- Media management
+- Extendability using plugins (or building your own)
+- SDK, REST, or GraphQL APIs
+
+<PostImage src="/assets/arts/flotiq-cms-x-astro/zrzut-ekranu_6-4-2025_12183_editor.flotiq.com.jpeg" width="wide" />
+
+### What do I enjoy about it?
+
+When I tried Flotiq for the first time, it felt simple. I didn't have to read docs to achieve things that most of this CMS will be doing (and let's remember users use CMSs differently than us, developers).
+
+The process of creating a definition is straightforward. There are enough content types to build almost anything you want (including block editor, markdown, text fields, lists, relations, etc). Content creation it's was OK too (although there is room for improvement).
+
+Using the API was also straightforward - so connecting everything with Astro was a breeze.
+
+I also enjoyed the **Favorite **option in the admin panel. It allows you to star pages in the admin panel that you use more often and have them listed under favorites. A really neat and helpful thing.
+
+**Webhooks** are also nice - they are very useful if you want to automate some things.
+
+**Forms **- you can create embeddable form for each post type and put them on your website - that's a really useful feature.
+
+### What could be done better?
+
+While I enjoyed a lot about Flotiq, some things could be polished a bit more.
+
+I said that the interface didn't cause me any problems and that's true. But I feel there is room for improvement. Maybe hiding some things would be a good idea (eg API documentation link - most users won't even use it). I'm not saying it's bad - it just can be better.
+
+There are two plugins that IMO should be part of the core - Slugs and Singular. There is no explanation why they aren't. Apart from the fact that on the free tier, you can only use one, the fact of using plugins might force you to bump your plan.
+
+What I also miss are more options when designing a post type page. For example, adding inputs in columns, having tabs to group content etc. I think that **Statamic** is a very good example here.
+
+Please, add a possibility to close the bar that says "You''ve reached your free plan limit! Upgrade now to keep everything running smoothly". I know, I installed a plugin :D 
+
+## Mapping data
+
+What we want to create in the end is a very simple blog that consists of:
+
+- title
+- description - which is an intro
+- content 
+- publication date
+- update date
+- hero image
+
+We'll later connect it to Astro's default blog theme.
+
+To achieve this we'll need to go to the **Definition Builder**, select **Add Content Type Definition**, and name it `Blog Post`.
+
+<PostImage src="/assets/arts/flotiq-cms-x-astro/zrzut-ekranu_6-4-2025_122037_editor.flotiq.com.jpeg" width="wide" />
+
+Next, we have to add all the required fields:
+
+- Hero Image - media
+- Title - text
+- Description - textarea
+- Content - markdown
+- Slug - text
+
+After doing this, you need to go to **Plugins**, install the **Slugs** plugin, and configure it by selecting a proper content type, selecting `title` as source field and `slug` as a target field.
+
+<PostImage src="/assets/arts/flotiq-cms-x-astro/zrzut-ekranu_6-4-2025_122110_editor.flotiq.com.jpeg" width="wide" />
+
+Now it's time to connect this with **Astro 🚀**
+
+## Connecting to Astro
+
+We're going to use the default Astro Blog template. While it's not robust and full of features it's perfect for our example.
+
+<Alert>
+While there is an <strong><a class="underline" href="https://docs.astro.build/en/guides/cms/flotiq/" target="blank">official Flotiq guide</a></strong> in the Astro documentation, we''re going to do it a bit differently by leveraging the power of Content Layer API.
+</Alert>
+
+First, install the latest version of Astro and select the **blog template**.
+
+**Flotiq **has a neat SDK, and installing it will be the first step, to do so, first visit the Flotiq admin panel and copy the API key (if you're building a static site, use the read-only).
+
+Now open or create `.env` file and add:
+
+```
+FLOTIQ_API_KEY=<paste your key>
+```
+
+and run:
+
+```
+npm install flotiq-api-ts
+```
+
+Next step is to update the `src/content.config.ts`:
+
+```typescript
+import { defineCollection, z } from 'astro:content';
+
+import { FlotiqApi } from "flotiq-api-ts";
+
+const blog = defineCollection({
+	loader: async () => {
+		const flotiq = new FlotiqApi(import.meta.env.FLOTIQ_API_KEY);
+		const posts = await flotiq.BlogpostAPI.list();
+
+		return posts.data.map((post) => ({
+			...post,
+			id: post.slug,
+			pubDate: post.internal?.publishedAt,
+			updatedDate: post.internal?.updatedAt,
+		}));
+	},
+	
+	schema: z.object({
+		id: z.string(),
+		title: z.string(),
+		description: z.string(),
+		pubDate: z.coerce.date(),
+		updatedDate: z.coerce.date(),
+		heroImage: z.string().optional(),
+		content: z.string(),
+	}),
+});
+
+export const collections = { blog };
+```
+
+This way we won't have to touch other parts of the code(almost) and just map variables accordingly. 
+
+Time to take care of displaying content and hero images.
+
+### Showing imported Markdown
+
+Displaying Markdown, which got imported from an API is not as simple as it might be. To do so, you'll need to install
+
+```
+npm install @astropub/md 
+```
+
+and correct the config a bit:
+
+```
+import markdownIntegration from '@astropub/md'
+export default defineConfig({
+	integrations: [markdownIntegration()],
+});
+```
+
+The last part you'll need to add is:
+
+```
+---
+import { Markdown } from '@astropub/md'
+---
+
+<Markdown of={ post.data.content} />
+```
+
+to `pages/blog/[...slug].astro` 
+
+### Images
+
+The default Astro Blog theme handles images in a rather simple way - it just shows the images as they are by passing the URL. And while it works, we can(and should) do better. That's why we'll use the `<Image />` component to optimize the images.
+
+But before we do, we need to change our content config a bit:
+
+```
+return posts.data.map((post) => ({
+	...post,
+	id: post.slug,
+	pubDate: post.internal?.publishedAt,
+	updatedDate: post.internal?.updatedAt,
+	heroImage: post.heroImage[0]?.url ? 'https://api.flotiq.com' + post.heroImage[0]?.url : undefined,
+}));
+```
+
+This is necessary because the `Image` requires the full URL to the image.
+
+Next, because we need to optimize images coming from the outside, we need to open our Astro config file again and add:
+
+```
+export default defineConfig({
+    // other stuff goes here
+	image: {
+		domains: ["api.flotiq.com"],
+	}
+});
+```
+
+The last step is to edit `BlogPost.astro` component and `index.astro` page. In both cases you need to add:
+
+```
+import { Image } from 'astro:assets';
+```
+
+in the frontmatter part and replacing the `<img src...` with `<Image src...` (rest of parameters stay the same).
+
+<PostImage src="/assets/arts/flotiq-cms-x-astro/zrzut-ekranu_6-4-2025_122228_localhost.jpeg" width="narrow" />
+
+## Summary
+
+We did it - we connected [Flotiq](https://flotiq.com/) with Astro. It wasn't difficult, right?
+
+Thanks to Content Layer API connecting and changing CMSs in Astro is simpler than ever. 

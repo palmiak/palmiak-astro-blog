@@ -1,0 +1,129 @@
+---
+title: "How to easily start blogging as a developer"
+intro: "So, here you are - you have a great idea for an article or even just wrote it, but you must publish it somewhere. Here are some tips about starting your developer blog."
+description: "So, here you are - you have a great idea for an article or even just wrote it, but you must publish it somewhere. Here are some tips about starting your developer blog."
+pubDate: 2024-04-07
+updatedDate: 2024-04-09
+thumbnail: "arts/blogging-for-devs/writing.png"
+ogImage: "arts/blogging-for-devs/post-cover--twitter-(25).png"
+tags:
+  - "cms"
+  - "ssg"
+  - "buddy"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+## SaaS
+
+Let's start with services that will do the most work for you. You only have to register and focus on writing.
+
+While those are the quickest to start writing on, always remember that at some point they can change the rules and become paid or add some gatekeeping for readers.
+
+### dev.to
+
+**Dev.to** is a service that allows you to start blogging in minutes. They focus on dev-related content, so you'll feel in a good place.
+
+You have to create your posts using markdown (which I consider a good thing) and what's most important it's free.
+
+You can customize your profile a bit, by setting branding colors.
+
+Most important features:
+
+- free
+- you can export your articles if you would like to migrate it somewhere else
+- others can comment/react to your articles
+- you **can't** use your own domain
+
+I like **dev.to** - unit I started writing regularly here, I was using it from time to time and I liked the experience. I consider this platform a great place to start and a great place to post copies of your articles from different sources.
+
+<PostImage src="/assets/arts/blogging-for-devs/zrzut-ekranu-2024-04-09-115239.png" width="wide" caption="dev.to admin panel" />
+
+### Hashnode
+
+**Hashnode** is very similar to **dev.to **- it allows you to start blogging quickly and for free. The are some differences though. It has a more robust editor (but you can switch to basic markdown), allows you to use custom domains, and has a paid **pro **version that allows you to use AI and some other features.
+
+Compared to dev.to you can customize it more. And it also has an amazing headless version, so you can bring your own front end.
+
+Most important features:
+
+- can be used for free, but there is a paid version too
+- you can export your articles
+- others can comment/react to your articles
+- you can use your own domain
+
+I like **Hashnode** too. It's really cool and it evolving quickly. Their headless feature is really cool too.
+
+<PostImage src="/assets/arts/blogging-for-devs/zrzut-ekranu-2024-04-09-120511.png" width="wide" caption="Hashnode admin panel" />
+
+### Medium
+
+Some time ago I would also recommend **Medium**, but some of their practices like requiring readers to create accounts and pay for them each month are preventing me from doing so. In short - don't use it. Dev.to or Hashnode are much better.
+
+## Self-hosted solutions
+
+Nothing describes them better than "with great power, comes great responsibility". You are responsible for hosting, security, and making sure your website works. That''s not an easy task. On the other hand, you can customize the website as much as you want. 
+
+### Astro and other SSGs
+
+Time to enter the **Static Site Generator** zone. Personally, I recommend **Astro**, but there are many others like Eleventy, Nuxt, or Next. All of them allow you to write your content using Markdown.
+
+The main advantage of using them is having full control over your data. 
+
+Also, most of them will give you access to a collection of templates that can be modified in a way you want.
+
+Using them is one thing - you have to host it somewhere. Don't worry though - there are many places where you can host static sites for free like Vercel, Netlify, CloudlFlare, or GitHub Pages. And even if one will stop being free, it's very easy to migrate from one place to another.
+
+Most important features:
+
+- it's free
+- you have full control over everything
+- you can extend it
+- things like comments or forms will require 3rd party tools
+- you'll need hosting
+
+I'm a huge fan of **SSG**. And usually, I would recommend one of those. On the other hand, I saw too many cases when developers spent so much time customizing their blogs, that they forgot to write new articles. 
+
+<PostImage src="/assets/arts/blogging-for-devs/zrzut-ekranu-2024-04-09-121057.png" width="wide" caption="Visual Code Studio and Astro" />
+
+### Statamic
+
+It's time to enter the CMS territory. If you have a bit of experience with PHP, then Statamic might be a great solution for you. It has a few cool starter kits (so you can start writing right away), it's flat-file-based by default and it has an SSG library (so you can host it for free on Vercel or Netlify). 
+
+This is also the way I chose - this blog is created in Statamic. First I used a pre-made starter kit, and over time my wife created this cool look.
+
+Most important features:
+
+- it's free for personal use
+- you have full control of everything
+- you can extend it
+- you'll need hosting
+
+**Statamic** is one of my favorite CMSs out there. You can find some materials about it on this blog too. Highly recommend it if you know PHP basics.
+
+<PostImage src="/assets/arts/blogging-for-devs/zrzut-ekranu-2024-04-09-120631.png" width="wide" caption="Statamic admin panel" />
+
+### WordPress
+
+With WP, you'll just need a bit more fuss to get it working exactly as you want - probably you'll need a code highlighter block and some other plugins to make everything as you imagined. While that's not a problem, you can do it quite quickly, the bigger problem is the database. The thing I loved so much about Statamic was the lack of it. The database adds some problems with moving stuff around from localhost to production (there are plugins that can help here).
+
+Luckily there are also plugins helping to convert WP into a static website (**Simply Static**), so you can host WP for free on Netlify, Vercel etc.
+
+Most important features:
+
+- it's free, but some plugins aren't
+
+- you have full control over everything
+- you can extend it
+- there is a plugin that allows you to convert it to a static website
+- you'll need hosting
+
+<PostImage src="/assets/arts/blogging-for-devs/zrzut-ekranu-2024-04-09-121319.png" width="wide" caption="WordPress admin panel" />
+
+## Time to sum up
+
+If you want to start writing, select a solution that will allow you to start as soon as possible. That's why I would recommend going with **Dev.to** or **Hashnode **as they will allow you to start writing in a few minutes. After some time you can decide if they are right for you, or maybe they are limiting you somehow. In that case, you can pick something else.
+
+Overall, writing is the most important, everything else is just useless fluff. 

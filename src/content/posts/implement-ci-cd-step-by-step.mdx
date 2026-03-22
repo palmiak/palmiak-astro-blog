@@ -1,0 +1,66 @@
+---
+title: "Implement CI/CD step-by-step in your project"
+intro: "Is implementing a full-fledged CI/CD in your project difficult? It depends. \n\nThe most difficult part is making the first step because sometimes it requires changing the habits of the whole team. In this article, I'll explain how to do it step by step."
+description: "Is implementing a full-fledged CI/CD in your project difficult? It depends. \n\nThe most difficult part is making the first step because sometimes it requires changing the habits of the whole team. In this article, I'll explain how to do it step by step."
+pubDate: 2022-04-22
+updatedDate: 2022-04-24
+thumbnail: "arts/implement-ci-cd/duotone.jpg"
+ogImage: "arts/implement-ci-cd/post-cover.png"
+tags:
+  - "cicd"
+  - "development"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+## Start using version control
+
+If for some reason you aren''t using any version control then... you should start. Currently, [git](https://git-scm.com/) is the most popular VCS. If you want to ask why - let me list its biggest advantages:
+
+From my experience, I can tell that most people fully understand what benefits git can bring to their project. On the other hand, they are quite often afraid of using the terminal. Luckily, there are quite a few git GUI solutions on the market:
+
+<PostImage src="/assets/arts/implement-ci-cd/standalone-glory@2x.png" width="wide" caption="GitKraken" />
+
+## Automate deployments first
+
+Why we are starting with deployments? Because it''s the simplest and you''ll be able to see the results very quickly. How to do it? Just integrate your repository with applications like [Buddy](https://buddy.works), GitHub Actions, or any other, and just create an action that will move your code from your repository to your server.
+
+Apart from the fact that you''ll be able to move your code easily, it will also harden your security, because all your credentials will be stored in one central point without the need of sharing them with each developer.
+
+## Use dependency management and build assets
+
+The next, natural step is to start using package managers like **Composer** (for PHP) and **npm** (for JS). Such managers will solve many problems for you:
+
+When you''ll start using those, you''ll have to add some actions to your CI/CD pipeline that will download all the libraries for you and build all the assets.
+
+## Automate boring tasks
+
+Are you always checking if your website still works after each deployment? Are you clearing the Cloudflare cache each time? Or maybe you are doing something else each time. Automate it.
+
+Thanks to most CI/CD applications you can automate those boring, repetitive tasks without a problem.
+
+<PostImage src="/assets/arts/implement-ci-cd/OnPaste.20220422-224516.png" width="wide" caption="Purging Cloudflare cache" />
+
+## Tests, that only require configuration
+
+There are many tests that only require adding some configuration. And there are quite a few of them:
+
+As I mentioned - they require limited configuration and they can help keep your code clean and check many aspects of its quality. Implement as many as you can, because as result they will significantly boost the quality of your website (Code Sniffers, Linters, Static analysis) or will help to find some bugs and errors (Visual regression tests, Lighthouse, a11y tests).
+
+## Writing tests
+
+Just one step left - writing tests. There are many types of those:
+
+Each type focuses on something else - some are testing each method in isolation and some are launching a browser and are following a scenario. Overall they will help you find errors in your code before pushing them to production.
+
+Of course, writing tests require some extra time and knowledge, but in the long run, it will help create better code.
+
+Watch this video if you want to see how big companies are doing it:
+
+<YouTube url="https://www.youtube-nocookie.com/embed/hPYbVbqvQM8" />
+
+## Time to sum up
+
+As you saw implementing CI/CD into your projects is a process. It may take a while and that''s totally normal. It''s better to take your time and slowly implement each step, rather than quickly add just a few of them and stop in the middle.

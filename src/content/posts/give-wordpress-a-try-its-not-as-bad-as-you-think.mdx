@@ -1,0 +1,175 @@
+---
+title: "Give WordPress a try - it's not as bad as you think"
+intro: "WordPress is slow, full of vulnerbilites and can be used just for blogging. We all heard it more than once. In this article I want to debunk some myths and show how much WordPress changed over the years."
+description: "During the International PHP Conference, I had a chance to give a talk called \"Give WordPress a try - it''s not as bad as you can think\". I wanted to show people that despite the reputation that WP has, is a very important CMS and that it evolved in the last years."
+pubDate: 2024-06-04
+updatedDate: 2024-06-04
+thumbnail: "arts/give-wp-a-try/wp-berlin.png"
+ogImage: "arts/give-wp-a-try/post-cover--twitter-(27).png"
+tags:
+  - "wordpress"
+  - "cms"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+During the **International PHP Conference**, I had a chance to give a talk called "Give WordPress a Try - it''s not as bad as you can think". I wanted to show people that despite the reputation that WP has, is a very important CMS and that it evolved in the last few years.
+
+## Why does WordPress matter anyway?
+
+You can love or hate WordPress, but it doesn't change the fact that WordPress is the most popular CMS. There is a reason why about[ 43% of websites are using it](https://w3techs.com/technologies/overview/content_management). Having about half of the market is one thing, but seeing that the second place (Shopify) has less than 5% shows that WP is dominating the market. And to think that at some point WP, Joomla, and Drupal had a similar market share. Now Joomla and Drupal have 1.7% and 0.9% of the market.
+
+Of course, WordPress is more than just the Core. I would even dare to say that WP without plugins is rather feature-poor. But the huge ecosystem around it does a lot of magic. With thousands of themes and plugins, we can extend our website quickly. It's also a huge market to introduce new themes and plugins.
+
+Also, according to [WPEngine](https://wpengine.com/wordpress-economy/), the whole WordPress ecosystem was worth around $600B in 2021. That''s quite a lot for a "small blogging platform".
+
+## The stereotypes
+
+WordPress reputation, especially outside the WP bubble, is quite poor, and very often we might hear some not-nice comments. I decided to list the most popular ones and debunk them.
+
+### Just a blogging platform
+
+Yes, **WordPress can be a blogging platform**. And a great one. Many companies decided to use WP for their blogs, even if they aren't using anywhere else (Slack, GitHub, etc). 
+
+It's also worth mentioning that WordPress started as a blogging platform and until the introduction of custom post types it stayed that way. Custom post types changed everything and enabled developers to create more content structures.
+
+Since that moment WP became very flexible - it can be a blog, a portfolio, an e-commerce, LMS, or whatever you want. Of course - the fact that you can create a second FB in WordPress, doesn't mean that you should.
+
+### Slow
+
+Yes, WordPress can be slow if done wrong. But guess what, every CMS will behave like that. 
+
+Over the years both core and many plugins made a lot of progress here implementing different solutions. Core reduced the number of queries on the backend and also implemented a lot of strategies for a more performant frontend (scaling images, lazy loading, etc). For example, the latest WP **makes 20 queries to the DB and scores 90+ in Google Page Speed** without any caching. 
+
+Plugins started to introduce custom DB tables (check Yoast and WooCommerce as examples).
+
+Also, if you explore the article on [Kinsta comparing the speed of different CMSs](https://kinsta.com/blog/php-benchmarks/), you'll see that WordPress isn't the slowest one (although some CMSs were tested in the development mode and some in production).
+
+### Full of vulnerabilities
+
+WordPress' Core is generally secure. Last year it only had 13, low severity vulnerabilities. That's a great score for a CMS that is widely and constantly tested by many security researchers. There are some things that WP could do better but in general it's secure.
+
+Plugins on the other hand are responsible for 96% of vulnerabilities. While that looks scary it's not entirely a bad thing:
+
+- every time we discover a vulnerability we can fix it
+- there are so many plugins in the WP ecosystem that it's not a surprise that there are so many reports coming in
+
+Also, it's worth mentioning that there are a lot of solutions, on different layers, that are making WordPress safer. For example [Patchstack](https://patchstack.com) with its plugin and [bounty program](https://patchstack.com/bug-bounty/).
+
+### Written in PHP
+
+That's true - it's written in PHP. But more parts are appearing in JS.
+
+## What changed?
+
+### Block Editor AKA Gutenberg
+
+With **WordPress 5.0** the Block Editor became the default editor in place of TinyMCE. While there were/are many controversies around it, Gutenberg introduced a much better writing experience than its predecessor.
+
+The new editor introduced many changes, like:
+
+- it's written in React and extending it requires JS knowledge
+- it gives a more Notion-like writing experience
+- it's not entirely WYSIWYG, but it's good at showing the general experience of how the content will look like
+
+### Full Site Editing
+
+After introducing Gutenberg, FSE was the next step. Full Site Editing enables users to build websites without writing a line of code. While personally, I'm not a fan of such an approach, I understand that many users might benefit from it.
+
+Also, in theory, FSE should be in the long run a more stable solution than other page builders.
+
+### REST and GraphQL API
+
+Adding **REST API** to core and **GraphQL** as plugins ([WPGraphQL](https://www.wpgraphql.com/) and [Gato GraphQL](https://gatographql.com/)) enabled new ways to interact with the CMS. For examples:
+
+- we can use third-party applications to read and use WP data
+- use WP as a headless CMS and connect it with frameworks like Astro, Nuxt, or Next
+- use it to make the interface more interactive 
+
+### WP-CLI
+
+**WP-CLI** enabled users another way to interact with the CMS - using the terminal. **WP-CLI** is a great tool for automating tasks and maintenance. 
+
+### WordPress Playground
+
+[WordPress Playground](https://wordpress.org/playground/) is in my eyes the most revolutionary thing that happened to WP in the last years. It enables users to launch WordPress inside of the browser, without the need for a server. How it's possible? All thanks to WASM. 
+
+Thanks to Playground users can test things, see demos of Pull Requests, and more. 
+
+Kudos to [Adam](https://adamadam.blog/) and the whole team responsible for this.
+
+### 1-click updates and auto-updates
+
+WordPress has a really good and easy-to-use update system. When the update is available you can just log in to the admin panel and press the update button.
+
+Apart from this, WordPress introduced the auto-update system, which updates plugins automatically (also it's configurable so, it can only update minor versions).
+
+In both cases the mechanisms are really good - most problems are caused by plugin authors that don't use Semantic Versioning, which often leads to updates introducing breaking changes out of the blue. 
+
+### roots.io Stack
+
+WordPress, by default, prefers a bit more legacy approach to PHP. It can be annoying because modern PHP offers a lot of amazing things. Luckily [roots.io](https://roots.io) decided to create a whole stack that enables WordPress developers to use a more modern approach to PHP development. 
+
+**Bedrock** changes the folder structure to make it easier to store in Git, it also enables configuration files based on the environment and allows to use of composer for plugin management.
+
+**Sage** is a modern starter theme that uses Blade and Tailwind CSS.
+
+**Bud** is a build system for all of this.
+
+**Acorn** is a collection of Laravel components for WordPress.
+
+**Bedrock** is my personal favorite and I use it for most WordPress projects. It's so much easier to spin a fresh project with it.
+
+### Twig and Blade
+
+While we are talking about the modern approach. I can't imagine not using templating engines in my work. Thanks to [Timber](https://github.com/timber/timber) I can use Twig and thanks to Sage I can benefit from using Blade. Both of them make our developer's lives a bit easier.
+
+### WordPress Performance Team
+
+In 2021 WordPress announced the WordPress Performance that is responsible for making WordPress faster. They created the [Performance Lab](https://wordpress.org/plugins/performance-lab/) plugin where you can launch different optimizations that, after testing, will end up in the core.
+
+IMO they are doing a lot of great work and actively fighting with one of the most common WordPress stereotypes.
+
+## How to WordPress
+
+Looking at all the things that changed lately you might wonder how to WordPress. And that's a really good question - WP's flexibility has its price. You can approach any problem in so many ways. On the highest level, you build a WordPress website in one of five ways:
+
+- **No-Code/Low-Code** - thanks to Full Site Editing and page builders, it's really simple to build websites without even touching a line of code. It comes with a performance and maintenance cost, but it's a great way to test things before investing more money into a website or application. 
+- **Block themes **- this is something between the **Low-Code** approach and the **Legacy** way. Check out [this article](https://wordpress.org/documentation/article/block-themes/) for an in-depth explanation.
+- **Modern PHP **- thanks to roots.io stack or similar you can use modern PHP with WordPress. While there is a higher learning curve and less documentation, it's a great solution for more enterprise solutions
+- **Headless **- thanks to the REST or GraphQL API, you can connect WordPress with a modern frontend framework like **Astro**, Nuxt, or Next. Also, check [this article](statamic://entry::2d468adf-1c7c-4c0a-88d7-4e8ed9eeea47) I wrote about Headless.
+- **Legacy AKA Old School**- just write code like we always did - no Composer, no build tools, just HTML with PHP functions inside and a sprinkle of 🍝
+
+## Not everything is perfect
+
+A lot has changed in the WordPress ecosystem. Most things are for the better. Not everything is perfect though. If I had to list the two most annoying things I would go with the following.
+
+### Backward compatibility 
+
+Backward compatibility is usually a good thing. Sadly, WordPress decided to take a rather radical approach. This means that WordPress 6.5 (the current version when I'm writing this) runs on PHP 7.0, PHP 7.1, PHP 7.2, PHP 7.3, PHP 7.4, PHP 8.0, PHP 8.1, PHP 8.2, and PHP 8.3. That's quite an impressive list.
+
+It''s even more "impressive" if we realize that only PHP 8.1, PHP 8.2, and PHP 8.3 are officially supported (although 8.1 only has security updates and will EoL in a few months).
+
+If you like modern PHP and would like to contribute to the core, you might be surprised. Also, supporting many versions of PHP takes time and requires additional effort.
+
+There is some good news though. With WordPress 6.6 we will remove the support for PHP 7.0 and 7.1.
+
+### Standards
+
+WordPress loves to create standards and its own solutions. Some examples:
+
+- **Interactivity API **- one of the latest examples - we could've used Alpine.js and created an addon for some specific WP needs. Such an approach would give us access to developers outside of the WP bubble. 
+- **Autoloader** - while there are so many voices about implementing composer autoloader, after many years of discussions we'll probably settle for [building our autoloader](https://make.wordpress.org/core/2024/02/01/proposal-implement-a-php-autoloader-in-wordpress-core/)
+- **WPCS** - a coding standard that, at this point, is a bit behind the rest. While other frameworks also implement some standards of their own(Laravel and Symfony), they are mostly based on PSR coding standards. WPCS isn't.
+
+I understand that sometimes handcrafting something is a good idea to keep control and shape the future of such a solution, but also having to maintain everything has a cost. 
+
+## Give WordPress a try
+
+As you can see WordPress changed a lot over time. It's more flexible, faster, and safer. It's not perfect, it still requires work, but there is a reason why 43% of websites are using it. We also have to remember that WordPress is familiar and easy to use for people who will be using it daily.
+
+In my talk and this article, I never thought about forcing you to start using WordPress because it's amazing. I only wanted you to give it a fighting chance and see how it changed - it might surprise you. 
+
+I mentioned already that WordPress has a poor reputation and while some parts of WP are far from being perfect, I consider WordPress as a really good and stable CMS and its reputation is unfair to WordPress' current state.

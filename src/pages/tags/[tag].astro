@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
+
+  return tags.map((tag) => ({
+    params: { tag },
+    props: {
+      posts: posts
+        .filter((p) => p.data.tags.includes(tag))
+        .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
+    },
+  }));
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props as any;
+---
+<Layout title={`#${tag}`} description={`All posts tagged with ${tag}`}>
+  <h1 class="container mx-auto px-5 text-center text-white text-2xl font-bold font-palmiak-font-title m-0 mt-10">
+    Posts tagged: <span class="text-palmiak_green">#{tag}</span>
+  </h1>
+  <hr class="gradient-line mx-auto mt-4" />
+
+  <div class="container mx-auto max-w-[1400px] px-5 grid grid-cols-1 min-[1024px]:grid-cols-2 gap-7 mt-10">
+    {posts.map((post: any, i: number) => (
+      <BlogCard
+        title={post.data.title}
+        slug={post.slug}
+        thumbnail={post.data.thumbnail}
+        tags={post.data.tags}
+        excerpt={post.data.description}
+        pubDate={post.data.pubDate}
+        lazy={i > 1}
+      />
+    ))}
+  </div>
+</Layout>

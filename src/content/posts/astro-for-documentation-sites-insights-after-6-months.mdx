@@ -1,0 +1,77 @@
+---
+title: "Astro for Documentation Sites: Insights After 6 Months"
+intro: "Six months ago, we released a new documentation website built on top of Astro. After those 6 months, I decided it was time to sum it up and what worked well and what didn't."
+description: "6 months with Astro Starlight: Easy updates, seamless collaboration, and great components. Still highly recommended!"
+pubDate: 2024-08-01
+updatedDate: 2024-08-01
+thumbnail: "arts/astro-starlight-6-month-later/starlight-(1).png"
+ogImage: "arts/astro-starlight-6-month-later/post-cover--twitter-(29).png"
+tags:
+  - "astro"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+Around 6 months earlier, I wrote an article about using [Astro Starlight](statamic://entry::b0a1289c-ac65-47a2-8e30-71a43b928039). Back then we introduced a new [documentation](https://docs.patchstack.com/) page at Patchstack. Some time later we also introduced an [Academy](https://patchstack.com/academy/welcome/) page.
+
+Also, back then I wrote:
+
+> if you are planning to build documentation for your project you should consider **Starlight** for sure.
+
+After using it for a longer time and maintaining it I think it is time to share some observations.
+
+## Maintenance
+
+Maintaining a static website is quite simple. For 99% of the time it will just work. I mean it's just HTML. No magic here.
+
+The only thing you have to do from time to time is update **Astro **and **Starlight** itself. The whole process is as simple as running:
+
+```
+npx @astrojs/upgrade
+```
+
+Based on all the updates I did, everything worked without any problem. In general - great experience.
+
+## Working together
+
+We are working on our Astro websites together with **Rafie**, **Ananda** and **Sander**. All of us have Astro installed locally, creating PR with new features and using GH for comments, tasks, etc.
+
+Also, both our docs and Academy websites are ready for Open Source style collaboration. And it works perfectly. Every PR gets validated and when everything is OK, it gets merged.
+
+That said - using Astro for websites, where you want to collaborate with others is really good.
+
+<PostImage src="/assets/arts/astro-starlight-6-month-later/zrzut-ekranu-2024-08-01-201206.png" width="narrow" />
+
+## Built-in components are great
+
+During those 6 months, more components were added to **Starlight**(you can see all of them [here](https://starlight.astro.build/guides/components/)). We started using them more often too. When we started using **Starlight**, we mostly used only the default markdown stuff, but over time we learned how those components are making the content better and a bit more fun (I love the`steps` component).
+
+## Moving to `mdx` more often
+
+Because of the above, we started moving to `mdx` files to benefit from the components. While this is great and gives us more options, it also worries me about the future. Markdown is more universal and we can use it everywhere. `mdx` loses this feature and if we'll ever be migrating this might become a problem.
+
+Of course, this is not Astro's fault, but more of a mix of how `mdx` works and our decisions.
+
+## Migrating from subdomain to subfolder
+
+Because of SEO reasons, at some point, we decided to move the Academy website from `academy.patchstack.com` to `patchstack.com/acadamy`. It turns out, it wasn't that straightforward, as I thought it will. 
+
+The biggest problem was related to making Astro work in a subfolder (production and local development) and the subdomain (Netlify staging environments) at the same time. With the help of some redirects, `env` variables and `ifs` I made it work.
+
+What surprised me a bit was the fact about the links in markdown files. I hoped that by using the `base` parameter in the config, all the links would get prefixed with this base too. But nope (or I'm missing something) and I had to search and replace all those links.
+
+## Using a custom CI/CD pipeline
+
+When we decided to move from subdomain to subfolder, we had to move to AWS - to make this work we had to deploy it automatically in some way. Currently, we're using **Buddy**, it builds everything, deploys to a server, clears the cache, and sends a Slack notification.
+
+Soon I will probably add some extra steps validating links, etc.
+
+<PostImage src="/assets/arts/astro-starlight-6-month-later/zrzut-ekranu-2024-08-01-200818.png" width="narrow" />
+
+## Astro Starlight is still amazing
+
+I was a bit afraid that after a few months, we would find some irritating stuff that would require some hacks or workarounds. Luckily that didn't happen at all. Over this time we learned Astro and Starlight better and we also learned how to collaborate in a better way.
+
+This means, that when last time I said I was very happy about it, now I can say I'm even happier and I would recommend Astro to everyone even more.

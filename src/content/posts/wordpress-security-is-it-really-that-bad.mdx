@@ -1,0 +1,117 @@
+---
+title: "WordPress Security - is it really that bad?"
+intro: "WordPress has its pros and cons. Sadly, very often the cons are blown out of proportion. The security aspect is one of those, especially since it has improved over the last few years."
+description: "WordPress has its pros and cons. Sadly, very often the cons are blown out of proportion. The security aspect is one of those, especially that is improved over the last few years."
+pubDate: 2024-10-07
+updatedDate: 2024-10-07
+thumbnail: "arts/wp-security/security.png"
+ogImage: "arts/wp-security/post-cover--twitter-(32).png"
+tags:
+  - "wordpress"
+  - "security"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+## WordPress' security reputation 
+
+When it comes to security, WordPress has a horrible reputation. Why? There are many reasons. What's funny, most of them are either the main reasons why WordPress became so popular or not caused by the CMS itself. So, let's take a look at a few of them.
+
+### Low barrier of entry
+
+WordPress is simple. It's simple to use and simple to extend. All you need is to add a few lines of code to the `functions.php` file based on what you found on Stack Overflow. What can go wrong, right? Especially if it works. Sadly, this approach in the long run can lead to unpredictable outcomes. 
+
+### Plugins and themes
+
+The WordPress ecosystem consists of (simplifying a bit) core, plugins, and themes. While the core is not a problem, the plugins and themes are. **They generate almost 99% of vulnerabilities** in the ecosystem.
+
+Why? It's easy to create a plugin and to share it with the world. Sadly, this code after the initial review, won't be checked anymore. So it's all in the hands of the author and security researchers
+
+<PostImage src="/assets/arts/wp-security/in-2023-plugins-were-responsible-for-96.77-of-all-new-wordpress-vulnerabilities.png" width="wide" />
+
+### Open Source nature
+
+It's amazing that you can host WP anywhere, that you can modify it, and that have full control over everything. At the same time, it means there is almost no control over it once it is installed on the server.  
+  
+While a SaaS CMS can fix a vulnerable addon and the problem will be gone for all users, with WP **there is still a long road from fixing a vulnerability to making sure that all the users will update it**.
+
+### The typical WP user isn't a developer
+
+WP always advised itself a simple solution with which you can achieve almost everything in a relatively easy way. This drew a lot of non-technical people who just wanted to have a website. The consequence is, that many of them don't fully understand how important the security is and how to approach it correctly. 
+
+<PostImage src="/assets/arts/wp-security/bailey-dog-meme-2.jpg" width="narrow" caption="I have no idea what I'm doing" />
+
+### There's a plugin for that
+
+For some people, it's a joke, and for some, it's a philosophy of creating websites. Sadly this approach makes many people think that they can solve a serious problem with just one click. Sadly, security, performance, SEO, or A11Y are processes that should be running in the background all the time. They aren't one-time tasks that you can solve with a plugin.
+
+Sadly marketing teams these days are pushing this approach even more - everything is just "one-click, ultimate solution that will all the work for you". That''s a lie.
+
+### Envato premium themes, TimThumb, and other disasters
+
+WordPress is a huge ecosystem. It's not just the core CMS. If we look over the years, the most critical vulnerabilities were caused by 3rd party themes and plugins. Many of you probably still remember the **TimThumb** vulnerability that was happening for a long time.
+
+Also, the **Envato premium themes**, where authors often "hardcode" some plugins without the possibility of updating, left a huge scar on WordPress reputation. 
+
+## It's getting better
+
+If we look at the last few years, we can see that the state of security is improving and that we are finally catching up with some standards. 
+
+### The number of found vulnerabilities is getting bigger
+
+**Last year there were around 6k vulnerabilities found in the WP ecosystem**, compared to 2022 it increased from 4.5K. While that doesn't seem like an improvement, it means that we can find and remove more vulnerabilities. Also, a lot of them disappear from the repo.
+
+A few years ago only a few companies had a bug bounty program, now thanks to [Patchstack](https://patchstack.com), WPScan, and others, it got much easier to be a part of one.
+
+At some point we will cross the critical line and the number of reports will start dropping. 
+
+<PostImage src="/assets/arts/wp-security/15.7-of-vulnerable-plugins-found-by-patchstack-in-2023-ended-up-being-removed-from-the-wordpress-plugin-repository-(1).png" width="wide" />
+
+### WP Core is safe
+
+It's nice to see that WP Core was responsible for **only 13 vulnerabilities last year** (and 7 this year). Also, most of them weren't severe, which means that WordPress itself is secure. Remember that we are talking about the CMS that has 40% of the market. Everyone would like to find a critical vulnerability in it.
+
+Of course, there are still things that we can improve, but in general, we're in a good position.
+
+### WP market is changing
+
+Over the last few years, we saw that the market is changing - bigger companies are buying smaller. This means that more often companies have a **budget for security**. I had the pleasure of doing small interviews with **Miriam Schwab** and **Nati Fisher** from Elementor and **Iain Poulsen** from ACF about how they are handling security. Based on those I learned that:
+
+- clear communication and transparency is crucial 
+- using code reviews, training, and automation they are doing whatever is possible to make sure that their product is secure
+- they see that transparency regarding security is a great PR
+- Elementor also started investing in the security of its whole ecosystem
+
+## Some things need to be improved
+
+There are some things we should address sooner than later. Those things would improve WordPress' security even more.
+
+### Closed plugins should be more visible
+
+I already wrote about it [here](statamic://entry::aecc4dc4-41c2-4621-a674-f9c862ac9fd6). For those who don't have the time to read this, it's all about the fact that if a plugin gets closed in the official repository, most users won't see this until they visit the plugin's page. This is a major security threat because users might be using vulnerable plugins and not even know about it.
+
+Matt promised to push this topic during the WCEU, but currently, he's busy with other things.
+
+### We should make security researchers more visible
+
+Currently, WordPress mostly promotes developers and their contributions. Other groups responsible for documentation, teaching, marketing, etc are also visible to some extent. 
+
+On the other hand, I feel that security researchers aren't appreciated in almost any way(most bounties are paid by 3rd parties). A badge for them, or including their work as a part of Five for the Future, would be nice. 
+
+### It's time to clean some code
+
+WordPress has some weird quirks when it comes to naming functions, return values, or default parameter values. The most obvious examples would be:
+
+- `is_admin()` - many developers new to WP will think this function is responsible for checking if the current user is an administrator. In reality, it checks if the current page is a part of the admin panel or the REST API.
+- `wp_verify_nonce()` - it returns `1` if the nonce is valid and generated between 0-12 hours ago, `2` if the nonce is valid and generated between 12-24 hours ago, and `False` if the nonce is invalid. We found many users thinking it returns `true/false` 
+- `register_rest_route()` - by default, the newly created endpoint is accessible to everyone. The downside of it is that we saw many developers forgetting about adding the `permission_callback` parameter. It would be safer if, by default, a new endpoint would be only accessible to someone with admin privileges.
+
+There are more of such things. Getting rid of them would be a long-term process, but maybe it would be a good idea to start it.
+
+## It's not perfect, but I'm an optimist
+
+There is still a lot of work to be done. Many developers and users still have to learn about the importance of security and the consequences of ignoring it.
+
+It will take some time, but we're already seeing a shift for the better. 

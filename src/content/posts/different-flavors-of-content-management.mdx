@@ -1,0 +1,135 @@
+---
+title: "Different flavors of content management"
+intro: "Picking up a perfect CMS isn't an easy task. You have to consider many things before picking the one and only. Here is a small guide explaining the different aspects of every CMS."
+description: "Picking up a perfect CMS isn't an easy task. You have to consider many things before picking the one and only. Here is a small guide explaining the different aspects of every CMS."
+pubDate: 2023-08-16
+updatedDate: 2023-08-25
+thumbnail: "arts/cms-types/cms-types-cover.png"
+ogImage: "arts/cms-types/post-cover--twitter-(10).png"
+tags:
+  - "cms"
+  - "development"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+Most people widely know the term Content Management System (or CMS for short). But many people don't see how many CMS flavors there are. I hope to list and explain the pros and cons of most possible approaches below.
+
+## Headless vs. Monolith
+
+A **monolith** CMS is a CMS that is responsible both for managing data (you can create posts, add images, etc.) and for showing this data to others (using some templating system). [WordPress](https://wordpress.org), [Statamic](https://statamic.com/), [CraftCMS](https://craftcms.com/), or [Drupal](https://www.drupal.org/) are perfect examples of monolith CMSs (although all can go headless too).
+
+A **headless** one is responsible only for data management and providing an API for other applications to show this data. When talking about headless CMS, [Strapi](https://strapi.io/) or [Sanity](https://www.sanity.io/) comes to my mind first, but there are many more.
+
+<PostImage src="/assets/arts/cms-types/screely-1692350858678.png" width="wide" caption="Statamic can work both as headless and monolith CMS" />
+
+So you know the theory, but when should you use them? Monolithic CMSs are usually simpler to use because you get everything working out of the box. On the downside, you have to use the tech in which the CMS is created (you'll use **PHP** for WordPress or **Ruby** for Camaleon).
+
+On the other hand, headless CMSs start to shine when our setup gets a bit more complicated, or our development team would like to use a different technology than the one in which the CMS is created. The biggest cons? You'll have some additional work orchestrating everything. 
+
+<Alert>
+You should also check my article <strong><a class="underline" href="https://maciekpalmowski.dev/is-going-headless-worth-the-fuss/" target="blank">about headless</a></strong>.
+</Alert>
+
+## Self-hosted vs. SaaS
+
+Another way in which you can differentiate CMSs is the way how they are hosted. 
+
+**Self-hosted** solutions give you complete control over your data. You can do everything with it. But with great power comes great responsibility - hosting, updates, backups, etc. If you mess something up, it's all on you. Also, you have to set everything up. 
+
+[WordPress](https://wordpress.org), [Statamic](https://statamic.com/), or [CraftCMS](https://craftcms.com/) are great examples of self-hosted solutions.
+
+When you decide to go the **SaaS** route, in theory, the product should got you covered with all the backups and other responsibilities. You should only focus on your website. There are some potential downsides:
+
+- You might need a feature that your SaaS won't provide
+- The pricing may change
+- The company behind the SaaS might not fulfill its responsibilities, and you might learn you lost all your data.
+- They might sunset the product, and you'll have to move somewhere else quickly.
+
+[Webflow](https://webflow.com/), [Storyblok](https://www.storyblok.com/home), and [ButterCMS](https://buttercms.com/) are great examples of SaaS CMSs.
+
+<PostImage src="/assets/arts/cms-types/screely-1692350964341.png" width="wide" caption="Sanity.io" />
+
+## Content editing vs. visual editing
+
+Some CMSs only allow you to **edit content** placed somewhere inside premade themes or templates. The biggest pro of such a way is also its biggest con. With such an approach, there is a separation of concerns - the CMS is only responsible for the content, while how it is presented is totally on the template end. You have to ask the developer if you want a more significant change. On the other hand, if made correctly, it helps keep the website more consistent and prevents destroying the UX created by the team responsible for this. 
+
+[Statamic](https://statamic.com/), [CraftCMS](https://craftcms.com/), and [Strapi](https://strapi.io/) are perfect examples here.
+
+With **visual editing**, you have much more flexibility. You aren't only capable of changing the content - you can also change the way everything is presented. This approach gives the user much more freedom, but such freedom can destroy the website's UX in the wrong hands. On the other hand, you won't have to ask the developer about every change.
+
+[WordPress](https://wordpress.org) (with Page Builders or Full Site Editing) or [Storyblok](https://www.storyblok.com/home) are perfect examples in this category.
+
+<PostImage src="/assets/arts/cms-types/screely-1692351218563.png" width="wide" caption="WordPress Block Editor AKA Gutenberg" />
+
+## Remote vs. local
+
+The most typical approach is having a CMS admin panel sit somewhere on the server; everyone with an account uses this. This is a very convenient approach, especially when working with a team. This way, many people can work on different articles simultaneously without worrying about potential conflicts or overwriting stuff. The only con is related to security - everyone can try to get inside, and if you forget to update our CMS or some user have a weak password, it can be someone outside of our team. [WordPress](https://wordpress.org), [Drupal](https://www.drupal.org/), [CraftCMS](https://craftcms.com/), or [Ghost](https://ghost.org/) are perfect examples of such CMSs.
+
+**Local** CMSs are the ones that are mostly file-based (like [Statamic](https://statamic.com/) or [Astro](https://astro.build)). This means that you can edit everything locally and deploy the data. This way, our CMS is more secure, but on the downside, you have to have a local server working, and you might experience more conflicts, especially when two people will work on the same article (although Git might save you from many of those). It also means that there is a higher learning curve. A remote CMS works somewhere on a server, and most users don't care how.
+
+## Dedicated app vs. bring your own app
+
+When discussing CMSs, the first thing that comes to mind is an **admin panel**, where you create and edit our content. And most CMSs work that way. Why? Because it is convenient and it's easier to teach your team how to use it. The only downside is that you have to get used to the admin panel, and sometimes you might not have any option to customize the experience.
+
+<PostImage src="/assets/arts/cms-types/screely-1692351348113.png" width="wide" caption="Nuxt Studio" />
+
+But, when your CMS is based on **Markdown files**, you can use whatever editor you want. For example, if you use Nuxt as your CMS, everyone can choose which editor they prefer. It can be Visual Studio Code, [FrontMatter CMS](https://frontmatter.codes/), or maybe [Nuxt Studio](https://nuxt.studio/). Everyone can pick the app they like the most.
+
+## WordPress vs. the rest
+
+It might sound funny, but WordPress has **~60%** of the CMS market share. Shopify is second with **6%**. [Here](https://w3techs.com/technologies/history_overview/content_management/ms/y) is the source of those numbers. 
+
+We might discuss the methodology and the fact that WordPress is easy to discover, while some CMSs aren't, but it doesn't change the fact that WP is playing a totally different game today. But we also have to remember that it wasn't like that.
+
+I just found a report from 2008 where we can read:
+
+> At this point in time, the only thing we can state with confidence is that the battle for market dominance has yet to be settled. Indeed, it rather looks like the battle is just about to heat up! WordPress, Joomla! and Drupal share a significant lead over the other products in the open source CMS market. We do not expect that to change in the near to medium term. Whether one will emerge as the market leader remains to be seen.
+
+Who knows what the market will look like 10 years from now?
+
+## Git-based vs. API-driven
+
+Big thanks to [David Large](https://twitter.com/avidlarge) for mentioning this distinction for headless CMSs.
+
+Git-based CMS are the ones that use Git to manage many aspects of CMS - mostly related to collaboration and history. This is a great solution because we aren't reinventing the wheel, but we're using an amazing standard for stuff like this. 
+
+Also, we have full control over our content.
+
+Solutions like [CloudCanon](https://cloudcannon.com/) or [TinaCMS](https://tina.io/) use this approach.
+
+<PostImage src="/assets/arts/cms-types/screely-1692961268624.png" width="wide" caption="TinaCMS" />
+
+API-driven CMSs provide you with an API that you have to connect with your front end. Those CMSs are very often more flexible. They are also great if we want to provide data to multiple sources (our website, store, and mobile application). 
+
+We can control our data (self-hosted solution like [Strapi](https://strapi.io/)) or not ([Contentful](https://www.contentful.com/)) based on the chosen solution.
+
+Those CMSs, in most cases, are more difficult to start with and require a developer for any bigger change.
+
+## Site Builders vs. App Frameworks
+
+Big thanks to [Shaun Walker](https://twitter.com/sbwalker) for mentioning this distinction.
+
+It might seem that it is similar to **Content editing vs. visual editing**, but not completely. Content vs. Visual editing is more about how we edit the content. Here, we are looking more at the CMS's focus.
+
+**Site builders **are solutions that should enable you to build websites without technical knowledge (in theory). They are amazing if your data structure is quite simple and you want a working website quickly. Those will be perfect if you want a landing page, a blog, a company page, or a simple store. Those solutions either have a lot of predefined blocks, or you can create everything manually. 
+
+There are some builders that are more customizable, enabling you to add your own components/blocks.
+
+Webflow and [Builder.io](https://builder.io) are perfect examples here.
+
+<PostImage src="/assets/arts/cms-types/screely-1692962457417.png" width="wide" caption="Builder.io" />
+
+App Frameworks are CMSs that can be extended in whatever way you want. If we take a look at what we can achieve with [WordPress](https://wordpress.org), [Statamic](https://statamic.com/), [CraftCMS](https://craftcms.com/), or [Drupal](https://www.drupal.org/), we'll see that there are almost no limits. They are used for a personal blog but also can become a center of our very advanced application managing different parts of our business. 
+
+## Summary
+
+As I mentioned initially, picking up a perfect CMS isn''t easy. Also, everything I said is just the tip of the iceberg. It''s one of those "it depends" situations where you must analyze your needs and decide based on those. 
+
+Which CMSs I'm using right now?
+
+I'm using Statamic for this blog - it's only on my local machine and converted to a static website during deployment. Why? It's a small blog, and I don't want to worry about security and other stuff.
+
+I'm also using Substack (a SaaS) for my newsletter. Why? Because I'm lazy and I wanted to focus only on the content. 

@@ -1,0 +1,170 @@
+---
+title: "Astro Studio - first impression"
+intro: "I waited a long time for Astro Studio to launch. For quite a while I wasn't fully sure what to expect. Luckily, at JSWorld in Amsterdam Elian shared a bit more about it and I knew it would be a database."
+description: "I waited a long time for Astro Studio to launch. For quite a while I wasn't fully sure what to expect. Luckily, at JSWorld in Amsterdam Elian shared a bit more about it and I knew it would be a database."
+pubDate: 2024-03-14
+updatedDate: 2024-03-14
+thumbnail: "arts/astro-studio/astro-db.png"
+ogImage: "arts/astro-studio/post-cover--twitter-(23).png"
+tags:
+  - "astro"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+Finally, the 12th of March happened, so I could test it on my own.
+
+## Expectations 
+
+As I mentioned, I wasn't sure what to expect. I was guessing something between:
+
+- **Nuxt Studio** - a CMS layer
+- **HygraphCMS **- a layer to manage multiple data sources and convert those into collections
+- **Airtable/Directus** - a very rich and flexible database that can be both a DB and a CMS at the same time
+
+All of those, aren't what **Astro Studio **is. Which was disappointing for a moment, until I realized it was my fault as I was imagining things :D 
+
+## What Astro Studio really is
+
+It's a database and it's a **LibSQL** database to be precise.
+
+It has some cool features:
+
+- **it scales perfectly** - you can see how great it works on [The PrimeTime](https://www.youtube.com/watch?v=h5SiumTDRIU) where did a nice stress test. I didn't do any serious benchmarks yet, but seeing that I'm sure that performance won't be a problem.
+- **it is designed with Astro in mind** - you can feel the same developer experience that made me fall in love in Astro. Everything is straightforward.
+- **it has a cool schema management **- with just a few simple lines of code, you can define your DB structure and relations.
+- it has great local development features. You can use the `seed.ts` file to fill the DB with data. Together with Faker.js, you can create a lot of interesting test data.
+- and it has a **visual data viewer**
+
+<PostImage src="/assets/arts/astro-studio/zrzut-ekranu-2024-03-14-024305.png" width="wide" caption="You can preview your DB data" />
+
+## Working with the DB
+
+First of all - read the [documentation](https://docs.astro.build/en/guides/astro-db/). Everything is there already and knowing how **Astro** handles documentation it will only get better.
+
+### Installation
+
+Installation is as simple as running `npx astro add db` and creating an account on **Astro Studio**.
+
+Then, thanks to using the CLI, it's quite straightforward to connect your local project with **Studio**. Just remember about two things that were causing me some problems:
+
+- don't forget to create a token and add `ASTRO_STUDIO_APP_TOKEN` to your env file
+- your project has to have `main` branch - with `master` I had some problems
+
+### Creating a database
+
+To create a database you need to create a `db/config.ts` file and define your fields inside. Documentation has you covered here, but let me show you a simple example:
+
+```
+const Posts = defineTable({
+    columns: {
+        title: column.text(),
+        content: column.text(),
+        publishedAt: column.date(),
+    }
+});
+
+export default defineDb({
+    tables: { Posts },
+});
+```
+
+If you want to sync the schema with production you have to run `astro db push`. This should either sync everything or at least explain what went wrong and what actions you should take.
+
+### Seeding
+
+If you want to create local data you have to seed the database. To do so, inside of `db/seed.ts` you can prepare such data. You can either do it manually, connect a CMS (and grab the data from there), or use faker.js to generate some random stuff. 
+
+```
+import { db, Posts } from 'astro:db';
+import { faker } from '@faker-js/faker';
+
+export default async function () {
+    faker.seed(1);
+    const PostsData = [];
+
+    for (let i = 0; i < 100; i++) {
+        PostsData.push(
+            db.insert(Posts).values({ 
+                title: faker.lorem.sentence(),
+                content: faker.lorem.paragraphs(3),
+                publishedAt: faker.date.recent({ days: 30 })
+            })
+        );
+    }
+
+    await db.batch(PostsData);
+}
+```
+
+But what if, I would like to push this data to the production database? That's simple - just run `astro db execute db/seed.ts --remote`
+
+### Querying
+
+**Astro DB **integrates Drizzle ORM, so if you would like to get all the posts just run:
+
+```
+---
+import { db, Posts } from 'astro:db';
+
+const posts = await db.select().from(Posts);
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Astro</title>
+	</head>
+	<body>
+		<h2>Posts</h2>
+
+			{
+			posts.map(( Post ) => (
+				<article>
+					<h3>{Post.title}</h3>
+					<p>{Post.content}</p>
+				</article>
+			))
+			}
+	</body>
+</html>
+```
+
+Do you want to just show the first 10 posts? 
+
+```
+const posts = await db.select().from(Posts).limit(10);
+```
+
+Order them by title?
+
+```
+const posts = await db.select().from(Posts).orderBy(Posts.title);
+```
+
+## Things that I hope to see
+
+In its current state, **Astro Studio **is an amazing foundation for growth. From the technical point of view, it does exactly what it should and does it perfectly. 
+
+Some things can be better thought:
+
+- **Only GitHub support **at the moment. From the practical point of view, I understand such a decision was made, but I hope that we'll see GitLab, BitBucket, and custom Git too.
+- The **visual editor is lacking** at the moment. It would be great if it would respect relations (so I don't have to enter let's say category ID but pick it from a dropdown field) or edit longer texts.
+- When creating tables, the **autoincrement keyword is missing**. On the other hand, leaving the ID empty or filling it with a NULL in the visual data editor throws an error that the field is required, while leaving it null in `seed.ts` works fine.
+- **The SQL console requires some work**. I mean it works, but that's it. There is no autocomplete, or table view of data.
+- **Support for other frameworks and languages.** Using Astro Studio as a universal database for multiple applications (not just Astro) seems natural. 
+
+## To sum up
+
+There is no other JS framework I trust so much as I trust **Astro**. That means that even with those shortcomings that I mentioned above I see a huge potential of **Studio **and I'm sure that it will just get better and better.
+
+I still have some hopes that Astro Studio will take a step towards content editing. Either directly or maybe via some additional tool. 
+
+Also, after Planetscape's free-tier removal, I truly hope that Astro will keep their end of the bargain and at some point we won't have to move somewhere else with our data:
+
+<PostImage src="/assets/arts/astro-studio/giasx1-b0aa08sk.png" width="narrow" />

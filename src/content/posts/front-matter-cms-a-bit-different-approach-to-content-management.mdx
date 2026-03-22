@@ -1,0 +1,219 @@
+---
+title: "Front Matter CMS - a bit different approach to content management"
+intro: "When we think about a CMS, the first thing that comes to our mind is WordPress. And even if we aren't thinking about WP, we still see an admin panel somewhere on the internet."
+description: "When we think about a CMS, the first thing that comes to our mind is WordPress. And even if we aren't thinking about WP, we still see an admin panel somewhere on the internet."
+pubDate: 2023-09-11
+updatedDate: 2023-09-13
+thumbnail: "arts/fm_cms/fmcms.png"
+ogImage: "arts/fm_cms/post-cover--twitter-(11).png"
+tags:
+  - "cms"
+  - "astro"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+There is also a group that will say that MarkDown and any editor are good enough for them. They are also right. It can be enough, but working with frontmatter inside MD files can be tedious. 
+
+But what if I tell you that there is a CMS that will transform your Visual Studio Code into a proper CMS with content and media management, taxonomies, and more? Say hello to [Front Matter CMS](https://frontmatter.codes/).
+
+If you prefer listening and watching rather than reading - together with Elio Struyf, we did an episode of Code and Coffee Show about **Front Matter CMS**:
+
+<YouTube url="https://www.youtube.com/embed/YX4HBXHojOA" />
+
+## Installation
+
+Because **FM CMS **is a Visual Studio Code extension, you must install it first. You'll find two versions - the stable one and the beta one. 
+
+<PostImage src="/assets/arts/fm_cms/screely-1694562378726.png" width="wide" />
+
+After installation, it's time to open a project that you want to use with **Front Matter CMS**. After doing so, press the FM icon in the sidebar and follow the instructions. At this point, the basic configuration is almost done.
+
+<PostImage src="/assets/arts/fm_cms/screely-1694562397873.png" width="wide" />
+
+## Configuration
+
+Sadly, Front Matter CMS can't guess some things. So, before going further, we have to polish the configuration file a bit.
+
+<PostImage src="/assets/arts/fm_cms/screely-1694562670088.png" width="wide" />
+
+Let's start with the field. Inside of your `frontMatter.taxonomy.contentTypes` part, you'll see that some fields are already created. You have to update this part to match the fields you'll need. In my case, I needed to add fields like this:
+
+```
+"fields": [
+  {
+    "title": "Title",
+    "name": "title",
+    "type": "string"
+  },
+  {
+    "title": "Cover",
+    "name": "image",
+    "type": "image",
+    "isPreviewImage": true
+  },
+  {
+    "title": "Intro",
+    "name": "intro",
+    "type": "string"
+  },
+  {
+    "title": "Author (use the one from src/content/author)",
+    "name": "author",
+    "type": "string"
+  },
+  {
+    "title": "Publishing date",
+    "name": "pubDate",
+    "type": "datetime",
+    "default": "{{now}}",
+    "isPublishDate": true,
+    "dateFormat": "yyyy-MM-dd"
+  },
+  {
+    "title": "Tag",
+    "name": "tag",
+    "type": "string"
+  }
+]
+```
+
+Most of it is pretty self-explanatory, but there are some more interesting bits:
+
+- `isPreviewImage` - It shows the image as a thumbnail in the Front Matter CMS dashboard
+- `isPublishDate` - This one helps FM CMS to sort posts by date
+- `now` - Now is a placeholder that sets the time and date to the moment when you created the post
+
+For more information about the fields, I recommend checking this [page](https://frontmatter.codes/docs/content-creation/fields).
+
+In the case of my Astro theme, there are some extra details I had to add:
+
+```
+"name": "default",
+"previewPath": "blog/",
+"filePrefix": null,
+"fileType": "mdx",
+```
+
+Without setting the `previewPath`, FM CMS would try to preview blog posts on `domain.com/slug` which would return a 404 error because all blog posts are in the `blog` folder. Adding this setting solves the problem.
+
+By default, new files created by FM CMS contain a date as a part of a slug. This is something I'm not a fan of. Luckily, thanks to the `filePrefix` setting, we can change it.
+
+And last but not least - I wanted to create MDX by default - that's why I used `fileType` setting.
+
+## Managing content
+
+Like in any other CMS, you can view your content in the dashboard. Apart from this, you can group them (by year, for example), sort them, or search for a post you want.
+
+<PostImage src="/assets/arts/fm_cms/screely-1694562983433.png" width="wide" />
+
+When viewing a single post, you can access some new powerful features. There are some practical SEO tools or a preview option.
+
+<PostImage src="/assets/arts/fm_cms/screely-1694563058158.png" width="wide" />
+
+You can also manage images. View them, organize them in folders, and add metadata to every image - like alt texts or descriptions.
+
+<PostImage src="/assets/arts/fm_cms/screely-1694563021452.png" width="wide" />
+
+## Snippets
+
+Snippets are a fantastic way to stop repeating yourself. It works really great with MDX files and components. So, let's create a simple component that will show **Hello [your name]**.
+
+The simplest way would be to go to Snippets, press the **Create new snippet** button, and paste something like this:
+
+```
+import Hello from '../../components/hello.astro';
+<Hello name="Test" />
+```
+
+and modify the code a bit every time. But we can do better. It's time to reopen our config file and add some fields.
+
+```
+"frontMatter.content.snippets": {
+  "Hello": {
+    "description": "A simple snippet",
+    "body": [
+      "import Hello from '../../components/hello.astro;'",
+      "",
+      "<Hello name=\"[[name]]\" />"
+    ],
+    "fields": [
+      {
+        "name": "name",
+        "title": "Name",
+        "type": "string",
+        "default": "FM_SELECTED_TEXT"
+      }
+    ]
+  }
+},
+"frontMatter.snippets.wrapper.enabled": false
+```
+
+This will result in:
+
+<PostImage src="/assets/arts/fm_cms/screely-1694562418033.png" width="wide" />
+
+But also, if you select a text and then add the snippet, the selected text will become a default value. Neat.
+
+There is just one problem with this - there is no way to add a conditional to check if we should import the component again or not. This is something we have to remove manually every time.
+
+For more use cases, check out the [docs](https://frontmatter.codes/docs/snippets#overview).
+
+## Custom scripts
+
+One of the most powerful features of Front Matter CMS is the ability to create your own scripts that can do whatever you want. I will show you a very simple example of how to make your title uppercase with a click of a button.
+
+This is the script we'll use - I placed it in the scripts folder:
+
+```
+const arguments = process.argv;
+
+if (arguments && arguments.length > 0) {
+  // getting all the frontmatter args
+  const frontMatterArg = arguments[4];
+
+  // transorming to json
+  const data = frontMatterArg && typeof frontMatterArg === "string" ? JSON.parse(frontMatterArg) : null;
+
+  // making the title uppercase
+  const title = data.title.toUpperCase();
+
+  // updating the contnet
+  const output = JSON.stringify({
+    "frontmatter": {
+      "title": title
+    }
+  });
+
+  console.log(output);
+}
+```
+
+As you see - it gets the data, changes the title, and creates a JSON that is passed to `console.log`  
+
+
+Now, let's add this script to FM CMS. We have to open the configuration file again and add:
+
+```
+"frontMatter.custom.scripts": [
+  {
+    "title": "Uppercase title",
+    "script": "./scripts/social-img.cjs",
+  }
+]
+```
+
+This will result in this cool-looking button that will uppercase your title.
+
+<PostImage src="/assets/arts/fm_cms/screely-1694562670088.png" width="wide" caption="Just press the &quot;Uppercase title button&quot;" />
+
+But you can do more with custom scripts - check [this](https://frontmatter.codes/docs/custom-actions#overview) documentation section to learn more about custom scripts.
+
+## Summary
+
+I hope I showed you how cool Front Matter CMS can be. While it's not a CMS for everyone, I think that developers will find it very useful. Also, they won't have to leave their favorite IDE.
+
+As for less technical people - if someone will configure it for them, FM CMS might be a really easy-to-use solution.

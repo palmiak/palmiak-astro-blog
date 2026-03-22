@@ -1,0 +1,22 @@
+{
+  "name": "palmiak-blog-astro",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "migrate": "node migrate/bard-to-mdx.mjs"
+  },
+  "dependencies": {
+    "astro": "^4.15.0",
+    "@astrojs/mdx": "^3.1.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "tailwindcss": "^4.0.0",
+    "@tailwindcss/typography": "^0.5.15",
+    "@tailwindcss/forms": "^0.5.9",
+    "canvas-confetti": "^1.9.3",
+    "highlight.js": "^11.10.0",
+    "quicklink": "^2.3.0"
+  }
+}

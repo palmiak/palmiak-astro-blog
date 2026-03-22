@@ -1,0 +1,64 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: string;
+  alt?: string;
+  width?: string;
+  caption?: string;
+}
+
+const { src, alt = '', width = '', caption } = Astro.props;
+
+// Strip /assets/ prefix to look up from src/assets/
+const assetPath = src.startsWith('/assets/') ? src.slice('/assets/'.length) : src;
+const isGif = assetPath.endsWith('.gif');
+
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/arts/**/*.{jpg,jpeg,png,webp,svg}'
+);
+
+const lookupKey = `/src/assets/${assetPath}`;
+const imgMetadata = !isGif && images[lookupKey]
+  ? (await images[lookupKey]()).default
+  : null;
+
+// Match original Glide output widths
+const imgWidths = width === 'wide'
+  ? [800, 1110]
+  : width === 'narrow'
+  ? [320, 620]
+  : [430, 860];
+
+const imgClass = width === 'narrow'
+  ? 'mx-auto max-w-[620px] w-full'
+  : width === 'wide'
+  ? ''
+  : 'max-w-[860px] w-full';
+---
+<div class={`image ${width} palmiak-image`}>
+  {imgMetadata ? (
+    <Image
+      src={imgMetadata}
+      alt={alt}
+      loading="lazy"
+      widths={imgWidths}
+      sizes={
+        width === 'wide'
+          ? '(max-width: 800px) 800px, 1110px'
+          : width === 'narrow'
+          ? '(max-width: 320px) 320px, 620px'
+          : '(max-width: 430px) 430px, 860px'
+      }
+      class={imgClass}
+    />
+  ) : (
+    <img src={src} alt={alt} loading="lazy" class={imgClass} />
+  )}
+  {caption && (
+    <figcaption class="mb-8">
+      <p class="mb-0 text-sm text-zinc-300">{caption}</p>
+    </figcaption>
+  )}
+</div>

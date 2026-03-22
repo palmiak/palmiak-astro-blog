@@ -1,0 +1,122 @@
+---
+title: "Migrating Gutenberg blocks using the Statamic Importer"
+intro: "Some time ago, I wrote a tutorial explaining how to migrate Gutenberg blocks to Bard sets—now it's time to improve it by using Statamic Importer."
+description: "Learn how to migrate WordPress content, including Gutenberg blocks, to Statamic using the brand-new Statamic Importer."
+pubDate: 2024-11-11
+updatedDate: 2024-11-12
+thumbnail: "arts/migrating-wordpress-gutenberg-blocks-to-statamic-using-statamic-importer/migracja.png"
+ogImage: "arts/migrating-wordpress-gutenberg-blocks-to-statamic-using-statamic-importer/post-cover--twitter-(34).png"
+tags:
+  - "statamic"
+  - "wordpress"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+## The Block Editor aka Gutenberg
+
+With the WordPress 5.0 release, Gutenberg became the new content editor and replaced **TinyMCE**. This change brought many changes in the way content was created. With TinyMCE, the content was just a blob of HTML that we could simply import into Statamic. 
+
+**Gutenberg** is more similar to **Bard**, where everything consists of blocks. 
+
+With both editors sharing a similar approach to handing content, moving some blocks directly to Bard sets would be great.
+
+## Statamic Importer to the rescue
+
+At the beginning of November, Statamic released the **Importer Addon**. It lets you import any content in CSV or JSON format, which means we can use it with any CMS. What's extra cool about it is how simple it is to convert Gutenberg blocks to Bard Sets.
+
+I won't explain how the importer works because it's simple and Jack already made a video about it
+
+<YouTube url="https://www.youtube.com/embed/e9FQCH1rKec?si=g9YEnY7UPCgSma0z" />
+
+## Our example block
+
+In WordPress, we have a block called `acf/test` and it consists of three data fields:
+
+- name - `string`
+- is_important - `boolean`
+- bigger_text - `string`
+
+It's not complicated, but enough for this example.
+
+## Preparation in Statamic
+
+We need to do two things:
+
+- Install the [Importer Addon](https://statamic.com/addons/statamic/importer)
+- Prepare a set in Bard called `test` 
+
+The installation is well described in the [documentation](https://statamic.com/addons/statamic/importer/docs), so I won't dwell on this.
+
+Inside Bard create a new set called `test` and create fields:
+
+- name - `text`
+- is_important - `toggle`
+- bigger_text - `textarea`
+
+<Alert>
+I recommend creating an entry using this block, so you'll be able to copy the structure later.
+</Alert>
+
+## Time to import
+
+Open your `AppServiceProvider.php` and add something like this:
+
+```
+<?php
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use Statamic\Statamic;
+use Illuminate\Support\Arr;
+use Statamic\Importer\WordPress\Gutenberg;
+
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        //
+    }
+
+    public function boot(): void
+    {
+        Gutenberg::hook('acf/test', function ($payload, $next) {
+            $block = Arr::get($payload, 'block.attrs.data');
+            return [
+                'type' => 'set',
+                'attrs' => [
+                    'values' => [
+                        'type' => 'test',
+                        'name' => $block['name'],
+                        'is_important' => $block['is_important'],
+                        'bigger_text' => $block['bigger_text'],
+                    ]
+                ],
+            ];
+        });
+    }
+}
+```
+
+As you can see we're using the `Gutenberg:hook` and we're hooking to our custom block.
+
+Next, we get the required data from `$payload`. 
+
+Last, but not least we're returning a set with the correct name and data.
+
+And voila - we have imported our custom block to **Statamic**. 
+
+The only thing left is to run the importer.
+
+## Demo
+
+<YouTube url="https://www.youtube.com/embed/1dNvbDC3ZKQ?si=xh-PHkkVJ0wexPak" />
+
+## Closing thoughts
+
+I love how well Statamic approached all the problems in the WordPress ecosystem. Instead of bashing or posting snarky comments, they started to post solutions. That's how we got the [great guide on switching from one to another](https://statamic.dev/from-wordpress-to-statamic) and this importer.
+
+And as you can see - content migration isn't that difficult, especially for content websites.

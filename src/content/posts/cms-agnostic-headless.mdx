@@ -1,0 +1,122 @@
+---
+title: "CMS Agnostic Headless"
+intro: "One of the main pros of headless is its Lego-like architecture. But can we make it even better?"
+description: "Some time ago I was working on an Astro template that I wanted to use to show how simple using Astro with different headless CMSs is"
+pubDate: 2023-11-24
+updatedDate: 2023-11-24
+thumbnail: "arts/cms-agnostic/cms-agnostic-headless.png"
+ogImage: "arts/cms-agnostic/post-cover--twitter-(17).png"
+tags:
+  - "cms"
+  - "headless"
+  - "astro"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+Some time ago I was working on an **Astro** template that I wanted to use to show how simple using Astro with different headless CMSs is. It was a very simple template and it had the following:
+
+- index page
+- post archive list with pagination
+- single post page with author info and showing two older posts
+
+Simple, right? But converting it from one CMS to another was annoying. "Annoying" is the correct word, because it wasn''t difficult, but it was tedious. Every time I had to:
+
+- find variable names and convert them to those new one
+- change all the fetches
+- fix some minor, CMS-specific stuff
+
+So, I started to wonder how to make it CMS-agnostic.
+
+## Before we start
+
+Just a few thoughts before we start:
+
+- I created this proof of concept for **Astro**, but you can use the idea for any framework.
+- It's a proof of concept, not a production-ready code. 
+- It might be useful in some cases, but in some cases implementing this is just a waste of time. 
+
+## Additional layer
+
+The key to solving most of the problems was adding a new abstraction layer. We could say it is a controller.
+
+In short - the title should always be stored in a variable called `title`. To do so we have to map it.
+
+This is what the **WordPress** mapping looks like:
+
+```
+const temp = {
+    'id': post.id,
+    'title': post.title.rendered,
+    'slug': post.slug,
+    'intro': post.excerpt.rendered,
+    'tag': post._embedded["wp:term"][1][0].name,
+    'pubDate': post.data,
+    'content': post.content.rendered,
+    'authorId': post.author
+};
+```
+
+and this is the CosmicJS integration:
+
+```
+const temp = {
+    'id': post.id,
+    'title': post.title,
+    'slug': post.slug,
+    'intro': post.metadata.intro,
+    'tag': post.metadata.tag,
+    'pubDate': post.published_at,
+    'content': marked.parse(post.metadata.content),
+    'authorId': post.metadata.author.id
+};
+```
+
+This means that no matter how your variables are named in the headless CMS, your theme will always use the same variable, in my case:
+
+```
+{ postData.title }
+```
+
+Apart from the variable mapping, those integrations take care of importing the SDK or API and running some additional operations (like you saw with markdown parsing in CosmicJS).
+
+<Alert>
+You can download the code from <strong><a class="underline" href="https://github.com/palmiak/pacamara-headless" target="blank">this repository</a></strong>.
+</Alert>
+
+## Dynamic imports
+
+OK, but how to import just the required integration? Thanks to **dynamic integrations**.
+
+I have a file called `cmsBase.js` that does something like this:
+
+```
+const cmsType = 'wordpress';
+
+export async function getPosts( args ) {
+    const data = await import( `./${cmsType}/getPosts.js` );
+    return data.getPosts( args );
+}
+```
+
+Based on the `cmsType` variable it imports the `getPosts.js` function from the right integration.
+
+At the moment my theme only supports one integration at once (which is OK, because I only have posts), but converting the `cmsType` variable into an object to map post types to CMSs seems a logical next step.
+
+## Adding a new CMS
+
+So, how to add a new CMS? I created a boilerplate folder called `_template` - you just have to copy and rename it to your CMS name.
+
+Next, you will want to install the CMS SDK and add some variables to the `env` file. With this work done, I always start with the `client.js` file - I use it to have all the SDK/API calls in one place. It's also a good place to create some helper functions.
+
+Having the `client.js` it's time to start mapping the post and author content in `getPosts.js` and `getAuthor.js`.
+
+## How can it work better?
+
+This theme is more of a proof of concept. It works perfectly for the **SSG** approach. If you would like to go with **SSR** you would probably also need to create some additional files (like `getSinglePost`).
+
+I didn't spend too much time optimizing the API calls, so you can see `fields: ['*']` in the Directus integration. 
+
+Also, I would remove all the unused SDKs from `package.json`. 

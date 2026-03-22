@@ -1,0 +1,90 @@
+---
+title: "How we removed (almost) 1000 plugins from the official WordPress repository"
+intro: "October was a once-in-a-lifetime experience - at Patchstack we did a bug bounty hunt that resulted in closing almost 1000 plugins."
+description: "Patchstack’s bug bounty program rewards security researchers for finding vulnerabilities in WordPress plugins. In October, we removed rules limiting reports to newer, popular plugins, leading to 1571 reports affecting 7M+ installs. Learn what we discovered!"
+pubDate: 2025-02-26
+updatedDate: 2025-02-26
+thumbnail: "arts/how-we-removed-almost-1000-plugins-from-the-official-wordpress-repository/bug-hunt.png"
+ogImage: "arts/how-we-removed-almost-1000-plugins-from-the-official-wordpress-repository/post-cover--twitter-(41).png"
+tags:
+  - "security"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+## How does Patchstack's bug bounty program work?
+
+At **Patchstack**, we have this monthly bug bounty event. The rules are simple:
+
+1. You try to find vulnerabilities
+2. You earn AXP points for them based on severity and plugin popularity
+3. People with the most AXP earn money
+
+We occasionally launch special events to motivate our community to find some specific vulnerability type.
+
+At that point, we only accepted plugins and themes:
+
+- with **1000+ installs**
+- that were updated in the last **3 years**
+
+<PostImage src="/assets/arts/how-we-removed-almost-1000-plugins-from-the-official-wordpress-repository/zrzut-ekranu-2025-02-26-161016.png" width="wide" />
+
+## What happened in October?
+
+In October, which is **Cyber Security Month**, we decided to launch a special event that focused on cleaning up the repository from old, vulnerable plugins. It's important because WordPress is already 25 years old. This means that there are plugins out there that are old and very often abandoned by their authors(including cases where the author is dead).
+
+Because of the limitations of most bug bounty programs, they aren't eligible for any program. So for October, we decided to remove those rules that I mentioned earlier and change them to:
+
+- Reports for plugins/themes **with less than 1K** active installs will get the same points as components with 1K active installs.
+- There’s **no limit of 3 years** since the last update for the October competition.
+- Both exceptions to the rules are applied **only for reports with these prerequisites**. The vulnerability **CVSS score must be at least 6.5** if you want rules “1” and “2” to be applied.
+
+We hoped to get 600 reports, but we didn't suspect what would happen next.
+
+Our community started reporting like crazy, and halfway into the event we decided to add an extra challenge - “If you discover 1000 (or more) valid reports this month, we will give an extra +$100 bounty to everyone who has reported at least **ten reports** with **CVSS higher than 6.5.”**
+
+And you know what? They did - in total we got 1571 valid reports affecting **7141940** active installs.
+
+<PostImage src="/assets/arts/how-we-removed-almost-1000-plugins-from-the-official-wordpress-repository/zrzut-ekranu-2025-02-26-161228.png" width="narrow" caption="This is how it ended" />
+
+## We learned a lot from this
+
+We were surprised by quite a lot of things after that month.
+
+First of all - **the amount of reports**. We didn't suspect that there were that many vulnerable plugins hiding in the repository. While many of those plugins were only installed on a bunch of websites the amount of them creates a problem. That's why we changed our rules after this event, so it's easier to report smaller plugins.
+
+What's also interesting - **~17% of our findings had 8+ CVSS score**. We suspected that there will less of those.
+
+What didn't surprise us that much was the fact that in almost 75% we weren't able to contact the author directly and we had to reach out to the **WP review teams. **BTW kudos to them too - they also had a lot of work because of us.
+
+We didn't suspect that one person (**SOPROBRO**) would be able to send **534** valid reports. What's interesting - he ended up in third place.
+
+We knew that we would get reports for old plugins, but we even discovered one plugin that was **17 years old**. Also, most of the plugins found during this event were somewhere between 6 and 11 years old.
+
+<Alert>
+If you are interested in reading the official summary, check <strong><a class="underline" href="https://patchstack.com/articles/nearly-1000-plugins-closed-during-wordpress-security-cleanup/" target="blank">this article</a></strong>.
+</Alert>
+
+## What happened later?
+
+And they lived happily ever after... Only partially 😿
+
+It's great that we were able to remove around **1000 plugins** (which at that point was around 2% of all plugins). It's also great that WordFence launched a similar event a month later and they got around **700 valid reports**.
+
+This means that there are less vulnerable plugins in the repository. Some got fixed, but **most were closed**. And that's great. There's no reason to keep vulnerable plugins inside of the repository.
+
+On the flip side - **WordPress won't notify you about this**. For a moment there was a [sparkle of hope](https://core.trac.wordpress.org/ticket/30465), but with Automattic reducing the amount of sponsored hours it's still on halt:
+
+> As I don't have any sponsored time to move this forward, including the open issues on that repo, and there's been no time allocated (AFAIK) for the plugins team to improve the closure situations, merging this in 6.8 is not viable.
+
+## What we can learn from this?
+
+WordPress really needs a mechanism in its core to **notify users about closed plugins**. There is an API for that, there is an experimental plugin just waiting to get merged. It just needs a small final push. I even wrote an [article about it](statamic://entry::aecc4dc4-41c2-4621-a674-f9c862ac9fd6).
+
+The repository also needs some **automated testing** introduced. I'm sure we could find something this way. Would that be perfect? No. Would there be false positives? Yes. Would it be in general better? Yes.
+
+Also, if you are a developer - make sure that security researchers can contact you in some way. Leave a **working** email or set up an **mVDP** somewhere([Patchstack has one](https://patchstack.com/for-plugins/)) - it's up to you. 
+
+We also discovered that managing everything around the validation of 1500 reports is more than difficult. It was a very hard time for us. But a joyful one too - I mean taking part in such enormous bug bounty happens only once in a lifetime.

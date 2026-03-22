@@ -1,0 +1,444 @@
+---
+title: "Migrating WordPress Gutenberg blocks to Statamic"
+intro: "Migrating data between CMSs is in most cases the reason why don't change your CMS. I wanted to discover how difficult it would be to migrate from WP to Statamic."
+description: "Learn how to migrate WordPress content, including Gutenberg blocks, to Statamic. This guide provides a step-by-step approach using a custom CLI command to convert WordPress blocks into Bard sets in Statamic, making your content migration smoother and more efficient. Ideal for developers handling complex WordPress to Statamic transitions."
+pubDate: 2024-08-20
+updatedDate: 2024-11-12
+thumbnail: "arts/wp-to-statamic/migracja.png"
+ogImage: "arts/wp-to-statamic/post-cover--twitter-(31).png"
+tags:
+  - "wordpress"
+  - "statamic"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+There are two amazing guides about migrating WordPress data to Statamic out there. Both of them are great and they handle this problem in a slightly different way: 
+
+- The one by [**Lucky Media**](https://www.luckymedia.dev/blog/wordpress-migration-to-statamic-v3-part-1) uses Corcel and a CLI command
+- The second, by [**Stopa Development**](https://statamic.com/addons/stopa-development/statamic-wp-import), is a set of plugins for WP and Statamic that migrates the data
+
+And while they are great, they both handle content like **Gutenberg never existed**.
+
+<Alert>
+There is a new version of this article that uses the <strong>Statamic Importer</strong>. Check it <strong><a class="underline" href="/blog/migrating-gutenberg-blocks-using-the-statamic-importer">here</a></strong>.
+</Alert>
+
+## The Block Editor aka Gutenberg
+
+With the WordPress 5.0 release, Gutenberg became the new content editor and replaced **TinyMCE**. It brought a lot of changes in the way how content was created. With TinyMCE, the content was just a blob of HTML, that we could simply import into Statamic. 
+
+**Gutenberg** is more similar to **Bard**, where everything consists of blocks. 
+
+With both editors sharing a similar approach to handing content, it would be great to move some blocks directly to bard sets.
+
+## The problem
+
+The only catch is the way how Gutenberg saves data:
+
+```
+<!-- wp:paragraph -->
+<p>Gesha coffee, also known as Geisha coffee, is a remarkable and highly sought-after variety that has taken the coffee world by storm. Originally discovered in the remote Gesha village of Ethiopia, this coffee has gained worldwide recognition for its exceptional quality and unique flavor profile.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:acf/test {"name":"acf/test","data":{"name":"Maciek Palmowski","_name":"field_66c11a6ea3876","is_important":"1","_is_important":"field_66c11a87a3877","bigger_text":"This is a very important content\r\n\r\nThat's the message","_bigger_text":"field_66c11aa6a3878"},"mode":"preview"} /-->
+```
+
+This way it isn't easy to parse outside of WordPress. Luckily WordPress has a `parse_blocks` function that allows you to convert this into a more readable format:
+
+```
+"block_data": [
+    {
+        "blockName": "core/paragraph",
+        "attrs": {
+            "align": "",
+            "content": "Gesha coffee, also known as Geisha coffee, is a remarkable and highly sought-after variety that has taken the coffee world by storm. Originally discovered in the remote Gesha village of Ethiopia, this coffee has gained worldwide recognition for its exceptional quality and unique flavor profile.",
+            "dropCap": false,
+            "placeholder": "",
+            "direction": "",
+            "lock": [],
+            "metadata": [],
+            "style": [],
+            "backgroundColor": "",
+            "textColor": "",
+            "gradient": "",
+            "className": "",
+            "fontSize": "",
+            "fontFamily": "",
+            "anchor": ""
+        },
+        "innerBlocks": [],
+        "innerHTML": "\n<p>Gesha coffee, also known as Geisha coffee, is a remarkable and highly sought-after variety that has taken the coffee world by storm. Originally discovered in the remote Gesha village of Ethiopia, this coffee has gained worldwide recognition for its exceptional quality and unique flavor profile.</p>\n",
+        "innerContent": [
+            "\n<p>Gesha coffee, also known as Geisha coffee, is a remarkable and highly sought-after variety that has taken the coffee world by storm. Originally discovered in the remote Gesha village of Ethiopia, this coffee has gained worldwide recognition for its exceptional quality and unique flavor profile.</p>\n"
+        ],
+        "rendered": "\n<p>Gesha coffee, also known as Geisha coffee, is a remarkable and highly sought-after variety that has taken the coffee world by storm. Originally discovered in the remote Gesha village of Ethiopia, this coffee has gained worldwide recognition for its exceptional quality and unique flavor profile.</p>\n"
+    },
+    {
+        "blockName": "acf/test",
+        "attrs": {
+            "name": "acf/test",
+            "data": {
+                "name": "Maciek Palmowski",
+                "_name": "field_66c11a6ea3876",
+                "is_important": "1",
+                "_is_important": "field_66c11a87a3877",
+                "bigger_text": "This is a very important content\r\n\r\nThat's the message",
+                "_bigger_text": "field_66c11aa6a3878"
+            },
+            "mode": "preview",
+            "align": "",
+            "lock": [],
+            "metadata": [],
+            "className": "",
+            "anchor": ""
+        },
+        "innerBlocks": [],
+        "innerHTML": "",
+        "innerContent": [],
+        "rendered": "<h1>Render something</h1>"
+    },
+}
+```
+
+Sadly, while **TipTap** is amazing, moving structured data to it isn't as straightforward as you could expect.
+
+## What we want to achieve
+
+ We'll create a CLI command that:
+
+- get the post data from the REST API
+
+- will convert some of the blocks into Bard sets
+- will convert the rest by guessing the rendered HTML
+- save as a post to a Statamic collection
+
+## WordPress preparations
+
+Before we start, we'll need to install the `wp-rest-blocks` plugin by **Jonny Harris. **You can find it on [GitHub](https://github.com/spacedmonkey/wp-rest-blocks). There is also a similar plugin called [VIP Block Data API ](https://github.com/Automattic/vip-block-data-api)by Automattic, but I prefer the one by Jonny.
+
+Thanks to this, we'll get this nice structured data in the REST API. After the installation, you'll get access to the `block_data` node inside your API.
+
+Also, make sure that every post type you want to migrate is accessible via the REST API.
+
+## Creating the CLI command
+
+I went with the **LuckyMedia** approach. Just instead of using Corcel, I decided to use Guzzle and grab the API.
+
+Creating the command is as simple as running:
+
+```
+php artisan make:command ImportWordPress
+```
+
+## Grabbing the data
+
+This a very simple scenario, where I just want to grab content from `posts` :
+
+```
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use GuzzleHttp\Client;
+use Statamic\Facades\Entry;
+use Carbon\Carbon;
+
+class ImportWordPress extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'import:wp';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Import posts from WordPress';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle()
+    {
+        foreach ($this->getPosts() as $post) {
+            $this->info("Importing post: {$post['title']['rendered']}");
+
+            $entry = Entry::make()
+                ->collection('posts')
+                ->slug($post['slug'])
+                ->date(Carbon::createFromFormat('Y-m-d\TH:i:s', $post['date']))
+                ->data([
+                    'title' => $post['title']['rendered'],
+                    'content' => 'our future content will be here'
+                ]);
+
+            $entry->save();
+        }
+    }
+
+    public function getPosts()
+    {
+        $client = new Client();
+        $apiUrl = "http://wpapi.test/wp-json/wp/v2/posts";
+
+        try {
+            $response = $client->get($apiUrl);
+            $data = json_decode($response->getBody(), true);
+
+            return $data;
+        } catch (\Exception $e) {
+            $this->error("Error: " . $e->getMessage());
+        }
+    }
+}
+```
+
+I have the `getPosts` method that takes care of grabbing posts from the API and returning them. 
+
+<Alert>
+Remember the REST API limits the number of posts we can grab in one attempt - if you have a lot of them, you'll probably have to grab them page by page first.
+</Alert>
+
+Apart from grabbing the data in this step, we're saving some basic data into Statamic like slug and title. I won't focus more on those because this was already covered in the **LuckyMedia** tutorial.
+
+## Grabbing the default blocks
+
+First, let's start with grabbing the blocks, that we want to copy as they are and let TipTap handle the rest.
+
+<Alert>
+There is this <strong><a class="underline" href="https://jacksleight.dev/posts/importing-html-into-statamic-s-bard-fieldtype-updated" target="blank">amazing guide</a></strong> by <strong>Jack Sleight</strong> that you should read first.
+</Alert>
+
+```
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use GuzzleHttp\Client;
+use Statamic\Facades\Entry;
+use Carbon\Carbon;
+use Tiptap\Editor;
+
+class ImportWordPress extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'import:wp';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Import posts from WordPress';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle()
+    {
+        foreach ($this->getPosts() as $post) {
+            $value = [];
+            $this->info("Importing post: {$post['title']['rendered']}");
+
+            foreach ($post['block_data'] as $block) {
+                $value[] = match($block['blockName']) {
+                    default => $this->parseDefaultBlock($block),
+                };
+            }
+
+            $entry = Entry::make()
+                ->collection('posts')
+                ->slug($post['slug'])
+                ->date(Carbon::createFromFormat('Y-m-d\TH:i:s', $post['date']))
+                ->data([
+                    'title' => $post['title']['rendered'],
+                    'content' => $value
+                ]);
+
+            $entry->save();
+        }
+    }
+
+    public function getPosts()
+    {
+        $client = new Client();
+        $apiUrl = "http://wpapi.test/wp-json/wp/v2/posts";
+
+        try {
+            $response = $client->get($apiUrl);
+            $data = json_decode($response->getBody(), true);
+
+            return $data;
+        } catch (\Exception $e) {
+            $this->error("Error: " . $e->getMessage());
+        }
+    }
+
+    public function parseDefaultBlock($block)
+    {
+        $tmp_value = (new \Tiptap\Editor)
+            ->setContent($block['rendered'])
+            ->getJSON();
+
+        return json_decode($tmp_value, true)['content'][0];
+
+    }
+
+}
+```
+
+With the `parseDefaultBlock` method we're grabbing the rendered block HTML content, saving it to JSON, and converting it to an array. This way - we're recreating TipTap's data structure. This probably should work in most cases. There is a chance you'll need some additional extensions to handle some types of data, but all of this is covered in the tutorial I mentioned earlier.
+
+## Creating sets
+
+**TipTap **has a way to create custom sets. Sadly, it focuses on parsing HTML to grab data. A step that we don't need because we already have structured data. 
+
+That is why, I had to reverse-engineer the whole process a bit. Let's go step by step. 
+
+In **WordPress**, we have a block called `acf/test` and it consists of three data fields:
+
+- name - string
+- is_important - boolean
+- bigger_text - string
+
+Before going forward, we have to create a similar set in **Statamic**.
+
+Such set will be saved as:
+
+```
+-
+    type: set
+    attrs:
+      values:
+        type: test_data
+        name: 'Maciek Palmowski'
+        is_important: '1'
+        bigger_text: "This is a very important content\r\n\r\nThat's the message"
+```
+
+Knowing this and knowing that the Bard set is called `test_data` I could create:
+
+```
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use GuzzleHttp\Client;
+use Statamic\Facades\Entry;
+use Carbon\Carbon;
+use Tiptap\Editor;
+
+class ImportWordPress extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'import:wp';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Import posts from WordPress';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle()
+    {
+        foreach ($this->getPosts() as $post) {
+            $value = [];
+            $this->info("Importing post: {$post['title']['rendered']}");
+
+            foreach ($post['block_data'] as $block) {
+                $value[] = match($block['blockName']) {
+                    'acf/test' => $this->parseTestBlock($block),
+                    default => $this->parseDefaultBlock($block),
+                };
+            }
+
+            $entry = Entry::make()
+                ->collection('posts')
+                ->slug($post['slug'])
+                ->date(Carbon::createFromFormat('Y-m-d\TH:i:s', $post['date']))
+                ->data([
+                    'title' => $post['title']['rendered'],
+                    'content' => $value
+                ]);
+
+            $entry->save();
+        }
+    }
+
+    public function getPosts()
+    {
+        $client = new Client();
+        $apiUrl = "http://wpapi.test/wp-json/wp/v2/posts";
+
+        try {
+            $response = $client->get($apiUrl);
+            $data = json_decode($response->getBody(), true);
+
+            return $data;
+        } catch (\Exception $e) {
+            $this->error("Error: " . $e->getMessage());
+        }
+    }
+
+    public function parseDefaultBlock($block)
+    {
+        $tmp_value = (new \Tiptap\Editor)
+            ->setContent($block['rendered'])
+            ->getJSON();
+
+        return json_decode($tmp_value, true)['content'][0];
+
+    }
+    public function parseTestBlock($block)
+    {
+        $tmp_value = (new \Tiptap\Editor)
+            ->setContent([
+                'type' => 'set',
+                'content' => '',
+                'attrs' => [
+                    'values' => [
+                        'type' => 'test_data',
+                        'name' => $block['attrs']['data']['name'],
+                        'is_important' => $block['attrs']['data']['is_important'],
+                        'bigger_text' => $block['attrs']['data']['bigger_text'],
+                    ]
+                ],
+            ])
+            ->getJSON();
+
+        return json_decode($tmp_value, true);
+    }
+}
+```
+
+As you can see, the `parseTestBlock` method creates the array manually and fills the blanks with proper data from the API. If you want to migrate data similarly, you'll have to reverse-engineer each set's structure.
+
+Also, by default sets don't have the `content` key, but when you are creating it this way, this key has to be added, because without it will throw an error that `content` is missing. Not sure why.
+
+## Closing thoughts
+
+As I mentioned at some point - it wasn't as straightforward as it could. On the other hand, until we have a unified format for this type of content (and probably this will never happen), migrations between them will be tricky and will require some manual work.
+
+On the other hand - when you understand how to import any data as bard sets, it becomes simpler. The most difficult part for me was reverse engineering it for the first time. 

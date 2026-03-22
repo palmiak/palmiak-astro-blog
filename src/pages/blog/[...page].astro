@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths, Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import NewsletterBox from '../../components/NewsletterBox.astro';
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const posts = (await getCollection('posts')).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  );
+  return paginate(posts, { pageSize: 10 });
+};
+
+type Props = {
+  page: Page<CollectionEntry<'posts'>>;
+};
+
+const { page } = Astro.props;
+---
+<Layout title="Blog">
+  <h3 class="container mx-auto px-5 text-center text-white text-xl font-bold font-palmiak-font-title m-0 mt-10">
+    Latest posts
+  </h3>
+
+  <div class="container mx-auto max-w-[1400px] px-5 grid grid-cols-1 min-[1024px]:grid-cols-2 gap-7 mt-10">
+    {page.data.map((post, i) => (
+      <BlogCard
+        title={post.data.title}
+        slug={post.slug}
+        thumbnail={post.data.thumbnail}
+        tags={post.data.tags}
+        excerpt={post.data.description}
+        pubDate={post.data.pubDate}
+        lazy={i > 1}
+      />
+    ))}
+  </div>
+
+  {page.total > 10 && (
+    <div class="container mx-auto max-w-[1400px] px-5 mt-10 text-center flex flex-nowrap items-center justify-center gap-7">
+      {page.url.prev && (
+        <a href={page.url.prev} class="h-[62px] flex rounded-full bg-palmiak_lightdark p-[2px]">
+          <div class="text-white text-base font-bold font-palmiak-font-title tracking-wide flex rounded-full h-full items-center justify-center bg-palmiak_bg back px-6 transition-all duration-150 hover:bg-opacity-50 text-[15px]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-white mr-2" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            Prev
+          </div>
+        </a>
+      )}
+      {page.url.next && (
+        <a href={page.url.next} class="h-[62px] flex rounded-full bg-linear-to-r from-palmiak_pink via-palmiak_green to-palmiak_blue p-[2px]">
+          <div class="text-white text-base font-bold font-palmiak-font-title tracking-wide flex rounded-full h-full items-center justify-center bg-palmiak_bg back px-6 transition-all duration-150 hover:bg-opacity-80 text-[15px]">
+            Next
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-white ml-2" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+          </div>
+        </a>
+      )}
+    </div>
+  )}
+
+  <NewsletterBox />
+</Layout>

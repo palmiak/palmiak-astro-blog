@@ -1,0 +1,136 @@
+---
+title: "Content Layer API in Astro - how to create a CMS-agnostic website"
+intro: "One of the promises of headless was the simplicity of switching between technologies. In reality, it's not that simple."
+description: "One of the promises of headless was the simplicity of switching between technologies. In reality, it's not that simple."
+pubDate: 2025-05-09
+updatedDate: 2025-05-10
+thumbnail: "arts/content-layer-api-in-astro-how-to-create-a-cms-agnostic-website/content-layer.png"
+ogImage: "arts/content-layer-api-in-astro-how-to-create-a-cms-agnostic-website/post-cover--twitter-(46).png"
+tags:
+  - "astro"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+Quite a while ago, I published an [article](statamic://entry::e4b64123-92f2-4da2-a8a5-c1dd7a811aa0) in which I created a Proof of Concept on creating a CMS-agnostic flow. Back then, I wrote:
+
+> But converting it from one CMS to another was annoying. "Annoying" is the correct word, because it wasn''t difficult, but it was tedious.
+
+It was never used in production. In the meantime, Astro worked on** Content Layer API,** which did exactly what I wanted to achieve, but 100 times better.
+
+## The problem
+
+Imagine you are using Keystatic. It's all great and all, but your company got bigger, and this amazing CMS was not enough anymore for you. Situations like this happen. Before Content Layer API, you would probably have to:
+
+- Change the API endpoints - simple
+- remove/add dependencies related to the CMS you were using - also, simple
+- go through all the variables to correct them with the ones corresponding to the new CMS - annoying 
+
+The last part was always the worst. It's not something difficult, but you have to go through all the files, make sure that you didn't forget something, etc.
+
+## Content Layer API to the rescue
+
+The **Content Layer API** didn't happen out of thin air - it was a great example of smart evolution. 
+
+**Collections** were the first step. They allowed us to create an equivalent of post types, but for Markdown files. This meant we got a unified interface to interact with them in our code. And they also had one more superpower - the schema. The schema allowed us to define all the variables set in the frontmatter part of a file. We could select variable type, is it optional or required, and much more. 
+
+```
+schema: z.object({
+  isDraft: z.boolean(),
+  title: z.string(),
+  sortOrder: z.number(),
+  author: z.string().default('Anonymous'),
+  language: z.enum(['en', 'es']),
+  tags: z.array(z.string()),
+  footnote: z.string().optional(),
+  publishDate: z.date(), // e.g. 2024-09-17
+  updatedDate: z.string().transform((str) => new Date(str)),
+  authorContact: z.string().email(),
+  canonicalURL: z.string().url(),
+})
+```
+
+The only downside was that it worked only with local markdown files. 
+
+**Content Layer API **pushed this forward. Instead of just being limited to local MD files, we could define our own loaders and grab data from APIs or databases. 
+
+It would look like this (example taken from the docs):
+
+```
+const countries = defineCollection({
+  loader: async () => {
+    const response = await fetch("https://restcountries.com/v3.1/all");
+    const data = await response.json();
+    return data.map((country) => ({
+      id: country.cca3,
+      ...country,
+    }));
+  },
+  schema: /* ... */
+});
+```
+
+## So, how does it help?
+
+I wrote a few articles lately about how to connect **Astro** with different CMSs - the truth is, after creating the first article, the only thing I'm doing (at least in Astro) is just editing the `content.config.ts` file. Let me show you an example of how the file looked for [Flotiq](statamic://entry::385c79d3-4366-4492-9f28-f3ea1a2b5ec6) versus the one for [Keystatic](statamic://entry::525d748d-84c4-4a4a-8da3-5def99292733):
+
+```
+// Flotiq
+import { defineCollection, z } from 'astro:content';
+
+import { FlotiqApi } from "flotiq-api-ts";
+
+const blog = defineCollection({
+	loader: async () => {
+		const flotiq = new FlotiqApi(import.meta.env.FLOTIQ_API_KEY);
+		const posts = await flotiq.BlogpostAPI.list();
+
+		return posts.data.map((post) => ({
+			...post,
+			id: post.slug,
+			pubDate: post.internal?.publishedAt,
+			heroImage: post.heroImage[0]?.url ? 'https://api.flotiq.com' + post.heroImage[0]?.url : undefined,
+		}));
+	},
+	// Type-check frontmatter using a schema
+	schema: z.object({
+		id: z.string(),
+		title: z.string(),
+		description: z.string(),
+		pubDate: z.coerce.date(),
+		heroImage: z.string().optional(),
+		content: z.any(),
+	}),
+});
+
+export const collections = { blog };
+```
+
+```
+// Keystatic
+import { glob } from 'astro/loaders';
+import { defineCollection, z } from 'astro:content';
+
+const blog = defineCollection({
+	// Load mdoc files in the `src/content/blog/` directory.
+	loader: glob({ base: './src/content/blog', pattern: '**/*.mdoc' }),
+	schema: ({ image }) => z.object({
+		title: z.string(),
+		description: z.string(),
+		pubDate: z.coerce.date(),
+		heroImage: image().optional(),
+	}),
+});
+
+export const collections = { blog };
+```
+
+So, they do differ. One uses an API, and the second uses Mdoc files. But what is important - I can map the variables here and make sure they are the same type.
+
+This way, I'm skipping all the hard work of going through all the files, because the title will always be stored in the `title` variable and so on.
+
+## To sum up
+
+While Content Layer API has limitations - for example, it's only for read operations - it's currently the best way in Astro to achieve the **CMS-agnostic state**. So, if for some reason, you're still pinging the APIs directly to grab your content, you should start thinking about migrating to the [Content Layer API](https://astro.build/blog/content-layer-deep-dive/). Tomorrow you will thank you at some point.

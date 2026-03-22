@@ -1,0 +1,127 @@
+---
+title: "Unicon - the easiest way to use icons in Laravel and Statamic"
+intro: "Nuxt and Astro have an amazing icon management system based on Iconify. I got used to it and having to download icons for Statamic was a bit annoying - but then Unicon🦄 happened."
+description: "Nuxt and Astro have an amazing icon management system based on Iconify. I got used to it and having to download icons for Statamic was a bit annoying - but then Unicon🦄 happened."
+pubDate: 2024-11-29
+updatedDate: 2024-11-29
+thumbnail: "arts/unicon-the-easiest-way-to-use-icons-in-laravel-and-statamic/unicon-art.png"
+ogImage: "arts/unicon-the-easiest-way-to-use-icons-in-laravel-and-statamic/post-cover--twitter-(35).png"
+tags:
+  - "statamic"
+---
+
+import PostImage from '../../components/mdx/PostImage.astro';
+import YouTube from '../../components/mdx/YouTube.astro';
+import Alert from '../../components/mdx/Alert.astro';
+
+[**Nicolas Hedger**](https://bsky.app/profile/hedger.ch) created a lovely Laravel package called [**Unicon**](https://unicon.rocks/). It's inspired by [**nuxt/icon**](https://nuxt.com/modules/icon) which is an amazing library that allows you to download icons from [Iconify](https://iconify.design/) just by providing a component with an icon set and icon name, for example:
+
+```
+<Icon name="uil:github" />
+```
+
+Unicon works similarly:
+
+```
+<x-icon name="uil:github" />
+```
+
+## Installation
+
+Installation is very simple - you just have to run:
+
+```
+composer require unicon-rocks/unicon-laravel
+```
+
+And optionally run:
+
+```
+php artisan vendor:publish --tag=unicon-config
+```
+
+To export a config file.
+
+## Typical usage
+
+Out of the box, you can use **Unicon **in two ways:
+
+- as a **Blade** component
+- as a helper function
+
+In both cases, you first have to visit Iconify, pick an icon you want, copy the name of the set and icon, and use it:
+
+```
+<x-icon name="uil:github" class="w-6 h-6" />
+```
+
+or
+
+```
+<?php
+$icon = icon('uil:github');
+```
+
+The whole magic will happen automatically, the icon will get downloaded and SVG will be displayed in your app.
+
+But that's not all - if you are planning to only use one set of icons you can configure it by setting the `prefix` in the config file. So, if you would add `prefix => 'uil'` then you can just write:
+
+```
+<x-icon name="github" class="w-6 h-6" />
+```
+
+## Using it with Statamic
+
+One of the reasons I wanted to try **Unicon** was using it with **Statamic** and making icon management better. The package itself, helper function, and blade component worked perfectly out of the box without any alterations. The only thing that was missing was the Antlers support.
+
+Luckily, adding custom tags in **Statamic** is simple. First, you have to run:
+
+```
+php please make:tag Unicon
+```
+
+Then, paste the code into the `Unicon.php` file:
+
+```
+<?php
+
+namespace Palmiak\Unicon\Tags;
+
+use Statamic\Tags\Tags;
+use Illuminate\Support\Str;
+
+class Unicon extends Tags
+{
+    /**
+     * The {{ unicon }} tag.
+     *
+     * @return string|bool
+     */
+    public function index()
+    {
+        if ($this->isAntlersBladeComponent()) {
+            return false;
+        }
+        $icon = icon($this->params->get('icon'));
+
+        if($this->params->get('class')) {
+            $classes = $this->params->get('class') . ' ' . config('unicon.defaults.class');
+            $icon = Str::replace('<svg ', '<svg class="' . $classes . '" ', $icon);
+        }
+
+        return $icon;
+    }
+}
+```
+
+All you need to do is add `\{\{ unicon name="uil:github" class="w-6 h-6" \}\}`in your antlers file.
+
+## There's an add-on for that
+
+You can also install an add-on called [**Unicon for Statamic**](https://github.com/palmiak/unicon-for-statamic)**. **Just run:
+
+```
+composer require palmiak/unicon-for-statamic
+```
+
+And you'll have the antlers support included just like that and you'll be able to use `\{\{ unicon name="uil:github" class="w-6 h-6" \}\}` in your templates.
