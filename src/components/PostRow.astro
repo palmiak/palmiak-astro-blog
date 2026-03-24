@@ -1,5 +1,6 @@
 ---
 import Tag from './Tag.astro';
+import { u } from '../utils/url';
 
 interface Props {
   title: string;
@@ -17,7 +18,7 @@ const dateStr = pubDate.toLocaleDateString('en-GB', {
   year: 'numeric',
 });
 ---
-<a class="post-row" href={`/blog/${slug}`}>
+<a class="post-row" href={u(`/blog/${slug}`)}>
   <div class="post-row-inner">
     <div class="post-row-top">
       {tags.slice(0, 1).map((tag) => <Tag tag={tag} />)}

@@ -1,12 +1,13 @@
 ---
+import { u } from '../utils/url';
 const year = new Date().getFullYear();
 ---
 <footer class="site-footer">
   <div class="foot-inner col">
     <div class="foot-l">© {year} Maciek Palmowski · Łódź, Poland</div>
     <div class="foot-links">
-      <a class="foot-a" href="/blog">Blog</a>
-      <a class="foot-a" href="/#speaking">Speaking</a>
+      <a class="foot-a" href={u('/blog')}>Blog</a>
+      <a class="foot-a" href={u('/#speaking')}>Speaking</a>
       <a class="foot-a" href="https://newsletter.maciekpalmowski.dev/" target="_blank" rel="noopener">Newsletter</a>
     </div>
   </div>

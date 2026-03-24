@@ -1,4 +1,5 @@
 ---
+import { u } from '../utils/url';
 ---
 <section class="hero">
   <div class="col">
@@ -18,8 +19,8 @@
     </p>
 
     <div class="h-actions">
-      <a class="btn-p" href="/blog">Read the blog →</a>
-      <a class="btn-g" href="/#speaking">View talks</a>
+      <a class="btn-p" href={u('/blog')}>Read the blog →</a>
+      <a class="btn-g" href={u('/#speaking')}>View talks</a>
     </div>
 
     <div class="h-socials">

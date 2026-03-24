@@ -1,5 +1,6 @@
 ---
 import Logo from './Logo.astro';
+import { u } from '../utils/url';
 
 interface Props {
   isPost?: boolean;
@@ -8,15 +9,15 @@ const { isPost = false } = Astro.props;
 ---
 <header class="site-header">
   <div class="header-inner">
-    <a href="/" class="logo-link" aria-label="Return to the homepage">
+    <a href={u('/')} class="logo-link" aria-label="Return to the homepage">
       <Logo />
     </a>
 
     <nav class="nav-r">
-      <a class="na" href="/blog">Blog</a>
-      <a class="na" href="/#speaking">Speaking</a>
+      <a class="na" href={u('/blog')}>Blog</a>
+      <a class="na" href={u('/#speaking')}>Speaking</a>
       <a class="na" href="https://newsletter.maciekpalmowski.dev/" target="_blank" rel="noopener">Newsletter</a>
-      <a class="nav-cta" href="/contact-me">Contact →</a>
+      <a class="nav-cta" href={u('/contact-me')}>Contact →</a>
     </nav>
 
     <!-- Mobile hamburger toggle -->
@@ -40,10 +41,10 @@ const { isPost = false } = Astro.props;
 
   <!-- Mobile menu -->
   <div id="mobile-menu" class="mobile-menu hidden">
-    <a class="mobile-na" href="/blog">Blog</a>
-    <a class="mobile-na" href="/#speaking">Speaking</a>
+    <a class="mobile-na" href={u('/blog')}>Blog</a>
+    <a class="mobile-na" href={u('/#speaking')}>Speaking</a>
     <a class="mobile-na" href="https://newsletter.maciekpalmowski.dev/" target="_blank" rel="noopener">Newsletter</a>
-    <a class="mobile-na" href="/contact-me">Contact</a>
+    <a class="mobile-na" href={u('/contact-me')}>Contact</a>
   </div>
 
   {isPost && <div id="progress" role="progressbar" aria-label="progress"></div>}
