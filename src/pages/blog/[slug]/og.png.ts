@@ -205,7 +205,7 @@ export const GET: APIRoute = async ({ props }) => {
               color: '#00ffb3',
             },
           },
-          'Read more →'
+          'Read more'
         )
       )
     ),
