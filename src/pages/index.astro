@@ -17,7 +17,7 @@ const talks = (await getCollection('talks')).sort(
   (a, b) => b.data.year - a.data.year
 );
 ---
-<Layout title="Home">
+<Layout title="Home" ogImage={u('/og/home.png')}>
   <Hero />
 
   <GradBar />

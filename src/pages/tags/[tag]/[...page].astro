@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import type { GetStaticPaths, Page } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import Layout from '../../../layouts/Layout.astro';
+import { u } from '../../../utils/url';
 import PostRow from '../../../components/PostRow.astro';
 import SectionHeader from '../../../components/SectionHeader.astro';
 import GradBar from '../../../components/GradBar.astro';
@@ -26,7 +27,7 @@ type Props = {
 const { tag } = Astro.params;
 const { page } = Astro.props;
 ---
-<Layout title={`#${tag}`} description={`All posts tagged with ${tag}`}>
+<Layout title={`#${tag}`} description={`All posts tagged with ${tag}`} ogImage={u(`/tags/${tag}/og.png`)}>
   <div class="col">
     <SectionHeader label="Tag" title={`#${tag}`} />
   </div>

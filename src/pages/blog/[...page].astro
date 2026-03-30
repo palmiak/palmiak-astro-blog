@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import type { GetStaticPaths, Page } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import { u } from '../../utils/url';
 import PostRow from '../../components/PostRow.astro';
 import SectionHeader from '../../components/SectionHeader.astro';
 import NewsletterBox from '../../components/NewsletterBox.astro';
@@ -21,7 +22,7 @@ type Props = {
 
 const { page } = Astro.props;
 ---
-<Layout title="Blog">
+<Layout title="Blog" ogImage={u('/og/blog.png')}>
   <div class="col">
     <SectionHeader label="Writing" title="Latest posts" />
   </div>
