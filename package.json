@@ -9,14 +9,15 @@
     "migrate": "node migrate/bard-to-mdx.mjs"
   },
   "dependencies": {
-    "astro": "^4.15.0",
     "@astrojs/mdx": "^3.1.0",
-    "@tailwindcss/vite": "^4.0.0",
-    "tailwindcss": "^4.0.0",
-    "@tailwindcss/typography": "^0.5.15",
     "@tailwindcss/forms": "^0.5.9",
+    "@tailwindcss/typography": "^0.5.15",
+    "@tailwindcss/vite": "^4.0.0",
+    "@takumi-rs/image-response": "^0.73.1",
+    "astro": "^4.15.0",
     "canvas-confetti": "^1.9.3",
     "highlight.js": "^11.10.0",
-    "quicklink": "^2.3.0"
+    "quicklink": "^2.3.0",
+    "tailwindcss": "^4.0.0"
   }
 }

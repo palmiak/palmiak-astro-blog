@@ -10,6 +10,9 @@ export default defineConfig({
   integrations: [mdx()],
   vite: {
     plugins: [tailwindcss()],
+    ssr: {
+      external: ['@takumi-rs/core'],
+    },
   },
   output: 'static',
   markdown: {

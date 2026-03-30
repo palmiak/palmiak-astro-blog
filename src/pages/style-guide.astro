@@ -1,0 +1,724 @@
+---
+import Layout from '../layouts/Layout.astro';
+import GradBar from '../components/GradBar.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import Tag from '../components/Tag.astro';
+import PostRow from '../components/PostRow.astro';
+import NewsletterBox from '../components/NewsletterBox.astro';
+---
+
+<Layout title="Style Guide">
+  <div class="sg-wrap">
+
+    <!-- Header -->
+    <div class="sg-hero">
+      <div class="sg-col">
+        <div class="sg-eyebrow">maciekpalmowski.dev</div>
+        <h1 class="sg-title">Style Guide</h1>
+        <p class="sg-sub">Design tokens, typography, and components. The source of truth for this site's visual language.</p>
+      </div>
+    </div>
+
+    <GradBar />
+
+    <!-- ── Color Palette ─────────────────────────────────────── -->
+    <section class="sg-section">
+      <div class="sg-col">
+        <SectionHeader label="Foundations" title="Color palette" />
+
+        <div class="swatch-grid">
+          <div class="swatch-group">
+            <h3 class="swatch-group-title">Backgrounds</h3>
+            <div class="swatches">
+              <div class="swatch">
+                <div class="swatch-color" style="background:#0b0b0e;border:1px solid rgba(255,255,255,0.15)"></div>
+                <div class="swatch-name">--bg</div>
+                <div class="swatch-val">#0b0b0e</div>
+                <div class="swatch-role">Page background</div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background:#111116;border:1px solid rgba(255,255,255,0.1)"></div>
+                <div class="swatch-name">--bg1</div>
+                <div class="swatch-val">#111116</div>
+                <div class="swatch-role">Hover bg, inputs</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swatch-group">
+            <h3 class="swatch-group-title">Borders</h3>
+            <div class="swatches">
+              <div class="swatch">
+                <div class="swatch-color" style="background:rgba(255,255,255,0.09);border:1px solid rgba(255,255,255,0.2)"></div>
+                <div class="swatch-name">--bd</div>
+                <div class="swatch-val">rgba(255,255,255,0.09)</div>
+                <div class="swatch-role">Default borders</div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3)"></div>
+                <div class="swatch-name">--bd2</div>
+                <div class="swatch-val">rgba(255,255,255,0.18)</div>
+                <div class="swatch-role">Hover / emphasis</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swatch-group">
+            <h3 class="swatch-group-title">Text</h3>
+            <div class="swatches">
+              <div class="swatch">
+                <div class="swatch-color" style="background:#f0f0f6"></div>
+                <div class="swatch-name">--hi</div>
+                <div class="swatch-val">#f0f0f6</div>
+                <div class="swatch-role">Headings, strong</div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background:#c8c8e4"></div>
+                <div class="swatch-name">--mid</div>
+                <div class="swatch-val">#c8c8e4</div>
+                <div class="swatch-role">Body copy, meta</div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background:#8e8eaa"></div>
+                <div class="swatch-name">--dim</div>
+                <div class="swatch-val">#8e8eaa</div>
+                <div class="swatch-role">Dates, footer, dim</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swatch-group">
+            <h3 class="swatch-group-title">Accents — always use as gradients, never flat fills</h3>
+            <div class="swatches">
+              <div class="swatch">
+                <div class="swatch-color" style="background:#ff2d78"></div>
+                <div class="swatch-name">--pk</div>
+                <div class="swatch-val">#ff2d78</div>
+                <div class="swatch-role">Pink</div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background:#a855f7"></div>
+                <div class="swatch-name">--vi</div>
+                <div class="swatch-val">#a855f7</div>
+                <div class="swatch-role">Violet</div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background:#00ffb3"></div>
+                <div class="swatch-name">--gr</div>
+                <div class="swatch-val">#00ffb3</div>
+                <div class="swatch-role">Neon green</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swatch-group">
+            <h3 class="swatch-group-title">Gradients</h3>
+            <div class="swatches">
+              <div class="swatch">
+                <div class="swatch-color" style="background:linear-gradient(90deg,#ff2d78,#a855f7,#00ffb3)"></div>
+                <div class="swatch-name">Full gradient</div>
+                <div class="swatch-role">Hairlines, hero text, progress bar</div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background:linear-gradient(90deg,#ff2d78,#a855f7)"></div>
+                <div class="swatch-name">Pink → Violet</div>
+                <div class="swatch-role">Buttons, nav underline, rm-dot</div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background:linear-gradient(90deg,#a855f7,#00ffb3)"></div>
+                <div class="swatch-name">Violet → Green</div>
+                <div class="swatch-role">Stat numbers, logo right chevron</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <GradBar />
+
+    <!-- ── Typography ────────────────────────────────────────── -->
+    <section class="sg-section">
+      <div class="sg-col">
+        <SectionHeader label="Foundations" title="Typography" />
+
+        <div class="type-stack">
+
+          <div class="type-row">
+            <div class="type-meta">
+              <div class="type-font">Unbounded</div>
+              <div class="type-role">Display / headings only. Never for body text.</div>
+            </div>
+            <div class="type-examples">
+              <div style="font-family:'Unbounded',sans-serif;font-size:30px;font-weight:800;letter-spacing:-0.03em;line-height:1.15;color:var(--hi)">Post title · 30px / 800</div>
+              <div style="font-family:'Unbounded',sans-serif;font-size:20px;font-weight:700;letter-spacing:-0.03em;color:var(--hi);margin-top:16px">Section title · 20px / 700</div>
+              <div style="font-family:'Unbounded',sans-serif;font-size:16px;font-weight:600;letter-spacing:-0.025em;line-height:1.4;color:var(--hi);margin-top:16px">Post list title · 16px / 600</div>
+              <div style="font-family:'Unbounded',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.01em;color:var(--hi);margin-top:16px">Logo wordmark · 10px / 700</div>
+            </div>
+          </div>
+
+          <div class="type-divider"></div>
+
+          <div class="type-row">
+            <div class="type-meta">
+              <div class="type-font">Instrument Serif</div>
+              <div class="type-role">Italic only. Post lede and blockquotes exclusively.</div>
+            </div>
+            <div class="type-examples">
+              <div style="font-family:'Instrument Serif',serif;font-size:22px;font-style:italic;line-height:1.55;color:var(--mid)">Post lede paragraph · 22px italic — the engaging subtitle that draws readers in after the title.</div>
+            </div>
+          </div>
+
+          <div class="type-divider"></div>
+
+          <div class="type-row">
+            <div class="type-meta">
+              <div class="type-font">IBM Plex Mono</div>
+              <div class="type-role">All metadata, labels, dates, tags, buttons, nav links, captions. Always uppercase for labels.</div>
+            </div>
+            <div class="type-examples">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--mid)">Section label · 10px / 0.16em tracking</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.05em;color:var(--mid);margin-top:12px">14 Mar 2025 — Date / meta · 10px</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.08em;color:#c084fc;margin-top:12px">Button label · 10–11px / 0.08em</div>
+            </div>
+          </div>
+
+          <div class="type-divider"></div>
+
+          <div class="type-row">
+            <div class="type-meta">
+              <div class="type-font">Inter</div>
+              <div class="type-role">Body copy only. Excerpts, prose paragraphs, form inputs.</div>
+            </div>
+            <div class="type-examples">
+              <div style="font-family:'Inter',sans-serif;font-size:15px;font-weight:300;line-height:1.8;color:var(--mid)">Body paragraph · 15px / weight 300 / line-height 1.8. Used for excerpts on post list and general descriptive text throughout the site.</div>
+              <div style="font-family:'Inter',sans-serif;font-size:16px;font-weight:300;line-height:1.85;color:var(--mid);margin-top:12px">Article prose · 16px / weight 300 / line-height 1.85. The main reading text inside blog posts.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <GradBar />
+
+    <!-- ── Buttons ────────────────────────────────────────────── -->
+    <section class="sg-section">
+      <div class="sg-col">
+        <SectionHeader label="Components" title="Buttons" />
+        <p class="sg-note">Transparent background + colored border + tinted bg on hover. Never a solid or gradient fill.</p>
+
+        <div class="btn-row">
+          <button class="btn-green">Read the blog →</button>
+          <button class="btn-violet">Subscribe →</button>
+          <button class="btn-ghost">View talks →</button>
+        </div>
+
+        <div class="sg-code">
+          <pre><code>{`/* Green — primary CTA */
+border: 1px solid rgba(0,255,179,0.4);
+color: #4dffd6;
+background: rgba(0,255,179,0.06);
+
+/* Violet — subscribe, contact, newsletter */
+border: 1px solid rgba(168,85,247,0.45);
+color: #c084fc;
+background: rgba(168,85,247,0.07);
+
+/* Ghost — secondary actions */
+border: 1px solid rgba(255,255,255,0.14);
+color: var(--mid);
+background: transparent;
+
+/* Shared */
+font-family: 'IBM Plex Mono', monospace;
+font-size: 10–11px;
+letter-spacing: 0.06–0.08em;
+padding: 8–11px 15–20px;
+border-radius: 4px;`}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <GradBar />
+
+    <!-- ── Tags ──────────────────────────────────────────────── -->
+    <section class="sg-section">
+      <div class="sg-col">
+        <SectionHeader label="Components" title="Tags" />
+        <p class="sg-note">IBM Plex Mono, uppercase, 9px. Three color variants mapped by category.</p>
+
+        <div class="tag-row">
+          <Tag tag="Astro" />
+          <Tag tag="WordPress" />
+          <Tag tag="Security" />
+          <Tag tag="Conferences" />
+          <Tag tag="Jamstack" />
+          <Tag tag="Patchstack" />
+        </div>
+
+        <div class="sg-code">
+          <pre><code>{`/* Violet — conferences, wordpress, speaking */
+color: #c084fc; border: 1px solid rgba(168,85,247,0.3);
+
+/* Green — astro, wordcamp, jamstack, headless, ci/cd, development */
+color: #4dffd6; border: 1px solid rgba(0,255,179,0.3);
+
+/* Pink — security, patchstack */
+color: #f472b6; border: 1px solid rgba(255,45,120,0.3);`}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <GradBar />
+
+    <!-- ── Section Header ────────────────────────────────────── -->
+    <section class="sg-section">
+      <div class="sg-col">
+        <SectionHeader label="Components" title="Section header" />
+        <p class="sg-note">Every section starts with a mono label + gradient dot, followed by an Unbounded title.</p>
+
+        <div class="sg-demo">
+          <SectionHeader label="Writing" title="Latest posts" />
+        </div>
+      </div>
+    </section>
+
+    <GradBar />
+
+    <!-- ── Post Row ──────────────────────────────────────────── -->
+    <section class="sg-section">
+      <div class="sg-col">
+        <SectionHeader label="Components" title="Post row" />
+        <p class="sg-note">No cards, no thumbnails. Bordered rows with a translateX(4px) hover shift and an expanding gradient dash.</p>
+
+        <div class="sg-demo" style="padding:0">
+          <PostRow
+            title="How I moved my blog from Gatsby to Astro and never looked back"
+            slug="example"
+            tags={["Astro", "Jamstack"]}
+            excerpt="A walkthrough of migrating a content-heavy blog to Astro's island architecture, with notes on performance and DX."
+            pubDate={new Date('2025-03-14')}
+          />
+          <PostRow
+            title="WordPress security in 2025: what actually matters"
+            slug="example-2"
+            tags={["Security", "WordPress"]}
+            pubDate={new Date('2025-01-22')}
+          />
+        </div>
+      </div>
+    </section>
+
+    <GradBar />
+
+    <!-- ── Newsletter ────────────────────────────────────────── -->
+    <section class="sg-section">
+      <div class="sg-col">
+        <SectionHeader label="Components" title="Newsletter box" />
+        <p class="sg-note">Two variants: <code>home</code> (full width section) and <code>post</code> (inline, horizontal layout).</p>
+      </div>
+      <NewsletterBox variant="home" />
+      <div class="sg-col" style="margin-top:32px">
+        <NewsletterBox variant="post" />
+      </div>
+    </section>
+
+    <GradBar />
+
+    <!-- ── Layout ────────────────────────────────────────────── -->
+    <section class="sg-section">
+      <div class="sg-col">
+        <SectionHeader label="Foundations" title="Layout & spacing" />
+
+        <div class="layout-table">
+          <div class="lt-row">
+            <div class="lt-key">Global column</div>
+            <div class="lt-val"><code>max-width: 680px</code> — homepage, blog list</div>
+          </div>
+          <div class="lt-row">
+            <div class="lt-key">Post column</div>
+            <div class="lt-val"><code>max-width: 760px</code> — single post pages</div>
+          </div>
+          <div class="lt-row">
+            <div class="lt-key">Section padding</div>
+            <div class="lt-val"><code>52px 0</code> standard · <code>84px 0 76px</code> hero</div>
+          </div>
+          <div class="lt-row">
+            <div class="lt-key">Default border</div>
+            <div class="lt-val"><code>1px solid rgba(255,255,255,0.09)</code> (--bd)</div>
+          </div>
+          <div class="lt-row">
+            <div class="lt-key">Emphasis border</div>
+            <div class="lt-val"><code>1px solid rgba(255,255,255,0.18)</code> (--bd2)</div>
+          </div>
+          <div class="lt-row">
+            <div class="lt-key">Border radius</div>
+            <div class="lt-val">3px tags · 4px buttons · 6px images — nothing larger</div>
+          </div>
+          <div class="lt-row">
+            <div class="lt-key">Nav height</div>
+            <div class="lt-val"><code>54px</code>, sticky, <code>backdrop-filter: blur(12px)</code></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <GradBar />
+
+    <!-- ── Do / Don't ───────────────────────────────────────── -->
+    <section class="sg-section">
+      <div class="sg-col">
+        <SectionHeader label="Guidelines" title="Rules" />
+
+        <div class="rules-grid">
+          <div class="rules-col rules-dont">
+            <div class="rules-head">Don't</div>
+            <ul class="rules-list">
+              <li>Gradient fills on buttons — borders + tints only</li>
+              <li>Solid neon color fills on any surface</li>
+              <li>Shadows or glows — use bg color + borders for depth</li>
+              <li>Card components — use 1px bordered rows</li>
+              <li>Border radius larger than 6px</li>
+              <li>Inter for headings</li>
+              <li>Unbounded for body text</li>
+              <li>Instrument Serif outside lede and blockquotes</li>
+              <li>Color in section labels — only the 5px gradient dot gets accent color</li>
+            </ul>
+          </div>
+          <div class="rules-col rules-do">
+            <div class="rules-head">Do</div>
+            <ul class="rules-list">
+              <li>Use CSS variables (--bg, --hi, --mid, --dim, --bd) for all colors</li>
+              <li>Use gradients only for text fills, hairlines, borders, and decorative dashes</li>
+              <li>Hover states are color shifts, not gradient reveals</li>
+              <li>Keep transitions at 0.12–0.2s ease</li>
+              <li>Use IBM Plex Mono + uppercase + letter-spacing for all labels and meta</li>
+              <li>Use <code>&lt;GradBar /&gt;</code> between major sections</li>
+              <li>Use <code>&lt;SectionHeader /&gt;</code> to open every section</li>
+              <li>Write scoped <code>&lt;style&gt;</code> in Astro components</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</Layout>
+
+<style>
+.sg-wrap {
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+/* Hero */
+.sg-hero {
+  padding: 64px 0 52px;
+  border-bottom: 1px solid var(--bd);
+}
+.sg-col {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.sg-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 16px;
+}
+.sg-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--hi);
+  margin: 0 0 16px;
+}
+.sg-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--mid);
+  margin: 0;
+}
+
+/* Sections */
+.sg-section {
+  padding: 52px 0;
+}
+.sg-note {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--dim);
+  line-height: 1.7;
+  margin: -8px 0 32px;
+}
+.sg-demo {
+  border: 1px solid var(--bd);
+  border-radius: 6px;
+  padding: 24px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+/* Swatches */
+.swatch-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.swatch-group-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin: 0 0 16px;
+  font-weight: 400;
+}
+.swatches {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 130px;
+}
+.swatch-color {
+  width: 100%;
+  height: 60px;
+  border-radius: 4px;
+}
+.swatch-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--hi);
+  letter-spacing: 0.04em;
+}
+.swatch-val {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--dim);
+}
+.swatch-role {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--dim);
+}
+
+/* Typography */
+.type-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.type-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 32px;
+  padding: 32px 0;
+}
+@media (max-width: 600px) {
+  .type-row { grid-template-columns: 1fr; gap: 16px; }
+}
+.type-divider {
+  height: 1px;
+  background: var(--bd);
+}
+.type-font {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--hi);
+  margin-bottom: 8px;
+}
+.type-role {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--dim);
+  line-height: 1.6;
+}
+
+/* Buttons */
+.btn-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+.btn-green {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 10px 20px;
+  border-radius: 4px;
+  border: 1px solid rgba(0,255,179,0.4);
+  color: #4dffd6;
+  background: rgba(0,255,179,0.06);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.btn-green:hover { border-color: rgba(0,255,179,0.65); background: rgba(0,255,179,0.1); }
+.btn-violet {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 10px 20px;
+  border-radius: 4px;
+  border: 1px solid rgba(168,85,247,0.45);
+  color: #c084fc;
+  background: rgba(168,85,247,0.07);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.btn-violet:hover { border-color: rgba(168,85,247,0.7); background: rgba(168,85,247,0.12); }
+.btn-ghost {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 10px 20px;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.14);
+  color: var(--mid);
+  background: transparent;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-ghost:hover { border-color: rgba(255,255,255,0.25); color: var(--hi); }
+
+/* Tags */
+.tag-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+/* Code blocks */
+.sg-code {
+  background: var(--bg1);
+  border: 1px solid var(--bd);
+  border-radius: 4px;
+  padding: 20px 24px;
+  overflow-x: auto;
+}
+.sg-code pre {
+  margin: 0;
+}
+.sg-code code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: #7dcfff;
+  line-height: 1.7;
+}
+
+/* Layout table */
+.layout-table {
+  border: 1px solid var(--bd);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.lt-row {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 24px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--bd);
+  align-items: start;
+}
+.lt-row:last-child { border-bottom: none; }
+.lt-key {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--dim);
+  padding-top: 2px;
+}
+.lt-val {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--mid);
+  line-height: 1.6;
+}
+.lt-val code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: #7dcfff;
+  background: rgba(125,207,255,0.07);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* Rules */
+.rules-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+@media (max-width: 600px) {
+  .rules-grid { grid-template-columns: 1fr; }
+}
+.rules-col {
+  border: 1px solid var(--bd);
+  border-radius: 6px;
+  padding: 24px;
+}
+.rules-dont { border-color: rgba(255,45,120,0.2); background: rgba(255,45,120,0.03); }
+.rules-do   { border-color: rgba(0,255,179,0.2); background: rgba(0,255,179,0.03); }
+.rules-head {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.rules-dont .rules-head { color: #f472b6; }
+.rules-do   .rules-head { color: #4dffd6; }
+.rules-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rules-list li {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--mid);
+  line-height: 1.5;
+  padding-left: 16px;
+  position: relative;
+}
+.rules-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 6px;
+  height: 1px;
+}
+.rules-dont .rules-list li::before { background: #f472b6; }
+.rules-do   .rules-list li::before { background: #4dffd6; }
+.rules-list li code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: #7dcfff;
+  background: rgba(125,207,255,0.07);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+</style>
