@@ -107,7 +107,7 @@ const jsonLd = JSON.stringify({
     <div class="col">
       <div class="author-inner">
         <div class="author-l">
-          <div class="author-av" style={`background-image: url('${u('/assets/me.jpg')}')`}></div>
+          <img class="author-av" src={u('/assets/me.jpg')} alt="Maciek Palmowski" width="36" height="36" />
           <div>
             <div class="author-name">Maciek Palmowski</div>
             <div class="author-role">mVDP Growth Manager · Patchstack</div>
@@ -310,8 +310,8 @@ const jsonLd = JSON.stringify({
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-position: center top;
-  background-size: cover;
+  object-fit: cover;
+  object-position: center top;
   border: 1px solid var(--bd2);
   flex-shrink: 0;
 }

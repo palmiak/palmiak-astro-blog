@@ -27,18 +27,12 @@ export async function getStaticPaths() {
 }
 
 export const GET: APIRoute = async ({ props }) => {
-  const { title, description, pubDate, tags } = props as {
+  const { title, description, tags } = props as {
     title: string;
     description: string;
     pubDate: Date;
     tags: string[];
   };
-
-  const dateStr = pubDate.toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  });
 
   // Scale title font size down for longer titles
   const titleSize = title.length > 60 ? 38 : title.length > 40 ? 46 : 54;
@@ -208,10 +202,10 @@ export const GET: APIRoute = async ({ props }) => {
               fontFamily: 'IBM Plex Mono',
               fontSize: 12,
               letterSpacing: '0.06em',
-              color: '#8e8eaa',
+              color: '#00ffb3',
             },
           },
-          dateStr
+          'Read more →'
         )
       )
     ),

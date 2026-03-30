@@ -33,7 +33,7 @@ const { page } = Astro.props;
         title={post.data.title}
         slug={post.slug}
         tags={post.data.tags}
-        excerpt={post.data.description}
+        excerpt={post.data.excerpt ?? post.data.description}
         pubDate={post.data.pubDate}
       />
     ))}

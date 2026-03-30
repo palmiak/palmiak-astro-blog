@@ -1,6 +1,5 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
-import tailwindcss from '@tailwindcss/vite';
 
 const isGhPages = process.env.DEPLOY_TARGET === 'gh-pages';
 
@@ -9,7 +8,6 @@ export default defineConfig({
   base: isGhPages ? '/palmiak-astro-blog' : '/',
   integrations: [mdx()],
   vite: {
-    plugins: [tailwindcss()],
     ssr: {
       external: ['@takumi-rs/core'],
     },

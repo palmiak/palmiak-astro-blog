@@ -33,7 +33,7 @@ const talks = (await getCollection('talks')).sort(
         title={post.data.title}
         slug={post.slug}
         tags={post.data.tags}
-        excerpt={post.data.description}
+        excerpt={post.data.excerpt ?? post.data.description}
         pubDate={post.data.pubDate}
       />
     ))}
@@ -48,7 +48,7 @@ const talks = (await getCollection('talks')).sort(
 
   <!-- About section -->
   <div class="about col">
-    <div class="about-inner">
+    <div class="about-border"><div class="about-inner">
       <div class="about-eyebrow"><span class="sec-dot"></span>About me</div>
       <p class="about-body">
         I'm a web developer and <strong>mVDP Growth Manager at Patchstack</strong> — the WordPress security company.
@@ -58,7 +58,7 @@ const talks = (await getCollection('talks')).sort(
       <a class="about-link" href={u('/contact-me')}>
         Get in touch →
       </a>
-    </div>
+    </div></div>
   </div>
 
   <GradBar />
@@ -134,21 +134,20 @@ const talks = (await getCollection('talks')).sort(
   padding: 52px 24px;
   border-bottom: 1px solid var(--bd);
 }
+.about-border {
+  background: linear-gradient(180deg, #ff2d78, #a855f7, #00ffb3);
+  border-radius: 4px;
+  padding: 1px;
+}
 .about-inner {
-  background: var(--bg1);
-  border: 1px solid var(--bd);
-  border-left: 2px solid transparent;
-  border-image: linear-gradient(180deg, #ff2d78, #a855f7, #00ffb3) 1;
-  border-radius: 0;
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 62px, rgba(255,255,255,0.04) 62px, rgba(255,255,255,0.04) 63px),
+    repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(255,255,255,0.04) 59px, rgba(255,255,255,0.04) 60px),
+    radial-gradient(ellipse at 15% 85%, rgba(168,85,247,0.1) 0%, transparent 55%),
+    #0b0b0e;
+  border-radius: 3px;
   padding: 36px 32px;
   position: relative;
-}
-.about-inner::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, #ff2d78, #a855f7, #00ffb3);
 }
 .about-eyebrow {
   font-family: 'IBM Plex Mono', monospace;
