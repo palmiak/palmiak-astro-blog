@@ -35,7 +35,7 @@ The **Content Layer API** didn't happen out of thin air - it was a great example
 
 **Collections** were the first step. They allowed us to create an equivalent of post types, but for Markdown files. This meant we got a unified interface to interact with them in our code. And they also had one more superpower - the schema. The schema allowed us to define all the variables set in the frontmatter part of a file. We could select variable type, is it optional or required, and much more. 
 
-```
+```ts
 schema: z.object({
   isDraft: z.boolean(),
   title: z.string(),
@@ -57,7 +57,7 @@ The only downside was that it worked only with local markdown files.
 
 It would look like this (example taken from the docs):
 
-```
+```ts
 const countries = defineCollection({
   loader: async () => {
     const response = await fetch("https://restcountries.com/v3.1/all");
@@ -75,7 +75,7 @@ const countries = defineCollection({
 
 I wrote a few articles lately about how to connect **Astro** with different CMSs - the truth is, after creating the first article, the only thing I'm doing (at least in Astro) is just editing the `content.config.ts` file. Let me show you an example of how the file looked for [Flotiq](statamic://entry::385c79d3-4366-4492-9f28-f3ea1a2b5ec6) versus the one for [Keystatic](statamic://entry::525d748d-84c4-4a4a-8da3-5def99292733):
 
-```
+```ts
 // Flotiq
 import { defineCollection, z } from 'astro:content';
 
@@ -107,7 +107,7 @@ const blog = defineCollection({
 export const collections = { blog };
 ```
 
-```
+```ts
 // Keystatic
 import { glob } from 'astro/loaders';
 import { defineCollection, z } from 'astro:content';

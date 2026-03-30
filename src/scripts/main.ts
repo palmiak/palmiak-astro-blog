@@ -1,38 +1,23 @@
-import hljs from 'highlight.js/lib/core';
-import javascript from 'highlight.js/lib/languages/javascript';
-import php from 'highlight.js/lib/languages/php';
-import typescript from 'highlight.js/lib/languages/typescript';
-import quicklink from 'quicklink/dist/quicklink.js';
-import confetti from 'canvas-confetti';
-
-hljs.registerLanguage('javascript', javascript);
-hljs.registerLanguage('php', php);
-hljs.registerLanguage('typescript', typescript);
-hljs.highlightAll();
-
-window.addEventListener('load', () => {
+// quicklink — load after full page load, not critical
+window.addEventListener('load', async () => {
+  const { default: quicklink } = await import('quicklink/dist/quicklink.js');
   quicklink.listen();
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  const target = document.getElementById('discussion');
-
-  if (target) {
-    const observer = new IntersectionObserver(
-      (entries, obs) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            confetti({
-              particleCount: 50,
-              spread: 70,
-              origin: { y: 0.6 },
-            });
-            obs.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(target);
-  }
-});
+// confetti — load only when #discussion scrolls into view
+const target = document.getElementById('discussion');
+if (target) {
+  const observer = new IntersectionObserver(
+    async (entries, obs) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          const { default: confetti } = await import('canvas-confetti');
+          confetti({ particleCount: 50, spread: 70, origin: { y: 0.6 } });
+          obs.unobserve(entry.target);
+        }
+      }
+    },
+    { threshold: 0.1 }
+  );
+  observer.observe(target);
+}

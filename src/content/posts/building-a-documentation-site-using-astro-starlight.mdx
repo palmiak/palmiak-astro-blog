@@ -66,7 +66,7 @@ While most of the things worked out of the box. There were some situations when 
 
 While it works, I felt that some slot system would be a better idea. Luckily, it's something that is planned [for the future](https://github.com/withastro/starlight/discussions/1443). Until that moment we will have a few overwritten components.
 
-```
+```js
 components: {
 	ThemeProvider: './src/components/ThemeProvider.astro',
 	ThemeSelect: './src/components/ThemeSelect.astro',
@@ -82,7 +82,7 @@ In short - this is a part we had to do manually. Luckily, there is a package cal
 
 **Starlight** gives us an easy way to autogenerate menus based on folders and files. It looks like this:
 
-```
+```js
 {
 	label: 'Getting started',
 	collapsed: true,
@@ -97,7 +97,7 @@ In short - this is a part we had to do manually. Luckily, there is a package cal
 
 Simple, right? The problems start when you start ordering stuff. You have to use:
 
-```
+```yaml
 sidebar:
   order: 5
 ```

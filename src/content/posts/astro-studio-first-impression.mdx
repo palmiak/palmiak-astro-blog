@@ -56,7 +56,7 @@ Then, thanks to using the CLI, it's quite straightforward to connect your local 
 
 To create a database you need to create a `db/config.ts` file and define your fields inside. Documentation has you covered here, but let me show you a simple example:
 
-```
+```ts
 const Posts = defineTable({
     columns: {
         title: column.text(),
@@ -76,7 +76,7 @@ If you want to sync the schema with production you have to run `astro db push`. 
 
 If you want to create local data you have to seed the database. To do so, inside of `db/seed.ts` you can prepare such data. You can either do it manually, connect a CMS (and grab the data from there), or use faker.js to generate some random stuff. 
 
-```
+```ts
 import { db, Posts } from 'astro:db';
 import { faker } from '@faker-js/faker';
 
@@ -104,7 +104,7 @@ But what if, I would like to push this data to the production database? That's s
 
 **Astro DB** integrates Drizzle ORM, so if you would like to get all the posts just run:
 
-```
+```astro
 ---
 import { db, Posts } from 'astro:db';
 
@@ -136,13 +136,13 @@ const posts = await db.select().from(Posts);
 
 Do you want to just show the first 10 posts? 
 
-```
+```js
 const posts = await db.select().from(Posts).limit(10);
 ```
 
 Order them by title?
 
-```
+```js
 const posts = await db.select().from(Posts).orderBy(Posts.title);
 ```
 

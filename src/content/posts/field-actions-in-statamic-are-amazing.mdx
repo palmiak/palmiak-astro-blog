@@ -35,7 +35,7 @@ First of all - check the documentation about [Field Actions](https://statamic.de
 
 After you understand the basics it's time to create a `resources/js/field-actions.js` file and add it to `vite.config.js`: 
 
-```
+```js
 export default defineConfig({
     plugins: [
         laravel({
@@ -65,7 +65,7 @@ All the examples in this article will be based on this setup.
 
 So, before we even start creating a field action, we have to create a function that will convert our string into a Title Case one:
 
-```
+```js
 function titleCase(str) {
     if (!str) {
         return ';
@@ -82,7 +82,7 @@ This function first converts everything to lowercase, then splits based on space
 
 Having this we can create our action:
 
-```
+```js
 Statamic.$fieldActions.add('text-fieldtype', {
     title: 'Convert to Title Case',
     run: ({config, value, update}) => {
@@ -104,7 +104,7 @@ Done? Almost there. While it's cool and it works, we can improve this. There are
 
 Luckily, in both cases **Statamic** has us covered.
 
-```
+```js
 Statamic.$fieldActions.add('text-fieldtype', {
     title: 'Convert to Title Case',
     run: ({config, value, update}) => {
@@ -117,7 +117,7 @@ Statamic.$fieldActions.add('text-fieldtype', {
 
 By adding `quick` and picking a nice SVG icon we added it as a quick action. Now, when we hover on the field the icon shows up.
 
-```
+```js
 Statamic.$fieldActions.add('text-fieldtype', {
     title: 'Convert to Title Case',
     run: ({config, value, update}) => {
@@ -147,7 +147,7 @@ This one is a bit more tricky because it will take a bit more time. That's why w
 
 First, let's focus on grabbing the data itself. Because I'm lazy, I used to **corsproxy.io** to take care of CORS problems. 
 
-```
+```js
 async function grabOGData({values, update}) {
     const url = encodeURI(values.url);
     const proxyurl = 'https://corsproxy.io/?url=' + url;
@@ -175,7 +175,7 @@ What we are doing here is passing our URL to **corsproxy.io**, parsing the HTML,
 
 Now, we have to connect it to field action:
 
-```
+```js
 Statamic.$fieldActions.add('bard-fieldtype-set', {
     title: 'Grab data',
     run: ({values, update }) => {

@@ -40,7 +40,7 @@ Sadly, Front Matter CMS can't guess some things. So, before going further, we ha
 
 Let's start with the field. Inside of your `frontMatter.taxonomy.contentTypes` part, you'll see that some fields are already created. You have to update this part to match the fields you'll need. In my case, I needed to add fields like this:
 
-```
+```json
 "fields": [
   {
     "title": "Title",
@@ -89,7 +89,7 @@ For more information about the fields, I recommend checking this [page](https://
 
 In the case of my Astro theme, there are some extra details I had to add:
 
-```
+```json
 "name": "default",
 "previewPath": "blog/",
 "filePrefix": null,
@@ -122,14 +122,14 @@ Snippets are a fantastic way to stop repeating yourself. It works really great w
 
 The simplest way would be to go to Snippets, press the **Create new snippet** button, and paste something like this:
 
-```
+```astro
 import Hello from '../../components/hello.astro';
 <Hello name="Test" />
 ```
 
 and modify the code a bit every time. But we can do better. It's time to reopen our config file and add some fields.
 
-```
+```json
 "frontMatter.content.snippets": {
   "Hello": {
     "description": "A simple snippet",
@@ -167,7 +167,7 @@ One of the most powerful features of Front Matter CMS is the ability to create y
 
 This is the script we'll use - I placed it in the scripts folder:
 
-```
+```js
 const arguments = process.argv;
 
 if (arguments && arguments.length > 0) {
@@ -196,7 +196,7 @@ As you see - it gets the data, changes the title, and creates a JSON that is pas
 
 Now, let's add this script to FM CMS. We have to open the configuration file again and add:
 
-```
+```json
 "frontMatter.custom.scripts": [
   {
     "title": "Uppercase title",

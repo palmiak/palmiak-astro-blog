@@ -64,7 +64,7 @@ We want our blog to look like this:
 
 To achieve this, let's create the first version of our `keystatic.config.ts`
 
-```
+```ts
 // keystatic.config.ts
 import { config, fields, collection } from '@keystatic/core';
 
@@ -117,7 +117,7 @@ It's OK, but before pushing forward, let's fix a few things:
 
 There is a [guide](https://keystatic.com/docs/recipes/astro-images) in the Keystatic docs that explains it better. But overall, it comes down to upgrading the `.tsconfig.json` file a bit:
 
-```
+```json
 {
   "compilerOptions": {
     "baseUrl": ".",
@@ -130,14 +130,14 @@ There is a [guide](https://keystatic.com/docs/recipes/astro-images) in the Keyst
 
 and updating the `keystatic.confg.ts` file:
 
-```
+```ts
 heroImage: fields.image({
     label: 'Hero Image',
     description: 'The image that will be displayed at the top of the blog post.',
     directory: 'src/assets/images/blog',
     publicPath: '@assets/images/blog/'
 }),
-content: fields.markdoc({ 
+content: fields.markdoc({
     label: 'Content',
     options: {
         image: {
@@ -154,7 +154,7 @@ By default, Keystatic is using the `entryLayout: form` option. It results in hav
 
 To do so, we need to apply a small change:
 
-```
+```ts
 entryLayout: 'content',
 format: {
   contentField: 'content',
@@ -167,8 +167,8 @@ format: {
 
 Right now, when we're viewing all the posts, we can only see the post slug. I would like to see the full title and the publication date, too. To add this, we just need to add this line:
 
-```
-columns: ['title', 'pubDate'], 
+```ts
+columns: ['title', 'pubDate'],
 ```
 
 ## Connecting to Astro
@@ -177,7 +177,7 @@ As I mentioned, we will use the default Astro Blog template. While it's not robu
 
 Because Keystatic will save the new files inside Astro's content folder, there's not much to do. Still, we're going to update the `content.config.ts` file a bit:
 
-```
+```ts
 import { glob } from 'astro/loaders';
 import { defineCollection, z } from 'astro:content';
 
@@ -202,7 +202,7 @@ The default Astro Blog theme handles images in a rather simple way - it just sho
 
 We just need to edit `BlogPost.astro` component and `index.astro` page. In both cases, you need to add:
 
-```
+```js
 import { Image } from 'astro:assets';
 ```
 

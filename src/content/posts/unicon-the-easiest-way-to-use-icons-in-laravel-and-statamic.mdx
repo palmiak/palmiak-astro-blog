@@ -15,13 +15,13 @@ import Alert from '../../components/mdx/Alert.astro';
 
 [**Nicolas Hedger**](https://bsky.app/profile/hedger.ch) created a lovely Laravel package called [**Unicon**](https://unicon.rocks/). It's inspired by [**nuxt/icon**](https://nuxt.com/modules/icon) which is an amazing library that allows you to download icons from [Iconify](https://iconify.design/) just by providing a component with an icon set and icon name, for example:
 
-```
+```html
 <Icon name="uil:github" />
 ```
 
 Unicon works similarly:
 
-```
+```blade
 <x-icon name="uil:github" />
 ```
 
@@ -29,13 +29,13 @@ Unicon works similarly:
 
 Installation is very simple - you just have to run:
 
-```
+```bash
 composer require unicon-rocks/unicon-laravel
 ```
 
 And optionally run:
 
-```
+```bash
 php artisan vendor:publish --tag=unicon-config
 ```
 
@@ -50,13 +50,13 @@ Out of the box, you can use **Unicon** in two ways:
 
 In both cases, you first have to visit Iconify, pick an icon you want, copy the name of the set and icon, and use it:
 
-```
+```blade
 <x-icon name="uil:github" class="w-6 h-6" />
 ```
 
 or
 
-```
+```php
 <?php
 $icon = icon('uil:github');
 ```
@@ -65,7 +65,7 @@ The whole magic will happen automatically, the icon will get downloaded and SVG 
 
 But that's not all - if you are planning to only use one set of icons you can configure it by setting the `prefix` in the config file. So, if you would add `prefix => 'uil'` then you can just write:
 
-```
+```blade
 <x-icon name="github" class="w-6 h-6" />
 ```
 
@@ -75,13 +75,13 @@ One of the reasons I wanted to try **Unicon** was using it with **Statamic** and
 
 Luckily, adding custom tags in **Statamic** is simple. First, you have to run:
 
-```
+```bash
 php please make:tag Unicon
 ```
 
 Then, paste the code into the `Unicon.php` file:
 
-```
+```php
 <?php
 
 namespace Palmiak\Unicon\Tags;
@@ -119,7 +119,7 @@ All you need to do is add `\{\{ unicon name="uil:github" class="w-6 h-6" \}\}`in
 
 You can also install an add-on called [**Unicon for Statamic**](https://github.com/palmiak/unicon-for-statamic)**.**Just run:
 
-```
+```bash
 composer require palmiak/unicon-for-statamic
 ```
 

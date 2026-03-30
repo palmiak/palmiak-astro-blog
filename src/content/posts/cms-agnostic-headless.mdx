@@ -45,7 +45,7 @@ In short - the title should always be stored in a variable called `title`. To do
 
 This is what the **WordPress** mapping looks like:
 
-```
+```js
 const temp = {
     'id': post.id,
     'title': post.title.rendered,
@@ -60,7 +60,7 @@ const temp = {
 
 and this is the CosmicJS integration:
 
-```
+```js
 const temp = {
     'id': post.id,
     'title': post.title,
@@ -75,7 +75,7 @@ const temp = {
 
 This means that no matter how your variables are named in the headless CMS, your theme will always use the same variable, in my case:
 
-```
+```js
 { postData.title }
 ```
 
@@ -91,7 +91,7 @@ OK, but how to import just the required integration? Thanks to **dynamic integra
 
 I have a file called `cmsBase.js` that does something like this:
 
-```
+```js
 const cmsType = 'wordpress';
 
 export async function getPosts( args ) {

@@ -99,13 +99,13 @@ First, install the latest version of Astro and select the **blog template**.
 
 Now open or create `.env` file and add:
 
-```
+```text
 FLOTIQ_API_KEY=<paste your key>
 ```
 
 and run:
 
-```
+```bash
 npm install flotiq-api-ts
 ```
 
@@ -151,13 +151,13 @@ Time to take care of displaying content and hero images.
 
 Displaying Markdown, which got imported from an API is not as simple as it might be. To do so, you'll need to install
 
-```
-npm install @astropub/md 
+```bash
+npm install @astropub/md
 ```
 
 and correct the config a bit:
 
-```
+```js
 import markdownIntegration from '@astropub/md'
 export default defineConfig({
 	integrations: [markdownIntegration()],
@@ -166,7 +166,7 @@ export default defineConfig({
 
 The last part you'll need to add is:
 
-```
+```astro
 ---
 import { Markdown } from '@astropub/md'
 ---
@@ -182,7 +182,7 @@ The default Astro Blog theme handles images in a rather simple way - it just sho
 
 But before we do, we need to change our content config a bit:
 
-```
+```js
 return posts.data.map((post) => ({
 	...post,
 	id: post.slug,
@@ -196,7 +196,7 @@ This is necessary because the `Image` requires the full URL to the image.
 
 Next, because we need to optimize images coming from the outside, we need to open our Astro config file again and add:
 
-```
+```js
 export default defineConfig({
     // other stuff goes here
 	image: {
@@ -207,7 +207,7 @@ export default defineConfig({
 
 The last step is to edit `BlogPost.astro` component and `index.astro` page. In both cases you need to add:
 
-```
+```js
 import { Image } from 'astro:assets';
 ```
 

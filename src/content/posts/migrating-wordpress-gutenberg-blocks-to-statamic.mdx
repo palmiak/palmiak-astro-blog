@@ -37,7 +37,7 @@ With both editors sharing a similar approach to handing content, it would be gre
 
 The only catch is the way how Gutenberg saves data:
 
-```
+```html
 <!-- wp:paragraph -->
 <p>Gesha coffee, also known as Geisha coffee, is a remarkable and highly sought-after variety that has taken the coffee world by storm. Originally discovered in the remote Gesha village of Ethiopia, this coffee has gained worldwide recognition for its exceptional quality and unique flavor profile.</p>
 <!-- /wp:paragraph -->
@@ -47,7 +47,7 @@ The only catch is the way how Gutenberg saves data:
 
 This way it isn't easy to parse outside of WordPress. Luckily WordPress has a `parse_blocks` function that allows you to convert this into a more readable format:
 
-```
+```json
 "block_data": [
     {
         "blockName": "core/paragraph",
@@ -128,7 +128,7 @@ I went with the **LuckyMedia** approach. Just instead of using Corcel, I decided
 
 Creating the command is as simple as running:
 
-```
+```bash
 php artisan make:command ImportWordPress
 ```
 
@@ -136,7 +136,7 @@ php artisan make:command ImportWordPress
 
 This a very simple scenario, where I just want to grab content from `posts` :
 
-```
+```php
 <?php
 
 namespace App\Console\Commands;
@@ -216,7 +216,7 @@ First, let's start with grabbing the blocks, that we want to copy as they are an
 There is this <strong><a class="underline" href="https://jacksleight.dev/posts/importing-html-into-statamic-s-bard-fieldtype-updated" target="blank">amazing guide</a></strong> by <strong>Jack Sleight</strong> that you should read first.
 </Alert>
 
-```
+```php
 <?php
 
 namespace App\Console\Commands;
@@ -317,7 +317,7 @@ Before going forward, we have to create a similar set in **Statamic**.
 
 Such set will be saved as:
 
-```
+```yaml
 -
     type: set
     attrs:
@@ -330,7 +330,7 @@ Such set will be saved as:
 
 Knowing this and knowing that the Bard set is called `test_data` I could create:
 
-```
+```php
 <?php
 
 namespace App\Console\Commands;
