@@ -1,8 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import GradBar from '../components/GradBar.astro';
+import { u } from '../utils/url';
 ---
-<Layout title="Contact me" description="Ways to get in touch with Maciek Palmowski">
+<Layout title="Contact me" description="Ways to get in touch with Maciek Palmowski" ogImage={u('/og/contact.png')}>
   <div class="contact-header">
     <div class="col">
       <div class="sec-label"><span class="sec-dot"></span>Contact</div>
