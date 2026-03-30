@@ -40,7 +40,9 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
   <link rel="preload" href={u('/fonts/unbounded-v7-latin-700.woff2')} as="font" type="font/woff2" crossorigin />
   <link rel="preload" href={u('/fonts/instrument-serif-italic.woff2')} as="font" type="font/woff2" crossorigin />
   <link rel="preload" href={u('/fonts/ibm-plex-mono-400.woff2')} as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href={u('/fonts/ibm-plex-mono-400-ext.woff2')} as="font" type="font/woff2" crossorigin />
   <link rel="preload" href={u('/fonts/inter-latin.woff2')} as="font" type="font/woff2" crossorigin />
+  {isPost && <link rel="preload" href={u('/fonts/inter-latin-ext.woff2')} as="font" type="font/woff2" crossorigin />}
 
   <title>{fullTitle}</title>
 
@@ -63,7 +65,9 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 
 <body style="background:var(--bg);color:var(--hi);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;">
   <Header isPost={isPost} />
-  <slot />
+  <main>
+    <slot />
+  </main>
   <Footer />
 </body>
 </html>
