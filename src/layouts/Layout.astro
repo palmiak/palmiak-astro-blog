@@ -61,6 +61,13 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
   {ogImage && <meta name="twitter:image" content={new URL(ogImage, Astro.site)} />}
 
   <script data-goatcounter="https://palmiak.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+
+  <script type="application/ld+json" is:inline set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Maciek Palmowski',
+    url: Astro.site?.toString().replace(/\/$/, ''),
+  })} />
 </head>
 
 <body style="background:var(--bg);color:var(--hi);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;">

@@ -21,6 +21,18 @@ type Props = {
 };
 
 const { page } = Astro.props;
+
+const collectionJsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Blog — Maciek Palmowski',
+  url: new URL(Astro.url.pathname, Astro.site).toString(),
+  author: {
+    '@type': 'Person',
+    '@id': `${Astro.site?.toString().replace(/\/$/, '')}/#person`,
+    name: 'Maciek Palmowski',
+  },
+});
 ---
 <Layout title="Blog" ogImage={u('/og/blog.png')}>
   <div class="col">
@@ -53,6 +65,8 @@ const { page } = Astro.props;
 
   <GradBar />
   <NewsletterBox variant="home" />
+
+  <script type="application/ld+json" is:inline set:html={collectionJsonLd} />
 </Layout>
 
 <style>

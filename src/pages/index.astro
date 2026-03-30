@@ -89,6 +89,23 @@ const talks = (await getCollection('talks')).sort(
   <NewsletterBox variant="home" />
 
   <GradBar />
+
+  <script type="application/ld+json" is:inline set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': `${Astro.site?.toString().replace(/\/$/, '')}/#person`,
+    name: 'Maciek Palmowski',
+    url: Astro.site?.toString().replace(/\/$/, ''),
+    jobTitle: 'mVDP Growth Manager',
+    worksFor: { '@type': 'Organization', name: 'Patchstack' },
+    sameAs: [
+      'https://bsky.app/profile/maciekpalmowski.dev',
+      'https://twitter.com/palmiak_fp',
+      'https://www.linkedin.com/in/maciekpalmowski/',
+      'https://github.com/palmiak',
+    ],
+    knowsAbout: ['WordPress security', 'Headless CMS', 'Astro', 'Web development'],
+  })} />
 </Layout>
 
 <style>

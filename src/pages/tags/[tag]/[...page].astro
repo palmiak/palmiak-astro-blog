@@ -26,6 +26,18 @@ type Props = {
 
 const { tag } = Astro.params;
 const { page } = Astro.props;
+
+const collectionJsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: `#${tag} — Maciek Palmowski`,
+  url: new URL(Astro.url.pathname, Astro.site).toString(),
+  author: {
+    '@type': 'Person',
+    '@id': `${Astro.site?.toString().replace(/\/$/, '')}/#person`,
+    name: 'Maciek Palmowski',
+  },
+});
 ---
 <Layout title={`#${tag}`} description={`All posts tagged with ${tag}`} ogImage={u(`/tags/${tag}/og.png`)}>
   <div class="col">
@@ -57,6 +69,8 @@ const { page } = Astro.props;
   )}
 
   <GradBar />
+
+  <script type="application/ld+json" is:inline set:html={collectionJsonLd} />
 </Layout>
 
 <style>
