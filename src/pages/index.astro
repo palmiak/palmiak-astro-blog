@@ -70,10 +70,17 @@ const talks = (await getCollection('talks')).sort(
     <div class="talks-list">
       {talks.map((talk) => (
         <div class="talk-row">
-          <div>
-            <div class="talk-title">{talk.data.title}</div>
-            <div class="talk-event">{talk.data.event}</div>
-          </div>
+          {talk.data.url ? (
+            <a href={talk.data.url} target="_blank" rel="noopener" class="talk-link">
+              <div class="talk-title">{talk.data.title}</div>
+              <div class="talk-event">{talk.data.event}</div>
+            </a>
+          ) : (
+            <div>
+              <div class="talk-title">{talk.data.title}</div>
+              <div class="talk-event">{talk.data.event}</div>
+            </div>
+          )}
           <div class="talk-year">{talk.data.year}</div>
         </div>
       ))}
@@ -224,6 +231,10 @@ const talks = (await getCollection('talks')).sort(
   transition: color 0.12s;
 }
 .talk-row:hover .talk-title { color: var(--hi); }
+.talk-link {
+  text-decoration: none;
+  color: inherit;
+}
 .talk-event {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 10px;
