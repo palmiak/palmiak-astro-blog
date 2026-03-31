@@ -88,7 +88,7 @@ const breadcrumbJsonLd = JSON.stringify({
 >
   <!-- Breadcrumb -->
   <div class="crumb-bar">
-    <div class="col">
+    <div class="col-narrow">
       <div class="crumb-inner">
         <a href={u('/')} class="crumb-link">Home</a>
         <span>/</span>
@@ -101,7 +101,7 @@ const breadcrumbJsonLd = JSON.stringify({
 
   <!-- Post header -->
   <div class="post-header">
-    <div class="col">
+    <div class="col-narrow">
       <div class="post-top">
         {tags.slice(0, 2).map((tag) => <Tag tag={tag} />)}
         {tags.length > 0 && <span class="dot-sep">·</span>}
@@ -109,82 +109,107 @@ const breadcrumbJsonLd = JSON.stringify({
       </div>
       <h1 class="post-title">{title}</h1>
       {intro && <p class="post-lede">{intro}</p>}
-
-      <!-- Hero image -->
-      {thumbnail && (
-        <div class="hero-img-wrap">
-          {thumbMetadata ? (
-            <Image
-              src={thumbMetadata}
-              width={1360}
-              height={595}
-              alt={title}
-              class="hero-img"
-              loading="eager"
-            />
-          ) : (
-            <img src={`/assets/${thumbnail}`} width="1360" height="595" alt={title} class="hero-img" />
-          )}
-        </div>
-      )}
     </div>
-  </div>
 
-  <!-- Author row -->
-  <div class="author-bar">
-    <div class="col">
-      <div class="author-inner">
-        <div class="author-l">
-          <img class="author-av" src={u('/assets/me.jpg')} alt="Maciek Palmowski" width="36" height="36" />
-          <div>
-            <div class="author-name">Maciek Palmowski</div>
-            <div class="author-role">mVDP Growth Manager · Patchstack</div>
-          </div>
-        </div>
-        <div class="share-row">
-          <span class="share-label">Share</span>
-          <a
-            class="share-btn"
-            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(currentUrl)}`}
-            target="_blank"
-            rel="noopener"
-          >X</a>
-          <a
-            class="share-btn"
-            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(currentUrl)}`}
-            target="_blank"
-            rel="noopener"
-          >LinkedIn</a>
-        </div>
+    <!-- Hero image — wider than text column -->
+    {thumbnail && (
+      <div class="hero-img-wrap col-wide">
+        {thumbMetadata ? (
+          <Image
+            src={thumbMetadata}
+            width={1360}
+            height={595}
+            alt={title}
+            class="hero-img"
+            loading="eager"
+          />
+        ) : (
+          <img src={`/assets/${thumbnail}`} width="1360" height="595" alt={title} class="hero-img" />
+        )}
       </div>
-    </div>
+    )}
   </div>
 
   <GradBar />
 
-  <!-- Article content -->
-  <div class="article">
-    <div class="col prose-post">
-      <Content />
+  <!-- Two-column: article + sidebar -->
+  <div class="editorial-wrap">
+    <div class="editorial-inner">
+      <!-- Main article content -->
+      <article class="article-col">
+        <div class="prose-post">
+          <Content />
+        </div>
+      </article>
+
+      <!-- Sidebar -->
+      <aside class="article-sidebar">
+        <!-- Author card -->
+        <div class="sidebar-section sidebar-author">
+          <img class="author-av" src={u('/assets/me.jpg')} alt="Maciek Palmowski" width="48" height="48" />
+          <div class="author-name">Maciek Palmowski</div>
+          <div class="author-role">mVDP Growth Manager<br/>Patchstack</div>
+        </div>
+
+        <!-- Date -->
+        <div class="sidebar-section">
+          <div class="sidebar-label">Published</div>
+          <div class="sidebar-value">{dateStr}</div>
+          {updatedDate && (
+            <div class="sidebar-value sidebar-updated">
+              Updated {updatedDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+            </div>
+          )}
+        </div>
+
+        <!-- Tags -->
+        {tags.length > 0 && (
+          <div class="sidebar-section sidebar-tags">
+            <div class="sidebar-label">Topics</div>
+            <div class="sidebar-tag-list">
+              {tags.map((tag) => (
+                <a href={u(`/tags/${tag}`)} class="sidebar-tag-link"><Tag tag={tag} /></a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <!-- Share -->
+        <div class="sidebar-section sidebar-share">
+          <div class="sidebar-label">Share</div>
+          <div class="share-row">
+            <a
+              class="share-btn"
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(currentUrl)}`}
+              target="_blank"
+              rel="noopener"
+            >X / Twitter</a>
+            <a
+              class="share-btn"
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(currentUrl)}`}
+              target="_blank"
+              rel="noopener"
+            >LinkedIn</a>
+          </div>
+        </div>
+
+        <!-- Comments link -->
+        <div class="sidebar-section">
+          <a href="#discussion" class="sidebar-comments-link">
+            <span class="sidebar-label" style="margin-bottom:0">Discussion</span>
+            <span class="sidebar-comments-arrow">↓ Leave a comment</span>
+          </a>
+        </div>
+      </aside>
     </div>
   </div>
 
   <!-- Newsletter (right after reading) -->
   <NewsletterBox variant="post" />
 
-  <!-- Post tags -->
-  <div class="post-tags-bar">
-    <div class="col">
-      <span class="tags-label">Tagged:</span>
-      {tags.map((tag) => (
-        <a href={u(`/tags/${tag}`)}><Tag tag={tag} /></a>
-      ))}
-    </div>
-  </div>
-
   <!-- Prev / Next nav -->
   {(prevPost || nextPost) && (
-    <div class="col">
+    <div class="col-narrow">
       <div class="post-nav">
         {prevPost ? (
           <a class="pnav prev" href={u(`/blog/${prevPost.slug}`)}>
@@ -208,7 +233,7 @@ const breadcrumbJsonLd = JSON.stringify({
   <GradBar />
 
   <!-- Comments -->
-  <div class="col comments-section" id="discussion">
+  <div class="col-narrow comments-section" id="discussion">
     <h2 class="comments-title">Share your thoughts</h2>
     <script
       src="https://giscus.app/client.js"
@@ -238,8 +263,15 @@ const breadcrumbJsonLd = JSON.stringify({
 </Layout>
 
 <style>
-.col {
+/* Columns */
+.col-narrow {
   max-width: 760px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.col-wide {
+  max-width: 1100px;
   margin: 0 auto;
   padding: 0 24px;
 }
@@ -270,13 +302,12 @@ const breadcrumbJsonLd = JSON.stringify({
 /* Post header */
 .post-header {
   padding: 56px 0 0;
-  border-bottom: 1px solid var(--bd);
 }
 .post-top {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
   flex-wrap: wrap;
 }
 .dot-sep { color: var(--dim); font-size: 10px; }
@@ -288,90 +319,150 @@ const breadcrumbJsonLd = JSON.stringify({
 }
 .post-title {
   font-family: 'Unbounded', sans-serif;
-  font-size: 30px;
+  font-size: clamp(28px, 5vw, 48px);
   font-weight: 800;
   letter-spacing: -0.03em;
-  line-height: 1.15;
+  line-height: 1.1;
   color: var(--hi);
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 .post-lede {
   font-family: 'Instrument Serif', serif;
-  font-size: 22px;
+  font-size: clamp(20px, 2.5vw, 26px);
   font-style: italic;
   line-height: 1.55;
   color: var(--mid);
-  max-width: 620px;
-  margin-bottom: 36px;
+  max-width: 640px;
+  margin-bottom: 44px;
 }
+
+/* Hero image */
 .hero-img-wrap {
+  margin-top: 0;
   overflow: hidden;
-  border-radius: 6px 6px 0 0;
 }
 .hero-img {
   width: 100%;
   aspect-ratio: 16 / 7;
   object-fit: cover;
-  border-radius: 6px 6px 0 0;
   display: block;
   border: 1px solid var(--bd);
-  border-bottom: none;
+  border-radius: 4px;
 }
 
-/* Author */
-.author-bar {
-  padding: 18px 0;
+/* Editorial two-column layout */
+.editorial-wrap {
+  padding: 0 24px;
+}
+.editorial-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 64px;
+  align-items: start;
+  padding: 56px 0 64px;
+}
+
+/* Article column */
+.article-col {
+  min-width: 0;
+}
+
+/* Wide PostImages break out via transform in global.css — reset to full column width */
+.article-col :global(.image.wide) {
+  position: static;
+  left: 0;
+  transform: none;
+  width: 100%;
+}
+
+/* Sidebar */
+.article-sidebar {
+  position: sticky;
+  /* 54px sticky header + 24px breathing room */
+  top: calc(54px + 24px);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.sidebar-section {
+  padding: 20px 0;
   border-bottom: 1px solid var(--bd);
 }
-.author-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
+.sidebar-section:first-child {
+  border-top: 1px solid var(--bd);
 }
-.author-l {
+
+.sidebar-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--dim);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.sidebar-value {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--mid);
+  letter-spacing: 0.04em;
+}
+.sidebar-updated {
+  margin-top: 4px;
+  color: var(--dim);
+  font-size: 10px;
+}
+
+/* Sidebar author */
+.sidebar-author {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  gap: 8px;
 }
 .author-av {
-  width: 36px;
-  height: 36px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   object-fit: cover;
   object-position: center top;
   border: 1px solid var(--bd2);
-  flex-shrink: 0;
+  margin-bottom: 4px;
 }
 .author-name {
   font-size: 14px;
   font-weight: 500;
   color: var(--hi);
+  line-height: 1.3;
 }
 .author-role {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 10px;
   color: var(--dim);
-  letter-spacing: 0.06em;
-  margin-top: 2px;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
 }
-.share-row {
+
+/* Sidebar tags */
+.sidebar-tag-list {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   gap: 6px;
 }
-.share-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  color: var(--dim);
-  letter-spacing: 0.1em;
+.sidebar-tag-link { text-decoration: none; }
+
+/* Share */
+.share-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 .share-btn {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 10px;
   letter-spacing: 0.06em;
-  padding: 6px 12px;
+  padding: 7px 12px;
   border-radius: 3px;
   border: 1px solid var(--bd2);
   color: var(--mid);
@@ -379,33 +470,9 @@ const breadcrumbJsonLd = JSON.stringify({
   cursor: pointer;
   transition: color 0.15s, border-color 0.15s;
   text-decoration: none;
+  text-align: center;
 }
 .share-btn:hover { color: var(--hi); border-color: rgba(255,255,255,0.25); }
-
-/* Article */
-.article {
-  padding: 44px 0;
-}
-
-/* Post tags */
-.post-tags-bar {
-  padding: 24px 0;
-  border-top: 1px solid var(--bd);
-  border-bottom: 1px solid var(--bd);
-}
-.post-tags-bar .col {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.tags-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  color: var(--dim);
-}
-.post-tags-bar a { text-decoration: none; }
 
 /* Prev / Next */
 .post-nav {
@@ -415,7 +482,7 @@ const breadcrumbJsonLd = JSON.stringify({
   border-bottom: 1px solid var(--bd);
 }
 .pnav {
-  padding: 24px 20px;
+  padding: 28px 20px;
   transition: background 0.12s;
   border-right: 1px solid var(--bd);
   text-decoration: none;
@@ -459,6 +526,92 @@ const breadcrumbJsonLd = JSON.stringify({
   transition: color 0.12s;
 }
 
+/* Comments link in sidebar */
+.sidebar-comments-link {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-decoration: none;
+}
+.sidebar-comments-link:hover .sidebar-comments-arrow {
+  color: var(--hi);
+}
+.sidebar-comments-arrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--mid);
+  letter-spacing: 0.04em;
+  transition: color 0.15s;
+}
+
+/* Comments */
+.comments-section {
+  padding: 48px 24px;
+  scroll-margin-top: calc(54px + 16px);
+}
+.comments-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--hi);
+  margin-bottom: 24px;
+}
+
+/* Responsive: collapse to single column below 900px */
+@media (max-width: 900px) {
+  .editorial-inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 40px 0 48px;
+  }
+
+  .article-sidebar {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0;
+    border-top: 1px solid var(--bd);
+    border-bottom: 1px solid var(--bd);
+  }
+
+  .sidebar-section {
+    flex: 1 1 200px;
+    border-bottom: none;
+    border-right: 1px solid var(--bd);
+    padding: 16px 20px;
+  }
+  .sidebar-section:first-child {
+    border-top: none;
+  }
+  .sidebar-section:last-child {
+    border-right: none;
+  }
+
+  .sidebar-author {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    flex: 100%;
+    border-right: none !important;
+    border-bottom: 1px solid var(--bd) !important;
+  }
+  .author-av {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .share-row {
+    flex-direction: row;
+  }
+
+  .post-title {
+    font-size: clamp(26px, 6vw, 40px);
+  }
+}
+
 @media (max-width: 640px) {
   .post-nav {
     grid-template-columns: 1fr;
@@ -474,18 +627,21 @@ const breadcrumbJsonLd = JSON.stringify({
   .pnav.next .pnav-dir {
     justify-content: flex-start;
   }
-}
 
-/* Comments */
-.comments-section {
-  padding: 48px 24px;
-}
-.comments-title {
-  font-family: 'Unbounded', sans-serif;
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--hi);
-  margin-bottom: 24px;
+  .article-sidebar {
+    flex-direction: column;
+  }
+  .sidebar-section {
+    flex: none;
+    border-right: none;
+    border-bottom: 1px solid var(--bd);
+    padding: 14px 0;
+  }
+  .sidebar-section:first-child {
+    border-top: 1px solid var(--bd);
+  }
+  .sidebar-author {
+    border-bottom: 1px solid var(--bd) !important;
+  }
 }
 </style>
