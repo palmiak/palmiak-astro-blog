@@ -1,0 +1,62 @@
+---
+title: "EmDash: a fresh take on CMS"
+intro: "Cloudflare just dropped EmDash, a new CMS built on Astro and positioned as a modern alternative to WordPress. I have thoughts."
+excerpt: "EmDash is new, ambitious, and built on Astro. I won't be using it, but I think it matters."
+description: "A look at EmDash CMS from Cloudflare: what it gets right, why it probably won't replace markdown files for most developers, and why it's worth watching anyway."
+pubDate: 2026-04-01
+updatedDate: 2026-04-01
+thumbnail: "arts/emdash-a-fresh-take-on-cms/emdash.png"
+tags:
+  - "cms"
+  - "astro"
+  - "wordpress"
+  - "cloudflare"
+---
+
+It's April 1st. A new CMS drops, built by Cloudflare, powered by Astro, pitched as a modern spiritual successor to WordPress. Sure. Very funny.
+
+Except it wasn't a joke. **EmDash** is real, and of course I had to take a look. Two posts got me started: [Cloudflare's own announcement](https://blog.cloudflare.com/EmDash-wordpress/) and [Joost's take](https://joost.blog/EmDash-cms/).
+
+## What is it?
+
+EmDash is a fully open source CMS built on TypeScript and Astro 6.0. It runs serverless on Cloudflare Workers (or any Node.js server), uses SQLite locally and Cloudflare D1 in production, and stores content as portable text (structured JSON) instead of raw HTML.
+
+The pitch? It's what WordPress would look like if you built it today, from scratch, without 20 years of legacy decisions weighing it down.
+
+## Things I actually like
+
+**The security model is genuinely clever.** In WordPress, plugins can do almost anything they want. That's the root of a huge number of security issues, and I've [written about this before](/blog/wordpress-security-is-it-really-that-bad). EmDash plugins run in sandboxed isolates and have to explicitly declare what they need access to, similar to how OAuth works. Honestly the most interesting thing about the whole project.
+
+**The DB structure seems solid.** I had a look at the SQLite tables and I liked what I saw. Post types get their own separate tables instead of everything being crammed into a handful of generic ones. If you've ever debugged a WordPress database, you know how refreshing that is.
+
+**It's AI-first in a real way.** There's an MCP server, a JSON CLI, and direct agent access baked in. Joost put it well:
+
+> It's not a CMS with AI features bolted on. It's a CMS where AI agents are first-class builders.
+
+That framing is accurate. EmDash treats agents as actual users of the system, with structured content and typed schemas they can introspect. It's a real bet, built in from the start. Whether it pays off depends on where AI-assisted workflows actually land, but it's the part of EmDash I find hardest to dismiss.
+
+**The Astro core.** Using Astro for themes instead of PHP templates and `functions.php` is a nice move. Familiar to modern developers and no more random PHP logic sprinkled through your theme files. That said, Astro templates and PHP templates aren't that different conceptually. You can still write messy, hard-to-maintain code in either. The real win is the ecosystem and tooling around it, not some magical safety guarantee.
+
+**And yes, it brings back some pre-Gutenberg nostalgia.** The admin panel has that old tinyMCE feel. The way themes work reminds me of building WordPress themes before Full Site Editing. Template files, `the_content()`, a straightforward loop. I get the appeal. But I think dropping a block editor entirely is a mistake. Gutenberg has real problems, but the idea of structured, visual content editing isn't one of them. Matt Cromwell asked it straight: "Is the future really Astro + TinyMCE? Really?" And honestly, I think he has a point.
+
+## Why I won't use it
+
+**I migrated to Astro partly to get away from the CMS.**
+
+My blog is markdown files. No database, no admin panel, no content layer that can go wrong. I write a post, push it, done. I've written a bit about [different approaches to content management](/blog/different-flavors-of-content-management) if you want more context on why this matters to me.
+
+EmDash is well built, but it means running a server, paying for edge compute, and adding a layer between me and my content. That's the trade-off I already decided wasn't worth it.
+
+And I think more people are quietly arriving at the same conclusion. Markdown files, a static site generator, Git for version control. No CMS required. For personal blogs and small sites, it's often just enough.
+
+## Does it solve the right problem?
+
+I'm not totally sure EmDash addresses the **main frustrations people have with WordPress**. Performance, hosting costs, plugin bloat. Those are the things that actually make people look elsewhere. EmDash doesn't really touch those directly.
+
+What it does tackle is the developer experience, the security model, and how AI fits into content management. But the person frustrated with WordPress is usually frustrated about slow hosting, expensive plugins, or too much maintenance overhead. EmDash doesn't make that cheaper or simpler. It makes it more elegant for developers who care about architecture. That's a smaller audience than the pitch suggests.
+
+## Still worth watching
+
+Astro itself wasn't an obvious success from day one. It took time, a strong community, and a lot of iteration to become what it is today. EmDash is early and rough in places. But it's doing something other than just wrapping existing tools in a nicer UI.
+
+I'll keep an eye on it. And I'm hoping it earns the community it needs to grow.
