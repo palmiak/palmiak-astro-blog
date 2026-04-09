@@ -6,7 +6,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "migrate": "node migrate/bard-to-mdx.mjs"
+    "migrate": "node migrate/bard-to-mdx.mjs",
+    "check-links": "node src/integrations/check-links.mjs",
+    "build:check": "astro build && node src/integrations/check-links.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^3.1.0",
