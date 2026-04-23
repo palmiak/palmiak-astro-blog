@@ -12,6 +12,9 @@ export default defineConfig({
       external: ['@takumi-rs/core'],
     },
   },
+  image: {
+    domains: ['checkoutsummit.com'],
+  },
   output: 'static',
   markdown: {
     shikiConfig: {

@@ -25,4 +25,16 @@ const talks = defineCollection({
   }),
 });
 
-export const collections = { posts, talks };
+const events = defineCollection({
+  type: 'data',
+  schema: z.object({
+    name: z.string(),
+    logo: z.string(),
+    links: z.array(z.object({
+      label: z.string(),
+      url: z.string(),
+    })),
+  }),
+});
+
+export const collections = { posts, talks, events };

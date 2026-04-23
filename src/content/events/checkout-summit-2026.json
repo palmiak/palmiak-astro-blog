@@ -1,0 +1,10 @@
+{
+  "name": "Checkout Summit 2026",
+  "logo": "https://checkoutsummit.com/wp-content/uploads/2025/08/cropped-Transparent-Icon-1-192x192.png",
+  "links": [
+    { "label": "Slides", "url": "https://palmiak.github.io/checkoutsummit-slides/1" },
+    { "label": "The Myth of Secure Hosting", "url": "https://patchstack.com/articles/myth-of-secure-hosting-only-26-percent-of-vulnerability-exploits-blocked-by-hosts/" },
+    { "label": "Hosting Security Tested", "url": "https://patchstack.com/articles/hosting-security-tested-87-percent-of-vulnerability-exploits-bypassed-hosting-defenses/" },
+    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/maciekpalmowski/?locale=en" }
+  ]
+}

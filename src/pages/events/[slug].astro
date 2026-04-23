@@ -1,0 +1,136 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import Layout from '../../layouts/Layout.astro';
+import { u } from '../../utils/url';
+
+export async function getStaticPaths() {
+  const events = await getCollection('events');
+  return events.map((event) => ({
+    params: { slug: event.id },
+    props: { event },
+  }));
+}
+
+const { event } = Astro.props;
+const { name, logo, links } = event.data;
+---
+
+<Layout title={name} description={`Links for ${name}`}>
+  <div class="linktree">
+    <div class="profile">
+      <div class="profile-images">
+        <Image
+          src={u('/assets/me.jpg')}
+          width={96}
+          height={96}
+          alt="Maciek Palmowski"
+          class="avatar"
+        />
+        <Image
+          src={logo}
+          width={96}
+          height={96}
+          alt={name}
+          class="event-logo"
+        />
+      </div>
+      <h1 class="event-name">{name}</h1>
+    </div>
+
+    <ul class="links-list">
+      {links.map((link) => (
+        <li>
+          <a href={link.url} target="_blank" rel="noopener noreferrer" class="link-btn">
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Layout>
+
+<style>
+.linktree {
+  min-height: calc(100vh - 54px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 56px 24px 80px;
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 48px;
+}
+
+.profile-images {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid transparent;
+  background:
+    linear-gradient(#0b0b0e, #0b0b0e) padding-box,
+    linear-gradient(135deg, #ff2d78, #a855f7, #00ffb3) border-box;
+}
+
+.event-logo {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+}
+
+.event-name {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--hi);
+  text-align: center;
+  margin: 0;
+}
+
+.links-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.link-btn {
+  display: block;
+  width: 100%;
+  padding: 16px 24px;
+  text-align: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--hi);
+  text-decoration: none;
+  border-radius: 4px;
+  border: 1px solid var(--bd);
+  background: rgba(255, 255, 255, 0.03);
+  transition: border-color 0.15s, background 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+
+.link-btn:hover {
+  border-color: rgba(168, 85, 247, 0.6);
+  background: rgba(168, 85, 247, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.15);
+}
+</style>
