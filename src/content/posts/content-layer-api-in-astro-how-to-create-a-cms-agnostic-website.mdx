@@ -14,7 +14,7 @@ import PostImage from '../../components/mdx/PostImage.astro';
 import YouTube from '../../components/mdx/YouTube.astro';
 import Alert from '../../components/mdx/Alert.astro';
 
-Quite a while ago, I published an [article](statamic://entry::e4b64123-92f2-4da2-a8a5-c1dd7a811aa0) in which I created a Proof of Concept on creating a CMS-agnostic flow. Back then, I wrote:
+Quite a while ago, I published an [article](/blog/cms-agnostic-headless/) in which I created a Proof of Concept on creating a CMS-agnostic flow. Back then, I wrote:
 
 > But converting it from one CMS to another was annoying. "Annoying" is the correct word, because it wasn't difficult, but it was tedious.
 
@@ -74,7 +74,7 @@ const countries = defineCollection({
 
 ## So, how does it help?
 
-I wrote a few articles lately about how to connect **Astro** with different CMSs - the truth is, after creating the first article, the only thing I'm doing (at least in Astro) is just editing the `content.config.ts` file. Let me show you an example of how the file looked for [Flotiq](statamic://entry::385c79d3-4366-4492-9f28-f3ea1a2b5ec6) versus the one for [Keystatic](statamic://entry::525d748d-84c4-4a4a-8da3-5def99292733):
+I wrote a few articles lately about how to connect **Astro** with different CMSs - the truth is, after creating the first article, the only thing I'm doing (at least in Astro) is just editing the `content.config.ts` file. Let me show you an example of how the file looked for [Flotiq](/blog/flotiq-cms-astro/) versus the one for [Keystatic](/blog/keystatic-x-astro/):
 
 ```ts
 // Flotiq
