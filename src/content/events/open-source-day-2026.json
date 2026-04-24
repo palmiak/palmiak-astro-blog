@@ -1,0 +1,8 @@
+{
+  "name": "Open Source Day 2026",
+  "logo": "https://osday.dev/_next/static/media/logo-red.4f01b3c2.png",
+  "links": [
+    { "label": "Content Layer API in Astro: How to Create a CMS-Agnostic Website", "url": "https://maciekpalmowski.dev/blog/content-layer-api-in-astro-how-to-create-a-cms-agnostic-website/" },
+    { "label": "Astro Content Loader Reference", "url": "https://docs.astro.build/en/reference/content-loader-reference/" }
+  ]
+}
