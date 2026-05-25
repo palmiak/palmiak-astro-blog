@@ -1,0 +1,12 @@
+{
+  "name": "WordCamp Europe 2026",
+  "logo": "/assets/events/wceu-2026.png",
+  "links": [
+    { "label": "Slides", "url": "https://docs.google.com/presentation/d/1Wi7d4DM87zH-3nxG2h3xy_6RXfeBCpPhDce-a-CZT1g/edit?usp=sharing" },
+    { "label": "The Myth of Secure Hosting", "url": "https://patchstack.com/articles/myth-of-secure-hosting-only-26-percent-of-vulnerability-exploits-blocked-by-hosts/" },
+    { "label": "Hosting Security Tested", "url": "https://patchstack.com/articles/hosting-security-tested-87-percent-of-vulnerability-exploits-bypassed-hosting-defenses/" },
+    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/maciekpalmowski/?locale=en" },
+    { "label": "Silent Death of OSS", "url": "https://dhakal-ananda.com.np/misc/silent-death-of-oss-bb/" },
+    { "label": "HackerOne Bug Bounty Cuts", "url": "https://www.theregister.com/security/2026/05/21/hackerone-takes-an-axe-to-its-bug-bounty-rewards/5244458" }
+  ]
+}
