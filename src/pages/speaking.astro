@@ -1,0 +1,582 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import EuropeMap from '../components/EuropeMap.astro';
+import { u } from '../utils/url';
+import { getAppearances, topics, mapPlaces, speakingStats, SESSIONIZE } from '../data/speaking';
+import { personJsonLd, personId } from '../utils/person';
+import { SITE } from '../utils/site';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+import imgColor from '../assets/speaker/maciek_color.jpg';
+import imgBw from '../assets/speaker/maciek_bw.jpg';
+import imgProfile from '../assets/speaker/maciek_profile.jpg';
+import imgSlack from '../assets/speaker/maciek_slack.jpg';
+
+const photos = [
+  { img: imgColor, file: 'maciek_color.jpg', label: 'Color photo', desc: 'Color portrait' },
+  { img: imgBw, file: 'maciek_bw.jpg', label: 'Black & white', desc: 'B&W portrait' },
+  { img: imgProfile, file: 'maciek_profile.jpg', label: 'Profile photo', desc: 'Profile picture' },
+  { img: imgSlack, file: 'maciek_slack.jpg', label: 'Slack avatar', desc: 'Square avatar' },
+];
+
+const bios = [
+  {
+    id: 'en-1st',
+    lang: 'English',
+    person: '1st person',
+    text: "I'm a Growth Engineer at Patchstack. I'm a huge fan of Open Source, Content Management Systems, and automation. After hours, I spend most of my time finding interesting cycling routes, coding side projects, or drinking coffee.",
+  },
+  {
+    id: 'en-3rd',
+    lang: 'English',
+    person: '3rd person',
+    text: "Maciek is a Growth Engineer at Patchstack. He's a huge fan of Open Source, Content Management Systems, and automation. After hours, he spends most of his time finding interesting cycling routes, coding side projects, or drinking coffee.",
+  },
+  {
+    id: 'pl-1st',
+    lang: 'Polski',
+    person: '1 osoba',
+    text: 'Pracuję jako Growth Engineer w Patchstack. Jestem ogromnym fanem Open Source, CMS-ów oraz automatyzacji. Wolny czas spędzam, znajdując nieznane ścieżki rowerowe, kodując albo popijając kawę.',
+  },
+  {
+    id: 'pl-3rd',
+    lang: 'Polski',
+    person: '3 osoba',
+    text: 'Maciek pracuje jako Growth Engineer w Patchstack. Jest ogromnym fanem Open Source, CMS-ów oraz automatyzacji. Wolny czas spędza, znajdując nieznane ścieżki rowerowe, kodując albo popijając kawę.',
+  },
+];
+
+const appearances = await getAppearances();
+const stats = speakingStats(appearances);
+const places = mapPlaces(appearances);
+
+const onSite = appearances.filter((a) => a.role !== 'online' && a.city);
+const cityCount = new Map<string, number>();
+onSite.forEach((a) => cityCount.set(a.city!, (cityCount.get(a.city!) ?? 0) + 1));
+const topCities = [...cityCount.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 6);
+
+const roleLabel = { speaker: 'Speaker', organiser: 'Organiser', meetup: 'Meetup', online: 'Online' } as const;
+const pad = (n: number) => String(n).padStart(2, '0');
+const monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const years = [...new Set(appearances.map((a) => a.year))];
+
+// Structured data: the person, every event they appeared at, and the speaking topics
+const eventNode = (a: (typeof appearances)[number]) => {
+  const url = a.links.find((l) => l.label === 'Event' || l.label === 'Session')?.url;
+  const online = a.role === 'online';
+  return {
+    '@type': 'Event',
+    name: a.event,
+    startDate: a.month ? `${a.year}-${pad(a.month)}` : String(a.year),
+    eventAttendanceMode: online ? 'https://schema.org/OnlineEventAttendanceMode' : 'https://schema.org/OfflineEventAttendanceMode',
+    location: online
+      ? { '@type': 'VirtualLocation', url: url ?? `${SITE}/speaking/` }
+      : { '@type': 'Place', name: a.city, address: { '@type': 'PostalAddress', addressLocality: a.city, addressCountry: a.country } },
+    ...(url ? { url } : {}),
+    ...(a.talk ? { description: `Talk: ${a.talk}${a.talkOriginal ? ` (${a.talkOriginal})` : ''}` } : {}),
+    [a.role === 'organiser' ? 'organizer' : 'performer']: { '@id': personId },
+    ...(a.organiser ? { organizer: { '@id': personId } } : {}),
+  };
+};
+const speakingJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    personJsonLd(),
+    {
+      '@type': 'ItemList',
+      name: 'What Maciek Palmowski speaks about',
+      itemListElement: topics.map((t, i) => ({ '@type': 'ListItem', position: i + 1, name: t.title, description: t.summary })),
+    },
+    ...appearances.map(eventNode),
+  ],
+};
+const href = (url: string) => (url.startsWith('/') ? u(url) : url);
+
+// Gallery: drop photos into src/assets/gallery and they appear here (sorted by file name).
+// Optional captions by file name:
+const captions: Record<string, string> = {
+  '01-wordcamp-europe-stage.jpg': 'On the WordCamp Europe stage, talking about WordPress security',
+  '02-wordcamp-europe-closeup.jpg': 'Close-up while speaking at WordCamp Europe',
+  '03-microphone.jpg': 'Speaking with a handheld microphone in a lecture hall',
+  '04-workshop.jpg': 'Leading a workshop with a Buddy pipeline on the screen',
+  '05-warsawjs.jpg': 'Speaking at WarsawJS with code on the slide',
+};
+const galleryFiles = import.meta.glob<{ default: ImageMetadata }>('/src/assets/gallery/*.{jpg,jpeg,png,webp}', { eager: true });
+const gallery = Object.entries(galleryFiles)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([path, mod], i) => {
+    const file = path.split('/').pop()!;
+    const img = mod.default;
+    const portrait = img.height > img.width * 1.15;
+    const feature = !portrait && i === 0;
+    return { img, file, portrait, feature, alt: captions[file] ?? 'Conference photo' };
+  });
+---
+
+<Layout
+  title="Speaking"
+  ogImage={u('/og/speaking.png')}
+  description="Talks and workshops by Maciek Palmowski on headless CMS, Astro and WordPress security: topics, a map and list of every conference he has spoken at, and a speaker kit with bios and photos."
+>
+  <header class="wrap page-head">
+    <SectionHeader page title="Speaking" lede="Talks and workshops on headless CMS, Astro and WordPress security, for conferences, meetups and podcasts." />
+    <div class="head-actions">
+      <a class="btn btn-accent" href={u('/contact-me')}>
+        Invite me to your event
+        <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></svg>
+      </a>
+      <a class="btn btn-secondary" href={SESSIONIZE} target="_blank" rel="noopener">Sessionize profile</a>
+    </div>
+  </header>
+
+  <nav class="wrap" aria-label="On this page">
+    <ul class="index">
+      <li><a href="#topics"><span class="index-title">What I speak about</span><span class="index-note">Subjects for talks and workshops</span></a></li>
+      <li><a href="#history"><span class="index-title">Where I have spoken</span><span class="index-note">A map and every event since {stats.since}</span></a></li>
+      <li><a href="#kit"><span class="index-title">Speaker kit</span><span class="index-note">Bio, photos and gallery</span></a></li>
+    </ul>
+  </nav>
+
+  <section class="section hairline" id="topics">
+    <div class="wrap split">
+      <div>
+        <h2 class="t-title-1">What I speak about</h2>
+        <p class="split-sub">Subjects I can build a talk or workshop around. Tell me your audience and I will shape it.</p>
+        <a class="btn btn-ghost sessionize-link" href={SESSIONIZE} target="_blank" rel="noopener">Ready-made sessions on Sessionize</a>
+      </div>
+      <ul class="offer-list">
+        {topics.map((topic) => (
+          <li class="offer" data-rule>
+            <div class="offer-inner" data-reveal>
+              <h3 class="offer-title">{topic.title}</h3>
+              <p class="offer-summary">{topic.summary}</p>
+              {topic.example && (
+                <a class="offer-link" href={href(topic.example.url)} {...(topic.example.url.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>{topic.example.label}<span class="sr-only">: {topic.title}</span></a>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section hairline" id="history">
+    <div class="wrap">
+      <div class="where-head">
+        <h2 class="t-title-1">Where I have spoken</h2>
+        <p class="where-stats">
+          Every conference, meetup and online event since {stats.since}, newest first.
+          </p>
+      </div>
+      <div class="map-grid">
+        <div class="map-wrap">
+          <EuropeMap places={places} />
+        </div>
+        <aside class="map-side" aria-label="Speaking in numbers">
+          <dl class="figures">
+            <div><dt>Appearances</dt><dd>{stats.appearances}</dd></div>
+            <div><dt>Cities</dt><dd>{stats.cities}</dd></div>
+            <div><dt>Countries</dt><dd>{stats.countries}</dd></div>
+          </dl>
+          <div class="side-block">
+            <h3 class="t-title-3">Most visited</h3>
+            <ul class="top-cities">
+              {topCities.map(([city, n]) => (
+                <li><span>{city}</span><span class="count">{n}</span></li>
+              ))}
+            </ul>
+          </div>
+        </aside>
+      </div>
+
+      <div class="timeline">
+        {years.map((year) => (
+          <div class="year-group">
+            <h3 class="year" data-reveal>{year}</h3>
+            <ul class="events">
+              {appearances.filter((a) => a.year === year).map((a) => (
+                <li class="event" data-rule>
+                  <div class="event-inner" data-reveal>
+                    <div class="event-main">
+                      <span class="event-name">{a.event}</span>
+                      <span class="event-meta">
+                        {a.month && <><time datetime={`${a.year}-${pad(a.month)}`}>{monthName[a.month - 1]}</time> · </>}{a.city ? `${a.city}, ${a.country}` : 'Online'}
+                        {a.talk && <> · {a.talk}</>}
+                        {a.talkOriginal && <> (Polish: <span lang="pl">{a.talkOriginal}</span>)</>}
+                      </span>
+                    </div>
+                    <div class="event-side">
+                      <span class="badges"><span class="badge">{roleLabel[a.role]}</span>{a.organiser && <span class="badge">Organiser</span>}</span>
+                      {a.links && a.links.length > 0 && (
+                        <span class="event-links">
+                          {a.links.map((l) => (
+                            <a href={href(l.url)} {...(l.url.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}<span class="sr-only">: {a.event}</span></a>
+                          ))}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section hairline" id="kit">
+    <div class="wrap">
+      <div class="where-head">
+        <h2 class="t-title-1">Speaker kit</h2>
+        <p class="where-stats">For organisers and event materials: copy a bio, download photos, or browse the gallery.</p>
+      </div>
+
+      <div class="kit-block split" id="bio">
+        <h3 class="t-title-2 split-title">Bio</h3>
+        <div class="bio-wrap" data-reveal>
+        <div class="tab-bar" role="tablist" aria-label="Bio version">
+          {bios.map((bio, i) => (
+            <button
+              class="tab-btn"
+              role="tab"
+              type="button"
+              aria-selected={i === 0 ? 'true' : 'false'}
+              aria-controls={`panel-${bio.id}`}
+              id={`tab-${bio.id}`}
+              data-tab={bio.id}
+            >
+              {bio.lang}, {bio.person}
+            </button>
+          ))}
+        </div>
+
+        {bios.map((bio, i) => (
+          <div
+            class="bio-panel"
+            role="tabpanel"
+            id={`panel-${bio.id}`}
+            aria-labelledby={`tab-${bio.id}`}
+            hidden={i !== 0}
+            data-panel={bio.id}
+          >
+            <p class="bio-text">{bio.text}</p>
+            <button class="btn btn-secondary copy-btn" type="button" data-copy={bio.text}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span class="copy-label" aria-live="polite">Copy bio</span>
+            </button>
+          </div>
+        ))}
+        </div>
+      </div>
+
+      <div class="kit-block split" id="photos">
+        <div>
+          <h3 class="t-title-2 split-title">Photos</h3>
+          <p class="split-sub">Select a photo to download it in full resolution.</p>
+        </div>
+        <div class="photo-grid">
+        {photos.map((photo) => (
+          <a
+            class="photo-card"
+            href={photo.img.src}
+            download={photo.file}
+            aria-label={`Download ${photo.label}`}
+            data-reveal
+          >
+            <div class="photo-wrap">
+              <Image
+                src={photo.img}
+                alt={photo.desc}
+                loading="lazy"
+                widths={[320, 640]}
+                sizes="(max-width: 320px) 320px, 640px"
+              />
+            </div>
+          </a>
+        ))}
+        </div>
+      </div>
+
+      <div class="kit-block" id="gallery">
+        <h3 class="t-title-2 split-title">Gallery</h3>
+        <p class="split-sub gallery-sub">On stage and around events.</p>
+        <div class="gallery">
+          {gallery.map((g) => (
+            <figure
+              class={`shot${g.portrait ? ' portrait' : ''}${g.feature ? ' feature' : ''}`}
+              data-reveal
+            >
+              <Image
+                src={g.img}
+                alt={g.alt}
+                loading="lazy"
+                widths={g.feature ? [640, 1100] : [320, 640]}
+                sizes={g.feature ? '(max-width: 720px) 100vw, 60vw' : '(max-width: 720px) 50vw, 30vw'}
+              />
+            </figure>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section hairline invite" id="invite">
+    <div class="wrap invite-grid">
+      <h2 class="t-display">Invite me to your event<span class="hush-title-dot">.</span></h2>
+      <div class="invite-side" data-reveal>
+        <p>Conference, meetup, workshop or podcast. Tell me the dates, audience and format. I'm based in Łódź, Poland, and I speak at in-person and online events.</p>
+        <a class="btn btn-accent" href={u('/contact-me')}>
+          Get in touch
+          <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(speakingJsonLd)} />
+</Layout>
+
+<script>
+  // Tabs
+  const tabBtns = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
+  const panels = document.querySelectorAll<HTMLElement>('.bio-panel');
+
+  tabBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.tab!;
+
+      tabBtns.forEach((b) => b.setAttribute('aria-selected', 'false'));
+      panels.forEach((p) => { p.hidden = true; });
+
+      btn.setAttribute('aria-selected', 'true');
+      const panel = document.querySelector<HTMLElement>(`[data-panel="${target}"]`);
+      if (panel) panel.hidden = false;
+    });
+  });
+
+  // Copy buttons
+  document.querySelectorAll<HTMLButtonElement>('.copy-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const text = btn.dataset.copy!;
+      try {
+        await navigator.clipboard.writeText(text);
+        const label = btn.querySelector('.copy-label')!;
+        label.textContent = 'Copied';
+        setTimeout(() => { label.textContent = 'Copy bio'; }, 2000);
+      } catch {
+        // fallback: select text manually
+      }
+    });
+  });
+</script>
+
+<style>
+.head-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-6); }
+
+/* Contents: a quiet map of the page, not a second navigation bar */
+.index {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--border);
+}
+@media (min-width: 760px) { .index { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.index li { border-bottom: 1px solid var(--border); }
+.index li:not(:first-child) { border-left: 1px solid var(--border-subtle); }
+@media (max-width: 759px) {
+  .index { grid-template-columns: minmax(0, 1fr); }
+  .index li:not(:first-child) { border-left: 0; }
+}
+.index a {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  height: 100%;
+  padding: var(--space-4);
+  text-decoration: none;
+  transition: background-color var(--dur-hover) var(--ease-in);
+}
+.index a:hover { background: var(--surface-100); }
+.index-title { font-size: 15px; line-height: 22px; font-weight: 500; color: var(--ink); transition: color var(--dur-hover) var(--ease-in); }
+.index a:hover .index-title { color: var(--accent-hover); }
+.index-note { font-size: 13px; line-height: 20px; color: var(--ink-muted); }
+
+.kit-block { margin-top: var(--space-12); }
+.gallery-sub { margin-bottom: var(--space-6); max-width: 52ch; }
+
+.split { display: grid; gap: var(--space-8); }
+.split-sub { margin-top: var(--space-3); max-width: 28ch; color: var(--ink-muted); }
+@media (min-width: 960px) {
+  .split { grid-template-columns: 280px minmax(0, 1fr); gap: var(--space-12); align-items: start; }
+}
+
+.tab-bar { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-8); }
+.tab-btn {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--ink-muted);
+  font: 500 13px/16px var(--font-body);
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease-in), color var(--dur-hover) var(--ease-in), border-color var(--dur-hover) var(--ease-in);
+}
+.tab-btn:hover { background: var(--surface-200); color: var(--ink); }
+.tab-btn[aria-selected='true'] { background: var(--surface-300); color: var(--ink); border-color: var(--border-control); }
+
+.bio-panel { max-width: 62ch; }
+.bio-panel:not([hidden]) { animation: panel-in var(--dur-panel) var(--ease-in) both; }
+@keyframes panel-in { from { opacity: 0; transform: translateY(4px); } }
+.bio-text {
+  font-family: var(--font-title);
+  font-weight: 300;
+  font-size: clamp(22px, 2.6vw, 28px);
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: var(--space-8);
+}
+
+.photo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+.photo-card {
+  display: block;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-200);
+  overflow: hidden;
+  transition: background-color var(--dur-hover) var(--ease-in), border-color var(--dur-hover) var(--ease-in);
+}
+.photo-card:hover { background: var(--surface-300); border-color: var(--border-control); }
+.photo-wrap { aspect-ratio: 1; overflow: hidden; }
+.photo-wrap :global(img) { width: 100%; height: 100%; object-fit: cover; }
+@media (max-width: 480px) { .photo-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* Talks on offer */
+.offer-list { list-style: none; min-width: 0; }
+.offer { border-top: 1px solid var(--border); }
+.offer:last-child { border-bottom: 1px solid var(--border); }
+.offer-inner { padding: var(--space-6) var(--space-2); }
+.offer-title {
+  font-family: var(--font-title);
+  font-weight: 300;
+  font-size: clamp(20px, 2.4vw, 26px);
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.sessionize-link { margin: var(--space-4) 0 0 -12px; }
+.offer-link {
+  display: inline-block;
+  margin-top: var(--space-3);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-muted);
+  text-decoration: underline;
+  text-decoration-color: var(--border-control);
+  text-underline-offset: 3px;
+  transition: color var(--dur-hover) var(--ease-in), text-decoration-color var(--dur-hover) var(--ease-in);
+}
+.offer-link:hover { color: var(--accent-hover); text-decoration-color: var(--accent-hover); }
+.offer-summary { margin-top: var(--space-2); max-width: 62ch; font-size: 14px; line-height: 22px; color: var(--ink-muted); }
+
+/* Where I have spoken */
+.where-head { max-width: 62ch; margin-bottom: var(--space-8); }
+.where-stats { margin-top: var(--space-3); color: var(--ink-muted); font-size: 15px; line-height: 24px; }
+.map-grid { display: grid; gap: var(--space-8); margin-bottom: var(--space-12); align-items: start; }
+@media (min-width: 900px) { .map-grid { grid-template-columns: minmax(0, 1fr) 280px; gap: var(--space-12); } }
+.map-wrap { min-width: 0; }
+.map-side { display: flex; flex-direction: column; gap: var(--space-8); }
+.figures { display: grid; gap: 0; }
+.figures > div { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-4); padding-block: var(--space-3); border-top: 1px solid var(--border); }
+.figures > div:last-child { border-bottom: 1px solid var(--border); }
+.figures dt { font-size: 13px; line-height: 20px; color: var(--ink-muted); }
+.figures dd { margin: 0; font-family: var(--font-title); font-weight: 300; font-size: 44px; line-height: 1; letter-spacing: -0.05em; color: var(--ink); }
+.side-block .t-title-3 { margin-bottom: var(--space-2); }
+.top-cities { list-style: none; }
+.top-cities li { display: flex; justify-content: space-between; gap: var(--space-4); padding-block: var(--space-2); border-top: 1px solid var(--border-subtle); font-size: 14px; line-height: 22px; color: var(--ink); }
+.top-cities .count { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-subtle); }
+
+.timeline { display: flex; flex-direction: column; }
+.year-group { display: grid; gap: var(--space-4); padding-block: var(--space-4); }
+.year { font-family: var(--font-title); font-weight: 300; font-size: 30px; line-height: 1.2; letter-spacing: -0.025em; color: var(--ink-subtle); }
+@media (min-width: 960px) {
+  .year-group { grid-template-columns: 280px minmax(0, 1fr); gap: var(--space-12); }
+  .year { position: sticky; top: calc(var(--frame) + var(--header-h) + 32px); align-self: start; }
+}
+.events { list-style: none; min-width: 0; }
+.event { border-top: 1px solid var(--border); }
+.year-group:last-child .event:last-child { border-bottom: 1px solid var(--border); }
+.event-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-6);
+  padding: var(--space-4) var(--space-2);
+}
+.event-main { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+.event-name { font-size: 15px; line-height: 22px; font-weight: 500; color: var(--ink); }
+.event-meta { font-size: 13px; line-height: 20px; color: var(--ink-muted); }
+.event-side { display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-2); flex-shrink: 0; }
+.badges { display: flex; gap: var(--space-1); }
+.event-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px var(--space-3); }
+.event-links a {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-muted);
+  text-decoration: underline;
+  text-decoration-color: var(--border-control);
+  text-underline-offset: 3px;
+  transition: color var(--dur-hover) var(--ease-in), text-decoration-color var(--dur-hover) var(--ease-in);
+}
+.event-links a:hover { color: var(--accent-hover); text-decoration-color: var(--accent-hover); }
+@media (max-width: 640px) {
+  .event-inner { flex-direction: column; gap: var(--space-2); }
+  .event-side { flex-direction: row; align-items: center; flex-wrap: wrap; }
+}
+
+/* Gallery */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 150px;
+  grid-auto-flow: dense;
+  gap: var(--space-2);
+}
+@media (min-width: 720px) {
+  .gallery { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 200px; gap: var(--space-4); }
+}
+.shot {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-200);
+  /* `translate` rather than `transform`: the scroll reveal owns transform */
+  transition: translate var(--dur-panel) var(--ease-in), border-color var(--dur-hover) var(--ease-in);
+}
+.shot :global(img) { transition: filter var(--dur-panel) var(--ease-in); }
+.shot:hover { translate: 0 -4px; border-color: var(--border-control); }
+/* The photo you point at lifts; the rest recede */
+@media (hover: hover) {
+  .gallery:has(.shot:hover) .shot:not(:hover) :global(img) { filter: brightness(0.45) saturate(0.7); }
+}
+.shot.portrait { grid-row: span 2; }
+.shot.feature { grid-column: span 2; grid-row: span 2; }
+.shot :global(img) { width: 100%; height: 100%; object-fit: cover; }
+
+/* Invite */
+.invite-grid { display: grid; gap: var(--space-8); align-items: end; }
+.invite-side { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-6); }
+.invite-side p { max-width: 44ch; font-size: 15px; line-height: 24px; color: var(--ink-muted); }
+@media (min-width: 960px) {
+  .invite-grid { grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); gap: var(--space-12); }
+}
+</style>

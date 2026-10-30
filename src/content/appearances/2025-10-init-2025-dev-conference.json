@@ -1,0 +1,16 @@
+{
+  "event": "INIT 2025 Dev Conference",
+  "year": 2025,
+  "month": 10,
+  "role": "speaker",
+  "city": "Banja Luka",
+  "country": "Bosnia and Herzegovina",
+  "lat": 44.7722,
+  "lon": 17.191,
+  "links": [
+    {
+      "label": "Event",
+      "url": "https://initconf.org/"
+    }
+  ]
+}

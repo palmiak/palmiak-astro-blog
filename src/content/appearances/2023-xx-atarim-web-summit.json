@@ -1,0 +1,12 @@
+{
+  "event": "Atarim Web Summit",
+  "year": 2023,
+  "role": "online",
+  "talk": "Is it worth converting your WordPress to headless?",
+  "links": [
+    {
+      "label": "Article",
+      "url": "/blog/is-it-worth-converting-your-wordpress-to-headless/"
+    }
+  ]
+}

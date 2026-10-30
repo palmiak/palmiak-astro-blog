@@ -1,0 +1,16 @@
+{
+  "event": "Come To Code 2024",
+  "year": 2024,
+  "month": 9,
+  "role": "speaker",
+  "city": "Pignola",
+  "country": "Italy",
+  "lat": 40.5667,
+  "lon": 15.7833,
+  "links": [
+    {
+      "label": "Event",
+      "url": "https://www.pignolalug.it/come-to-code"
+    }
+  ]
+}

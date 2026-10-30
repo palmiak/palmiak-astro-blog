@@ -1,21 +1,26 @@
 ---
 ---
-<div style="display:flex;align-items:center;gap:10px;">
-  <svg width="26" height="20" viewBox="0 0 28 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#ff2d78"/>
-        <stop offset="100%" stop-color="#a855f7"/>
-      </linearGradient>
-      <linearGradient id="lg2" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#a855f7"/>
-        <stop offset="100%" stop-color="#00ffb3"/>
-      </linearGradient>
-    </defs>
-    <polyline points="9,2 2,11 9,20" stroke="url(#lg1)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-    <polyline points="19,2 26,11 19,20" stroke="url(#lg2)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-  </svg>
-  <div style="font-family:'Unbounded',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.01em;color:var(--hi);line-height:1.4;">
-    maciek<br/>palmowski
-  </div>
-</div>
+<span class="logo">
+  <span class="logo-text">Maciek Palmowski<span class="logo-dot hush-title-dot">.</span></span>
+</span>
+
+<style>
+.logo {
+  display: inline-flex;
+  align-items: baseline;
+  color: var(--ink);
+}
+.logo-text {
+  font-family: var(--font-title);
+  font-weight: 300;
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+}
+.logo-dot {
+  display: inline-block;
+  transition: transform var(--dur-fade) var(--ease-in);
+}
+:global(a:hover) .logo-dot { transform: translateX(3px); }
+</style>

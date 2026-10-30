@@ -1,0 +1,26 @@
+{
+  "event": "WordCamp Gdynia 2024",
+  "year": 2024,
+  "month": 10,
+  "role": "speaker",
+  "city": "Gdynia",
+  "country": "Poland",
+  "lat": 54.5189,
+  "lon": 18.5305,
+  "talk": "The state of security in WordPress",
+  "talkOriginal": "Jak się zabezpieczać? Czyli o security w WordPressie",
+  "links": [
+    {
+      "label": "Video",
+      "url": "https://wordpress.tv/2024/10/13/jak-sie-zabezpieczac-czyli-o-security-w-wordpressie/"
+    },
+    {
+      "label": "Recap",
+      "url": "/blog/i-was-at-wordcamp-gdynia-2024/"
+    },
+    {
+      "label": "Event",
+      "url": "https://crossweb.pl/wydarzenia/wordcamp-gdynia-2024/"
+    }
+  ]
+}

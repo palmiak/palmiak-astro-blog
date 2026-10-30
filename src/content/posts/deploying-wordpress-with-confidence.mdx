@@ -21,7 +21,7 @@ During WordCamp Europe, I had the pleasure of hosting workshops about deploying 
 
 Let's start with the most straightforward approach. We'll just push everything to production
 
-<PostImage src="/assets/arts/workshops/simple_sftp.png" width="narrow" />
+<PostImage src="/assets/arts/workshops/simple_sftp.png" width="narrow" alt="Buddy pipeline with a single action, 'Upload files to production', under the 'On Run' tab." />
 
 While this approach will move our files, we can't be sure about the result. Every time we have to wait until the deployment is finished to check if our website is still working.
 
@@ -33,7 +33,7 @@ The best way to make sure that our code won't reach the production is to use a s
 
 For now, let's just test if our server is responding after deploying code to staging.
 
-<PostImage src="/assets/staging_sftp.png" width="narrow" />
+<PostImage src="/assets/staging_sftp.png" width="narrow" alt="Buddy pipeline with three actions: upload files to staging, check that the staging server works, and upload files to production." />
 
 That's much better. Thanks to this approach we can be a bit more confident about our deployments. Also, we can make it much better just by adding more tests.
 
@@ -65,7 +65,7 @@ There are many tools you can use - I would recommend using Pest (for PHP) and Je
 
 While unit tests are testing everything in isolation, integration tests are about combining everything and testing as a whole. This gif should explain the difference perfectly:
 
-<PostImage src="/assets/arts/workshops/unit_vs_integration_tests.gif" width="narrow" />
+<PostImage src="/assets/arts/workshops/unit_vs_integration_tests.gif" width="narrow" alt="Animated GIF captioned 'Unit test vs. Integration test', showing a close-up of a door handle and latch." />
 
 When it comes to the tooling you can also use Pest for it - big thanks to **Denis** for [making it so easy](https://madebydenis.com/wordpress-integration-tests-with-pest-php/).
 
@@ -83,7 +83,7 @@ It's a good practice to also check if your git repository doesn't contain files 
 
 If you decide to add all of the tests I mentioned, your pipeline can look like this
 
-<PostImage src="/assets/arts/workshops/full_pipeline.png" width="narrow" />
+<PostImage src="/assets/arts/workshops/full_pipeline.png" width="narrow" alt="A long Buddy pipeline of about 15 actions, including Install Composer, PHPCS, PHPStan, unit tests, integration tests, E2E tests, Lighthouse and Transfer files to production." />
 
 It looks scary, but it will probably save you from deploying any bug.
 

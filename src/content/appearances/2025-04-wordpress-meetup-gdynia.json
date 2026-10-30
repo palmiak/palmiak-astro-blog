@@ -1,0 +1,22 @@
+{
+  "event": "WordPress Meetup Gdynia",
+  "year": 2025,
+  "month": 4,
+  "role": "meetup",
+  "city": "Gdynia",
+  "country": "Poland",
+  "lat": 54.5189,
+  "lon": 18.5305,
+  "talk": "How we removed 1000 plugins from the repository in a month",
+  "talkOriginal": "O tym jak w ciągu miesiąca usunęliśmy 1000 wtyczek z repozytorium – historia największego bug bounty",
+  "links": [
+    {
+      "label": "Video",
+      "url": "https://wordpress.tv/2025/04/21/o-tym-jak-w-ciagu-miesiaca-usunelismy-1000-wtyczek-z-repozytorium-historia-najwiekszego-bug-bounty/"
+    },
+    {
+      "label": "Event",
+      "url": "https://crossweb.pl/wydarzenia/wordup-trojmiasto-22-meetup/"
+    }
+  ]
+}

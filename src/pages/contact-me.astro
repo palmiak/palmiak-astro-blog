@@ -1,66 +1,56 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import GradBar from '../components/GradBar.astro';
+import SectionHeader from '../components/SectionHeader.astro';
 import { u } from '../utils/url';
+
+const channels = [
+  { label: 'Email', value: 'hi@maciekpalmowski.dev', href: 'mailto:hi@maciekpalmowski.dev' },
+  { label: 'X', value: '@palmiak_fp', href: 'https://twitter.com/palmiak_fp' },
+  { label: 'LinkedIn', value: 'maciekpalmowski', href: 'https://www.linkedin.com/in/maciekpalmowski/' },
+];
 ---
 <Layout title="Contact me" description="Ways to get in touch with Maciek Palmowski" ogImage={u('/og/contact.png')}>
-  <div class="contact-header">
-    <div class="col">
-      <div class="sec-label"><span class="sec-dot"></span>Contact</div>
-      <h1 class="page-title">Get in touch</h1>
-    </div>
-  </div>
+  <header class="wrap page-head">
+    <SectionHeader page title="Get in touch" lede="Email is the fastest way. Direct messages on X and LinkedIn work too." />
+    <p class="speak-note">Inviting me to speak? See the <a href={u('/speaking')}>talks and speaker kit</a> first, then tell me the dates, audience and format.</p>
+  </header>
 
-  <div class="contact-body col prose-post">
-    <p>If you want to contact me, there are a few ways to do so:</p>
-    <ul>
-      <li>Write me an email at <a href="mailto:hi@maciekpalmowski.dev">hi@maciekpalmowski.dev</a></li>
-      <li>Send me a DM on <a href="https://twitter.com/palmiak_fp" target="_blank" rel="noopener">Twitter / X</a></li>
-      <li>Connect on <a href="https://www.linkedin.com/in/maciekpalmowski/" target="_blank" rel="noopener">LinkedIn</a></li>
+  <div class="wrap channels-wrap">
+    <ul class="channels">
+      {channels.map((c) => (
+        <li data-rule>
+          <a class="channel" href={c.href} {...(c.href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})} data-reveal>
+            <span class="channel-label">{c.label}</span>
+            <span class="channel-value t-title-2">{c.value}</span>
+          </a>
+        </li>
+      ))}
     </ul>
   </div>
-
-  <GradBar />
 </Layout>
 
 <style>
-.col {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 0 24px;
+.speak-note { margin-top: var(--space-6); max-width: 52ch; color: var(--ink-muted); font-size: 15px; line-height: 24px; }
+.speak-note a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--border-control); text-underline-offset: 3px; transition: color var(--dur-hover) var(--ease-in), text-decoration-color var(--dur-hover) var(--ease-in); }
+.speak-note a:hover { color: var(--accent-hover); text-decoration-color: var(--accent-hover); }
+.channels-wrap { padding-bottom: clamp(64px, 10vw, 120px); }
+.channels { list-style: none; max-width: 760px; }
+.channels li { border-top: 1px solid var(--border); }
+.channels li:last-child { border-bottom: 1px solid var(--border); }
+.channel {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: baseline;
+  padding: var(--space-8) var(--space-2);
+  text-decoration: none;
+  transition: background-color var(--dur-hover) var(--ease-in);
 }
-.contact-header {
-  padding: 56px 0 32px;
-  border-bottom: 1px solid var(--bd);
-}
-.sec-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--mid);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-.sec-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #ff2d78, #a855f7);
-  flex-shrink: 0;
-}
-.page-title {
-  font-family: 'Unbounded', sans-serif;
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--hi);
-}
-.contact-body {
-  padding: 44px 24px;
-  max-width: 680px;
-  margin: 0 auto;
+.channel:hover { background: var(--surface-100); }
+.channel-label { font-size: 13px; line-height: 16px; color: var(--ink-subtle); }
+.channel-value { overflow-wrap: anywhere; transition: color var(--dur-hover) var(--ease-in); }
+.channel:hover .channel-value { color: var(--accent-hover); }
+@media (max-width: 560px) {
+  .channel { grid-template-columns: minmax(0, 1fr); gap: var(--space-1); }
 }
 </style>

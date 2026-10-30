@@ -25,7 +25,7 @@ The pitch? It's what WordPress would look like if you built it today, from scrat
 
 ## Things I actually like
 
-**The security model is genuinely clever.** In WordPress, plugins can do almost anything they want. That's the root of a huge number of security issues, and I've [written about this before](/blog/wordpress-security-is-it-really-that-bad). EmDash plugins run in sandboxed isolates and have to explicitly declare what they need access to, similar to how OAuth works. Honestly the most interesting thing about the whole project.
+**The security model is genuinely clever.** In WordPress, plugins can do almost anything they want. That's the root of a huge number of security issues, and I've [written about this before](/blog/wordpress-security-is-it-really-that-bad/). EmDash plugins run in sandboxed isolates and have to explicitly declare what they need access to, similar to how OAuth works. Honestly the most interesting thing about the whole project.
 
 **The DB structure seems solid.** I had a look at the SQLite tables and I liked what I saw. Post types get their own separate tables instead of everything being crammed into a handful of generic ones. If you've ever debugged a WordPress database, you know how refreshing that is.
 
@@ -43,7 +43,7 @@ That framing is accurate. EmDash treats agents as actual users of the system, wi
 
 **I migrated to Astro partly to get away from the CMS.**
 
-My blog is markdown files. No database, no admin panel, no content layer that can go wrong. I write a post, push it, done. I've written a bit about [different approaches to content management](/blog/different-flavors-of-content-management) if you want more context on why this matters to me.
+My blog is markdown files. No database, no admin panel, no content layer that can go wrong. I write a post, push it, done. I've written a bit about [different approaches to content management](/blog/different-flavors-of-content-management/) if you want more context on why this matters to me.
 
 EmDash is well built, but it means running a server, paying for edge compute, and adding a layer between me and my content. That's the trade-off I already decided wasn't worth it.
 

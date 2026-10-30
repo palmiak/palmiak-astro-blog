@@ -1,0 +1,16 @@
+{
+  "event": "WordUp Lublin #19",
+  "year": 2019,
+  "month": 6,
+  "role": "meetup",
+  "city": "Lublin",
+  "country": "Poland",
+  "lat": 51.2465,
+  "lon": 22.5684,
+  "links": [
+    {
+      "label": "Event",
+      "url": "https://crossweb.pl/wydarzenia/wordup-lublin-19/"
+    }
+  ]
+}

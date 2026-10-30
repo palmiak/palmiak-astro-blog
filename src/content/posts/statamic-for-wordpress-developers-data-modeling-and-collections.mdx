@@ -37,7 +37,7 @@ When it comes to creating **collections** and** modeling the data**, Statamic do
 
 After logging into the **Control Panel**, click **Collections > Create collection**. Next, just enter the name of the **Collection** and its handle and that's it. You just defined an empty collection.
 
-<PostImage src="/assets/arts/statamic-for-wp/zrzut-ekranu-2024-04-16-173533.png" width="narrow" />
+<PostImage src="/assets/arts/statamic-for-wp/zrzut-ekranu-2024-04-16-173533.png" width="narrow" alt="Statamic's 'Create Collection' screen with the title 'Articles' and the handle 'articles'." />
 
 At this point, our Collection is up and running. Next, **Statamic** will propose to:
 
@@ -46,7 +46,7 @@ At this point, our Collection is up and running. Next, **Statamic** will propose
 - configure blueprints
 - scaffold views
 
-<PostImage src="/assets/arts/statamic-for-wp/zrzut-ekranu-2024-04-16-173557.png" width="narrow" />
+<PostImage src="/assets/arts/statamic-for-wp/zrzut-ekranu-2024-04-16-173557.png" width="narrow" alt="Statamic's Articles collection page with options to configure the collection, create an entry, configure blueprints and scaffold views." />
 
 ## Data modeling
 
@@ -67,11 +67,11 @@ If you are wondering about the published date, don't worry - we'll add it using 
 
 But before we start adding more fields - let's dive into the layout, tabs, and sections. By default, the editor is divided into two parts - the main section and the sidebar.
 
-<PostImage src="/assets/arts/statamic-for-wp/default-view.png" width="wide" />
+<PostImage src="/assets/arts/statamic-for-wp/default-view.png" width="wide" alt="Diagram of a Statamic blueprint (right) mapped to the entry form (left): a pink arrow for the main area and a blue arrow for the sidebar." />
 
 If we add more **sections**, they will appear underneath the main one. This is a great way to organize your content in separate parts:
 
-<PostImage src="/assets/arts/statamic-for-wp/more-sections.png" width="wide" />
+<PostImage src="/assets/arts/statamic-for-wp/more-sections.png" width="wide" alt="The same blueprint diagram with an extra section, mapped to additional fields in the entry form." />
 
 Apart from sections, you can also add **tabs**. Other than the default one, other tabs are hidden by default - you have to click on them to see what's there. It's great for secondary content that you don't need all the time.
 
@@ -95,7 +95,7 @@ This time we'll use the `Users` field. There we can change things limiting the n
 
 I won't go deeper into other fields, as they are mostly self-explanatory and [well-documented](https://statamic.dev/reference/fieldtypes). Compared to WordPress' Custom Fields plugins, the biggest difference is the UI and naming of some field types. With some practice, you should quickly get used to Statamic's way of doing things.
 
-<PostImage src="/assets/arts/statamic-for-wp/zrzut-ekranu-2024-04-18-023119.png" width="wide" />
+<PostImage src="/assets/arts/statamic-for-wp/zrzut-ekranu-2024-04-18-023119.png" width="wide" alt="Statamic's 'Create Entry' form for Articles with title, content, thumbnail, slug and date fields." />
 
 ## Configuring the Collection
 
@@ -120,7 +120,7 @@ In our case, as we are creating our Articles Collection, we have to:
 
 It's time to create the template files for our **Collection**. Statamic doesn't have a template hierarchy like WordPress. Until you create all the proper files, you'll get an error. On the other hand, Statamic gives you the option to scaffold those files with one click - just Click the **Scaffold views** and all the required files will be created.
 
-<PostImage src="/assets/arts/statamic-for-wp/zrzut-ekranu-2024-04-18-023541.png" width="wide" />
+<PostImage src="/assets/arts/statamic-for-wp/zrzut-ekranu-2024-04-18-023541.png" width="wide" alt="Statamic's 'Scaffold Views' screen with the index and show templates ticked." />
 
 The `index` files is the archive and the `show` file is the single entry.
 
@@ -138,7 +138,7 @@ First, in another collection (probably called Pages), we have to create a new en
 
 The last thing to do is to mount the archive - this will tell Statamic that it's not just a page. To do so, go back to the collection configuration find the **Mount** option, and link to the proper page.
 
-<PostImage src="/assets/arts/statamic-for-wp/zrzut-ekranu-2024-04-18-021954.png" width="narrow" />
+<PostImage src="/assets/arts/statamic-for-wp/zrzut-ekranu-2024-04-18-021954.png" width="narrow" alt="Statamic's Pages tree with 'Home' and 'Articles' and a 'Create Entry' button." />
 
 And we're done. From now on, the archive is working correctly.
 

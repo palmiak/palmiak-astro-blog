@@ -2,8 +2,11 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import { u } from '../utils/url';
+import { personJsonLd } from '../utils/person';
 import Hero from '../components/Hero.astro';
-import GradBar from '../components/GradBar.astro';
+import ScrollLit from '../components/ScrollLit.astro';
+import Ticker from '../components/Ticker.astro';
+import { getAppearances, speakingStats } from '../data/speaking';
 import SectionHeader from '../components/SectionHeader.astro';
 import PostRow from '../components/PostRow.astro';
 import NewsletterBox from '../components/NewsletterBox.astro';
@@ -13,254 +16,143 @@ const allPosts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
 );
 const recentPosts = allPosts.slice(0, 8);
 
-const talks = (await getCollection('talks')).sort(
-  (a, b) => b.data.year - a.data.year
-);
+const appearances = await getAppearances();
+const stats = speakingStats(appearances);
+const monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const recentTalks = appearances.filter((a) => a.role === 'speaker' || a.role === 'organiser').slice(0, 6);
+const linkOf = (a: (typeof appearances)[number]) => {
+  const first = a.links?.find((l) => l.label !== 'Resources') ?? a.links?.[0];
+  return first ? (first.url.startsWith('/') ? u(first.url) : first.url) : undefined;
+};
+
+const eventNames = [...new Set(appearances.filter((a) => a.role === 'speaker' || a.role === 'organiser').map((a) => a.event.replace(/ 20\d{2}$/, '')))];
 ---
-<Layout title="Home" ogImage={u('/og/home.png')}>
+<Layout
+  fullTitle="Maciek Palmowski, web developer and speaker"
+  description="I'm a Growth Engineer at Patchstack in Łódź, Poland. I write and speak about WordPress security, headless CMS and Astro."
+  ogImage={u('/og/home.png')}
+>
   <Hero />
 
-  <GradBar />
-
-  <!-- Writing section -->
-  <div class="col">
-    <SectionHeader label="Writing" title="Latest posts" />
-  </div>
-
-  <div class="posts-list col">
-    {recentPosts.map((post) => (
-      <PostRow
-        title={post.data.title}
-        slug={post.slug}
-        tags={post.data.tags}
-        excerpt={post.data.excerpt ?? post.data.description}
-        pubDate={post.data.pubDate}
-      />
-    ))}
-  </div>
-
-  <!-- Read more button -->
-  <div class="all-posts-link">
-    <a href={u('/blog')} class="view-all-btn">
-      Read all {allPosts.length} posts →
-    </a>
-  </div>
-
-  <!-- About section -->
-  <div class="about col">
-    <div class="about-border"><div class="about-inner">
-      <div class="about-eyebrow"><span class="sec-dot"></span>About me</div>
-      <p class="about-body">
-        I'm a web developer and <strong>mVDP Growth Manager at Patchstack</strong> — the WordPress security company.
-        Over 15+ years I've gone deep on WordPress, PHP, headless architecture, and Astro. I write and speak about all of it.<br /><br />
-        I co-organise <strong>CMS Conf 2026</strong> in Gdynia, Poland. When I'm not at a keyboard I'm on a gravel bike.
-      </p>
-      <a class="about-link" href={u('/contact-me')}>
-        Get in touch →
-      </a>
-    </div></div>
-  </div>
-
-  <GradBar />
-
-  <!-- Talks section -->
-  <div id="speaking" class="talks-section col">
-    <SectionHeader label="Speaking" title="Selected talks" />
-    <div class="talks-list">
-      {talks.map((talk) => (
-        <div class="talk-row">
-          {talk.data.url ? (
-            <a href={talk.data.url} target="_blank" rel="noopener" class="talk-link">
-              <div class="talk-title">{talk.data.title}</div>
-              <div class="talk-event">{talk.data.event}</div>
-            </a>
-          ) : (
-            <div>
-              <div class="talk-title">{talk.data.title}</div>
-              <div class="talk-event">{talk.data.event}</div>
-            </div>
-          )}
-          <div class="talk-year">{talk.data.year}</div>
-        </div>
-      ))}
+  <!-- Writing -->
+  <section class="section hairline" id="writing">
+    <div class="wrap split">
+      <div class="split-head">
+        <SectionHeader title="Writing" lede={`${allPosts.length} posts on WordPress, headless CMS, Astro and speaking.`} />
+        <a class="btn btn-secondary all-link" href={u('/blog')}>
+          All posts
+          <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></svg>
+        </a>
+      </div>
+      <div class="posts-list">
+        {recentPosts.map((post) => (
+          <PostRow
+            title={post.data.title}
+            slug={post.slug}
+            tags={post.data.tags}
+            excerpt={post.data.excerpt ?? post.data.description}
+            pubDate={post.data.pubDate}
+          />
+        ))}
+      </div>
     </div>
-  </div>
+  </section>
+
+  <!-- About -->
+  <section class="section hairline about" id="about">
+    <div class="wrap">
+      <ScrollLit keywords={['Patchstack', 'headless architecture', 'Astro', 'CMS Conf 2026', 'gravel bike']} text="My name is Maciek Palmowski. I live in Łódź, Poland. I'm a web developer and Growth Engineer at Patchstack. For over 15 years, I've gone deep on WordPress, PHP, headless architecture and Astro, and I write and speak about all of it. I co-organise CMS Conf 2026 in Gdynia, Poland. When I'm away from the keyboard I'm on my gravel bike." />
+      <div class="about-actions" data-reveal>
+        <a class="btn btn-secondary" href={u('/contact-me')}>Get in touch</a>
+        <a class="btn btn-ghost" href={u('/speaking')}>Speaking</a>
+      </div>
+    </div>
+  </section>
+
+  <Ticker items={eventNames} />
+
+  <!-- Speaking -->
+  <section id="speaking" class="section hairline">
+    <div class="wrap split">
+      <div class="split-head">
+        <SectionHeader title="Speaking" lede={`${stats.appearances} talks and workshops in ${stats.cities} cities since ${stats.since}.`} />
+        <a class="btn btn-secondary all-link" href={u('/speaking')}>
+          Talks, map and speaker kit
+          <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></svg>
+        </a>
+      </div>
+      <ul class="talks-list">
+        {recentTalks.map((a) => {
+          const url = linkOf(a);
+          return (
+            <li class="talk-row" data-rule>
+              <div class="talk-inner" data-reveal>
+                <div class="talk-main">
+                  {url ? (
+                    <a href={url} {...(url.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})} class="talk-title talk-link">{a.event}</a>
+                  ) : (
+                    <span class="talk-title">{a.event}</span>
+                  )}
+                  <span class="talk-event">{a.city ? `${a.city}, ${a.country}` : 'Online'}{a.talk ? `. ${a.talk}` : ''}{a.talkOriginal && <> (Polish: <span lang="pl">{a.talkOriginal}</span>)</>}</span>
+                </div>
+                <time class="talk-year" datetime={a.month ? `${a.year}-${String(a.month).padStart(2, '0')}` : String(a.year)}>{a.month ? `${monthName[a.month - 1]} ` : ''}{a.year}</time>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
 
   <NewsletterBox variant="home" />
 
-  <GradBar />
-
-  <script type="application/ld+json" is:inline set:html={JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    '@id': `${Astro.site?.toString().replace(/\/$/, '')}/#person`,
-    name: 'Maciek Palmowski',
-    url: Astro.site?.toString().replace(/\/$/, ''),
-    jobTitle: 'mVDP Growth Manager',
-    worksFor: { '@type': 'Organization', name: 'Patchstack' },
-    sameAs: [
-      'https://bsky.app/profile/maciekpalmowski.dev',
-      'https://twitter.com/palmiak_fp',
-      'https://www.linkedin.com/in/maciekpalmowski/',
-      'https://github.com/palmiak',
-    ],
-    knowsAbout: ['WordPress security', 'Headless CMS', 'Astro', 'Web development'],
-  })} />
+  <script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', ...personJsonLd() })} />
 </Layout>
 
 <style>
-.col {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 0 24px;
+/* Writing follows the pinned hero, so it needs less lead-in space */
+#writing { padding-top: clamp(40px, 6vw, 72px); }
+
+.split {
+  display: grid;
+  gap: var(--space-12);
 }
-.posts-list {
-  border-bottom: 1px solid var(--bd);
-  overflow: hidden;
+.split-head { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-6); }
+@media (min-width: 960px) {
+  .split { grid-template-columns: 280px minmax(0, 1fr); gap: var(--space-12); align-items: start; }
+  .split-head { position: sticky; top: calc(var(--frame) + var(--header-h) + 32px); }
 }
 
-/* Read all posts button */
-.all-posts-link {
-  padding: 40px 24px;
-  border-bottom: 1px solid var(--bd);
-  display: flex;
-  justify-content: center;
-}
-.view-all-btn {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--hi);
-  text-decoration: none;
-  padding: 14px 32px;
-  border-radius: 4px;
-  border: 1px solid rgba(168, 85, 247, 0.5);
-  background: rgba(168, 85, 247, 0.08);
-  transition: border-color 0.15s, background 0.15s, transform 0.15s, box-shadow 0.15s;
-}
-.view-all-btn:hover {
-  border-color: rgba(168, 85, 247, 0.8);
-  background: rgba(168, 85, 247, 0.15);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.2);
-}
+.posts-list { min-width: 0; }
 
-/* About */
-.about {
-  padding: 52px 24px;
-  border-bottom: 1px solid var(--bd);
-}
-.about-border {
-  background: linear-gradient(180deg, #ff2d78, #a855f7, #00ffb3);
-  border-radius: 4px;
-  padding: 1px;
-}
-.about-inner {
-  background:
-    repeating-linear-gradient(0deg, transparent, transparent 62px, rgba(255,255,255,0.04) 62px, rgba(255,255,255,0.04) 63px),
-    repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(255,255,255,0.04) 59px, rgba(255,255,255,0.04) 60px),
-    radial-gradient(ellipse at 15% 85%, rgba(168,85,247,0.1) 0%, transparent 55%),
-    #0b0b0e;
-  border-radius: 3px;
-  padding: 36px 32px;
-  position: relative;
-}
-.about-eyebrow {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--dim);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-.sec-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #ff2d78, #a855f7);
-  flex-shrink: 0;
-}
-.about-body {
-  font-size: 18px;
-  line-height: 1.8;
-  color: var(--mid);
-  font-weight: 300;
-  margin-bottom: 32px;
-  max-width: 580px;
-}
-.about-body strong {
-  color: var(--hi);
-  font-weight: 500;
-}
-.about-link {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--hi);
-  text-decoration: none;
-  padding: 12px 24px;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 255, 179, 0.4);
-  background: rgba(0, 255, 179, 0.06);
-  display: inline-block;
-  transition: border-color 0.15s, background 0.15s, color 0.15s, transform 0.15s, box-shadow 0.15s;
-}
-.about-link:hover {
-  border-color: rgba(0, 255, 179, 0.7);
-  background: rgba(0, 255, 179, 0.1);
-  color: #00ffb3;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(0, 255, 179, 0.15);
-}
+.about-actions { display: flex; gap: var(--space-2); margin-top: var(--space-12); flex-wrap: wrap; }
 
-/* Talks */
-.talks-section {
-  padding: 0 24px 52px;
-  border-bottom: 1px solid var(--bd);
-}
-.talk-row {
-  border-top: 1px solid var(--bd);
-  padding: 20px 0;
+.talks-list { list-style: none; min-width: 0; }
+.talk-row { border-top: 1px solid var(--border); transition: background-color var(--dur-hover) var(--ease-in); }
+.talk-row:last-child { border-bottom: 1px solid var(--border); }
+.talk-row:hover { background: var(--surface-100); }
+.talk-inner {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: 16px;
-  transition: padding-left 0.18s ease;
+  gap: var(--space-6);
+  padding: var(--space-6) var(--space-2);
 }
-.talk-row:hover {
-  padding-left: 8px;
-}
+.talk-main { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
 .talk-title {
-  font-family: 'Unbounded', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--mid);
-  letter-spacing: -0.02em;
-  margin-bottom: 5px;
-  line-height: 1.4;
-  transition: color 0.12s;
-}
-.talk-row:hover .talk-title { color: var(--hi); }
-.talk-link {
+  font-family: var(--font-title);
+  font-weight: 300;
+  font-size: clamp(20px, 2.4vw, 24px);
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  color: var(--ink);
   text-decoration: none;
-  color: inherit;
+  text-wrap: balance;
 }
-.talk-event {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  color: var(--dim);
-  letter-spacing: 0.06em;
-}
-.talk-year {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  color: var(--dim);
-  flex-shrink: 0;
-  margin-left: 32px;
-}
+.talk-link { transition: color var(--dur-hover) var(--ease-in); }
+.talk-link::after { content: ""; position: absolute; inset: 0; }
+.talk-row { position: relative; }
+.talk-link:hover { color: var(--accent-hover); }
+.talk-event { font-size: 13px; line-height: 20px; color: var(--ink-subtle); }
+.talk-year { font-family: var(--font-mono); font-size: 12.5px; line-height: 20px; color: var(--ink-subtle); flex-shrink: 0; }
 </style>

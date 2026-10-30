@@ -1,0 +1,16 @@
+{
+  "event": "CMS Conf Local Vilnius",
+  "year": 2026,
+  "month": 10,
+  "role": "speaker",
+  "city": "Vilnius",
+  "country": "Lithuania",
+  "lat": 54.6872,
+  "lon": 25.2797,
+  "links": [
+    {
+      "label": "Event",
+      "url": "https://cmsconf.com/local/vilnius-1"
+    }
+  ]
+}

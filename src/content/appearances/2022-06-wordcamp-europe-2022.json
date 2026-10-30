@@ -1,0 +1,21 @@
+{
+  "event": "WordCamp Europe 2022",
+  "year": 2022,
+  "month": 6,
+  "role": "speaker",
+  "city": "Porto",
+  "country": "Portugal",
+  "lat": 41.1579,
+  "lon": -8.6291,
+  "talk": "Deploying WordPress with confidence using CI/CD",
+  "links": [
+    {
+      "label": "Video",
+      "url": "https://wordpress.tv/2022/07/13/maciek-palmowski-deploying-wordpress-with-confidence-using-ci-cd/"
+    },
+    {
+      "label": "Article",
+      "url": "/blog/deploying-wordpress-with-confidence/"
+    }
+  ]
+}

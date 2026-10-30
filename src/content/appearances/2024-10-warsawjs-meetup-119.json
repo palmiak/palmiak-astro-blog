@@ -1,0 +1,21 @@
+{
+  "event": "WarsawJS Meetup #119",
+  "year": 2024,
+  "month": 10,
+  "role": "meetup",
+  "city": "Warsaw",
+  "country": "Poland",
+  "lat": 52.2297,
+  "lon": 21.0122,
+  "talk": "Is Astro the ultimate front-end framework?",
+  "links": [
+    {
+      "label": "Video",
+      "url": "https://www.youtube.com/watch?v=i4MyL0Itz9o"
+    },
+    {
+      "label": "Event",
+      "url": "https://crossweb.pl/wydarzenia/warsawjs-meetup-119-javascript-onsite-online/"
+    }
+  ]
+}

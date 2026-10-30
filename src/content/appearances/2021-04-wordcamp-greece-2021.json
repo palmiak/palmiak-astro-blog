@@ -1,0 +1,13 @@
+{
+  "event": "WordCamp Greece 2021",
+  "year": 2021,
+  "month": 4,
+  "role": "online",
+  "talk": "Static WordPress: how to make WordPress faster and more secure?",
+  "links": [
+    {
+      "label": "Video",
+      "url": "https://wordpress.tv/2021/04/30/static-wordpress-how-to-make-wordpress-faster-and-more-secure/"
+    }
+  ]
+}

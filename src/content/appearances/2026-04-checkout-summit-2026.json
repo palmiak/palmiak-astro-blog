@@ -1,0 +1,20 @@
+{
+  "event": "Checkout Summit 2026",
+  "year": 2026,
+  "month": 4,
+  "role": "speaker",
+  "city": "Palermo",
+  "country": "Italy",
+  "lat": 38.1157,
+  "lon": 13.3615,
+  "links": [
+    {
+      "label": "Resources",
+      "url": "/events/checkout-summit-2026/"
+    },
+    {
+      "label": "Event",
+      "url": "https://checkoutsummit.com"
+    }
+  ]
+}

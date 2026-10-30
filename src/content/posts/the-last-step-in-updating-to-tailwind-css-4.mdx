@@ -24,7 +24,7 @@ You should check [this guide](https://tailwindcss.com/docs/upgrade-guide) before
 
 After the migration, I checked if everything was fine - it looked so, so I pushed it to production. Afterward, I even published a post on social media mentioning how simple everything was:
 
-<PostImage src="/assets/arts/last-step-in-updating-to-tailwind-css-4/twittershots-palmiak_fp-1892520615883710836.png" width="narrow" />
+<PostImage src="/assets/arts/last-step-in-updating-to-tailwind-css-4/twittershots-palmiak_fp-1892520615883710836.png" width="narrow" alt="Maciek's tweet about migrating his website from Tailwind CSS 3 to 4 in about 20 minutes, 'Overall 9/10 experience', with a before and after image." />
 
 But...
 
@@ -32,7 +32,7 @@ But...
 
 After a few days, while checking something on my website I realized I missed something. Take a look at both versions side-by-side. Are you able to see the bug?
 
-<PostImage src="/assets/arts/last-step-in-updating-to-tailwind-css-4/both_versions.png" width="wide" />
+<PostImage src="/assets/arts/last-step-in-updating-to-tailwind-css-4/both_versions.png" width="wide" alt="Two screenshots of the same Drupal CMS blog post, before and after the Tailwind CSS 4 upgrade, side by side." />
 
 If not - don't worry. It is difficult to spot. Before I will tell you what went wrong - I will show you how to make sure you won't miss anything during your migration.
 
@@ -74,7 +74,7 @@ You should run the test for the first time **before** you even start your migrat
 
 In my case, after the migration, the article test failed with this diff image:
 
-<PostImage src="/assets/arts/last-step-in-updating-to-tailwind-css-4/diff.png" width="narrow" />
+<PostImage src="/assets/arts/last-step-in-updating-to-tailwind-css-4/diff.png" width="narrow" alt="A pale grey visual diff of the two page versions, showing almost no differences." />
 
 As you can see, the links in the content were the problem. In the TWv4 version, they were almost invisible.
 
