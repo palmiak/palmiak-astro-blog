@@ -3,10 +3,10 @@ import { u } from '../utils/url';
 const year = new Date().getFullYear();
 
 const socials = [
-  { label: 'Bluesky', href: 'https://bsky.app/profile/maciekpalmowski.dev' },
-  { label: 'X', href: 'https://twitter.com/palmiak_fp' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/maciekpalmowski/' },
+  { label: 'X', href: 'https://twitter.com/palmiak_fp' },
   { label: 'GitHub', href: 'https://github.com/palmiak' },
+  { label: 'Bluesky', href: 'https://bsky.app/profile/maciekpalmowski.dev' },
 ];
 ---
 <footer class="site-footer">
@@ -52,15 +52,14 @@ const socials = [
 .signoff:hover .signoff-sub { color: var(--ink); }
 .foot-bar {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px 24px;
-  padding-block: 20px;
+  flex-direction: column-reverse; /* links first, copyright last, all in one column */
+  align-items: flex-start;
+  gap: 32px;
+  padding-block: 28px;
   border-top: 1px solid var(--border-subtle);
 }
 .foot-l { font-size: 12px; line-height: 16px; color: var(--ink-subtle); }
-.foot-links { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+.foot-links { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
 .foot-links a {
   font-size: 12px;
   line-height: 16px;
