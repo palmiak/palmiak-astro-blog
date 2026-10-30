@@ -1,23 +1,12 @@
-// Post outline: builds a list from the article's h2s and slides a marker to the one being read.
+// Post outline: the list is rendered at build time; this slides a marker to the heading being read.
 const toc = document.querySelector<HTMLElement>('[data-toc]');
-const prose = document.querySelector<HTMLElement>('.prose-post');
 const list = toc?.querySelector<HTMLOListElement>('.toc-list');
 const marker = toc?.querySelector<HTMLElement>('.toc-marker');
 
-const headings = prose ? [...prose.querySelectorAll<HTMLHeadingElement>('h2[id]')] : [];
+const links = list ? [...list.querySelectorAll<HTMLAnchorElement>('a')] : [];
+const headings = links.map((a) => document.getElementById(decodeURIComponent(a.hash.slice(1))));
 
-if (toc && list && marker && headings.length >= 2) {
-  const links = headings.map((h) => {
-    const li = document.createElement('li');
-    const a = document.createElement('a');
-    a.href = `#${h.id}`;
-    a.textContent = h.textContent ?? '';
-    li.append(a);
-    list.append(li);
-    return a;
-  });
-  toc.hidden = false;
-
+if (toc && list && marker && links.length >= 2 && headings.every(Boolean)) {
   let active = -1;
   const place = (i: number) => {
     const a = links[i];
@@ -35,7 +24,7 @@ if (toc && list && marker && headings.length >= 2) {
     const line = innerHeight * 0.28;
     let next = -1;
     headings.forEach((h, i) => {
-      if (h.getBoundingClientRect().top <= line) next = i;
+      if (h!.getBoundingClientRect().top <= line) next = i;
     });
     if (next === active) return;
     active = next;

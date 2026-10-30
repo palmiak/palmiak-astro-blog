@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import { u } from '../utils/url';
-import { SITE } from '../utils/site';
+import { personJsonLd } from '../utils/person';
 import Hero from '../components/Hero.astro';
 import ScrollLit from '../components/ScrollLit.astro';
 import Ticker from '../components/Ticker.astro';
@@ -27,7 +27,11 @@ const linkOf = (a: (typeof appearances)[number]) => {
 
 const eventNames = [...new Set(appearances.filter((a) => a.role === 'speaker' || a.role === 'organiser').map((a) => a.event.replace(/ 20\d{2}$/, '')))];
 ---
-<Layout title="Home" ogImage={u('/og/home.png')}>
+<Layout
+  fullTitle="Maciek Palmowski: WordPress security, headless CMS and Astro"
+  description="Maciek Palmowski is a Growth Engineer at Patchstack in Łódź, Poland. He writes and speaks about WordPress security, headless CMS and Astro."
+  ogImage={u('/og/home.png')}
+>
   <Hero />
 
   <!-- Writing -->
@@ -57,7 +61,7 @@ const eventNames = [...new Set(appearances.filter((a) => a.role === 'speaker' ||
   <!-- About -->
   <section class="section hairline about" id="about">
     <div class="wrap">
-      <ScrollLit keywords={['Patchstack', 'headless architecture', 'Astro', 'CMS Conf 2026', 'gravel bike']} text="I'm a web developer and Growth Engineer at Patchstack, the WordPress security company. Over 15 years I've gone deep on WordPress, PHP, headless architecture and Astro, and I write and speak about all of it. I co-organise CMS Conf 2026 in Gdynia, Poland. When I'm away from the keyboard I'm on a gravel bike." />
+      <ScrollLit keywords={['Patchstack', 'headless architecture', 'Astro', 'CMS Conf 2026', 'gravel bike']} text="My name is Maciek Palmowski. I live in Łódź, Poland. I'm a web developer and Growth Engineer at Patchstack. For over 15 years, I've gone deep on WordPress, PHP, headless architecture and Astro, and I write and speak about all of it. I co-organise CMS Conf 2026 in Gdynia, Poland. When I'm away from the keyboard I'm on my gravel bike." />
       <div class="about-actions" data-reveal>
         <a class="btn btn-secondary" href={u('/contact-me')}>Get in touch</a>
         <a class="btn btn-ghost" href={u('/speaking')}>Speaking</a>
@@ -89,9 +93,9 @@ const eventNames = [...new Set(appearances.filter((a) => a.role === 'speaker' ||
                   ) : (
                     <span class="talk-title">{a.event}</span>
                   )}
-                  <span class="talk-event">{a.city ? `${a.city}, ${a.country}` : 'Online'}{a.talk ? `. ${a.talk}` : ''}</span>
+                  <span class="talk-event">{a.city ? `${a.city}, ${a.country}` : 'Online'}{a.talk ? `. ${a.talk}` : ''}{a.talkOriginal && <> (Polish: <span lang="pl">{a.talkOriginal}</span>)</>}</span>
                 </div>
-                <span class="talk-year">{a.month ? `${monthName[a.month - 1]} ` : ''}{a.year}</span>
+                <time class="talk-year" datetime={a.month ? `${a.year}-${String(a.month).padStart(2, '0')}` : String(a.year)}>{a.month ? `${monthName[a.month - 1]} ` : ''}{a.year}</time>
               </div>
             </li>
           );
@@ -102,22 +106,7 @@ const eventNames = [...new Set(appearances.filter((a) => a.role === 'speaker' ||
 
   <NewsletterBox variant="home" />
 
-  <script type="application/ld+json" is:inline set:html={JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    '@id': `${SITE}/#person`,
-    name: 'Maciek Palmowski',
-    url: SITE,
-    jobTitle: 'Growth Engineer',
-    worksFor: { '@type': 'Organization', name: 'Patchstack' },
-    sameAs: [
-      'https://bsky.app/profile/maciekpalmowski.dev',
-      'https://twitter.com/palmiak_fp',
-      'https://www.linkedin.com/in/maciekpalmowski/',
-      'https://github.com/palmiak',
-    ],
-    knowsAbout: ['WordPress security', 'Headless CMS', 'Astro', 'Web development'],
-  })} />
+  <script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', ...personJsonLd() })} />
 </Layout>
 
 <style>

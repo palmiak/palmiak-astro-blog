@@ -1,17 +1,12 @@
 import type { APIRoute } from 'astro';
 import { renderOg } from '../../../utils/og';
-import { getPosts } from '../../../utils/content';
+import { getTagInfo } from '../../../utils/tags';
 
 export async function getStaticPaths() {
-  const posts = await getPosts();
-  const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
-  return tags.map((tag) => ({
-    params: { tag },
-    props: { tag },
-  }));
+  return (await getTagInfo()).map(({ tag, label }) => ({ params: { tag }, props: { label } }));
 }
 
 export const GET: APIRoute = ({ props }) => {
-  const { tag } = props as { tag: string };
-  return renderOg({ title: tag, cta: 'Browse the posts' });
+  const { label } = props as { label: string };
+  return renderOg({ title: label, cta: 'Browse the posts' });
 };

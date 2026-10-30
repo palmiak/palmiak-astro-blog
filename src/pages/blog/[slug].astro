@@ -17,7 +17,8 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await post.render();
+const { Content, headings } = await post.render();
+const outline = headings.filter((h) => h.depth === 2);
 
 const { title, intro, description, pubDate, updatedDate, thumbnail, tags } = post.data;
 
@@ -88,6 +89,7 @@ const breadcrumbJsonLd = JSON.stringify({
   ogImage={u(`/blog/${post.slug}/og.png`)}
   ogImageAlt={title}
   ogType="article"
+  markdownUrl={abs(u(`/blog/${post.slug}.md`))}
   article={{ published: pubDate, modified: updatedDate, tags }}
   isPost={true}
 >
@@ -145,13 +147,17 @@ const breadcrumbJsonLd = JSON.stringify({
           </div>
         </div>
 
-        <div class="sidebar-section sidebar-toc" data-toc hidden>
-          <div class="sidebar-label">On this page</div>
-          <nav class="toc-box" aria-label="On this page" data-lenis-prevent>
-            <span class="toc-marker" aria-hidden="true"></span>
-            <ol class="toc-list"></ol>
-          </nav>
-        </div>
+        {outline.length >= 2 && (
+          <div class="sidebar-section sidebar-toc" data-toc>
+            <div class="sidebar-label">On this page</div>
+            <nav class="toc-box" aria-label="On this page" data-lenis-prevent>
+              <span class="toc-marker" aria-hidden="true"></span>
+              <ol class="toc-list">
+                {outline.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}
+              </ol>
+            </nav>
+          </div>
+        )}
 
         <div class="sidebar-section">
           <div class="sidebar-label">Published</div>
@@ -321,7 +327,6 @@ const breadcrumbJsonLd = JSON.stringify({
 .jump { margin-left: -12px; }
 
 /* On this page */
-.sidebar-toc[hidden] { display: none; }
 .toc-box {
   position: relative;
   max-height: max(160px, calc(100vh - 460px));

@@ -7,7 +7,8 @@
   "country": "Poland",
   "lat": 54.5189,
   "lon": 18.5305,
-  "talk": "How we removed 1000 plugins from the repository in a month (in Polish)",
+  "talk": "How we removed 1000 plugins from the repository in a month",
+  "talkOriginal": "O tym jak w ciągu miesiąca usunęliśmy 1000 wtyczek z repozytorium – historia największego bug bounty",
   "links": [
     {
       "label": "Video",

@@ -44,6 +44,8 @@ const appearances = defineCollection({
       lat: z.number().optional(),
       lon: z.number().optional(),
       talk: z.string().optional(),
+      /** The talk title in its original language when that was Polish */
+      talkOriginal: z.string().optional(),
       links: z.array(z.object({ label: z.string(), url: z.string() })).default([]),
     })
     .refine((a) => a.role === 'online' || (a.city && a.country && a.lat !== undefined && a.lon !== undefined), {

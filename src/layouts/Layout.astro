@@ -4,31 +4,38 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { u } from '../utils/url';
 import { SITE, SITE_NAME, abs, isPreview } from '../utils/site';
+import { personId, profiles } from '../utils/person';
 
 interface Props {
   title?: string;
+  /** Replaces the "Title | Site" pattern, e.g. for the home page */
+  fullTitle?: string;
   description?: string;
   ogImage?: string;
   ogImageAlt?: string;
   ogType?: 'website' | 'article';
   article?: { published: Date; modified?: Date; tags?: string[] };
   noindex?: boolean;
+  /** Markdown copy of this page, announced to AI readers */
+  markdownUrl?: string;
   isPost?: boolean;
 }
 
 const {
   title,
+  fullTitle: fullTitleOverride,
   description = 'Web developer, public speaker, Open Source enthusiast.',
   ogImage,
   ogImageAlt,
   ogType = 'website',
   article,
   noindex = false,
+  markdownUrl,
   isPost = false,
 } = Astro.props;
 
 const siteName = SITE_NAME;
-const fullTitle = title ? `${title} | ${siteName}` : siteName;
+const fullTitle = fullTitleOverride ?? (title ? `${title} | ${siteName}` : siteName);
 const canonicalUrl = abs(Astro.url.pathname);
 const ogImageUrl = ogImage ? abs(ogImage) : undefined;
 const robots = noindex || isPreview
@@ -59,7 +66,9 @@ const robots = noindex || isPreview
   <meta name="description" content={description} />
   <meta name="robots" content={robots} />
   <link rel="canonical" href={canonicalUrl} />
+  {profiles.map((href) => <link rel="me" href={href} />)}
   <link rel="alternate" type="application/rss+xml" title={siteName} href={u('/rss.xml')} />
+  {markdownUrl && <link rel="alternate" type="text/markdown" href={markdownUrl} />}
 
   <meta property="og:type" content={ogType} />
   <meta property="og:site_name" content={siteName} />
@@ -91,6 +100,7 @@ const robots = noindex || isPreview
     name: 'Maciek Palmowski',
     url: SITE,
     inLanguage: 'en',
+    publisher: { '@id': personId },
   })} />
 </head>
 

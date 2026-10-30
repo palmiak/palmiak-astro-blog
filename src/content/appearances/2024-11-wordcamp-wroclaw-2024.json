@@ -7,7 +7,8 @@
   "country": "Poland",
   "lat": 51.1079,
   "lon": 17.0385,
-  "talk": "How to protect yourself? Security in WordPress (in Polish)",
+  "talk": "How to protect yourself? Security in WordPress",
+  "talkOriginal": "Jak się zabezpieczać? Czyli o security w WordPressie",
   "links": [
     {
       "label": "Video",

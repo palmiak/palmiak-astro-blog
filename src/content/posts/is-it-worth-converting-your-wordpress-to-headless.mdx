@@ -27,21 +27,21 @@ Before diving into the details, let me show you the differences between those ar
 
 In the traditional WordPress setup, it functions as a **monolith**, with the admin panel allowing users to create and store data, while the theme is responsible for presenting this data on the front end. The theme interacts directly with the database making it a unified application. 
 
-<PostImage src="/assets/arts/headless-wp/monolith.png" width="narrow" caption="Monolith WordPress" />
+<PostImage src="/assets/arts/headless-wp/monolith.png" width="narrow" caption="Monolith WordPress" alt="Diagram of monolithic WordPress: a 'theme' block in cyan on top of a 'wp-admin' block in magenta." />
 
 However, with a **headless **WordPress approach, the front end is completely separate, functioning as an independent application like **Next.js, Astro, or Laravel**. For both to communicate, we need to introduce some API. We can either use the built-in **REST API** or install the **GraphQL API** plugin.
 
-<PostImage src="/assets/arts/headless-wp/headless.png" width="narrow" caption="Headless WordPress" />
+<PostImage src="/assets/arts/headless-wp/headless.png" width="narrow" caption="Headless WordPress" alt="Diagram of headless WordPress: a 'frontend' block connected through an API arrow to a 'wp-admin' block." />
 
 If you look at the graphs explaining what it looks like, you might probably see the most common headless schema looks like a monolith but with an extra step. And that's totally true. The most common example showing how headless architecture works is also one of the worst ones. 
 
 The true power of headless starts when working with more complicated stacks. For example, like the one where our WordPress is the **single source of truth** that powers all our landing pages and mobile apps.
 
-<PostImage src="/assets/arts/headless-wp/advanced-headless-v1.png" width="narrow" caption="Advanced Headless " />
+<PostImage src="/assets/arts/headless-wp/advanced-headless-v1.png" width="narrow" caption="Advanced Headless " alt="Diagram of WordPress at the centre with arrows to a laptop, a phone, a desktop computer and a second laptop." />
 
 Or when our website is **a hub** that gathers data from multiple data sources.
 
-<PostImage src="/assets/arts/headless-wp/advanced-headless-v2.png" width="narrow" caption="Advanced Headless" />
+<PostImage src="/assets/arts/headless-wp/advanced-headless-v2.png" width="narrow" caption="Advanced Headless" alt="Diagram of a browser window in the middle connected with two-way arrows to WordPress, Notion and Shopify." />
 
 ## What are the most commons reasons to try headless?
 

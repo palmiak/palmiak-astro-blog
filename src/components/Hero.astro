@@ -28,9 +28,8 @@ const letters = (word: string) => [...word];
 <section class="hero">
   <div class="wrap hero-inner">
     <h1 class="hero-title t-display-xl">
-      <span class="sr-only">Maciek Palmowski</span>
-      <span class="hero-line"><span style="--i:0" aria-hidden="true">{letters('Maciek').map((c) => <span class="ch">{c}</span>)}</span></span>
-      <span class="hero-line"><span style="--i:1" aria-hidden="true">{letters('Palmowski').map((c) => <span class="ch">{c}</span>)}<span class="hero-dot hush-title-dot">.</span></span></span>
+      <span class="hero-line"><span style="--i:0">{letters('Maciek').map((c) => <span class="ch">{c}</span>)}</span></span>
+      <span class="hero-line"><span style="--i:1">{letters('Palmowski').map((c) => <span class="ch">{c}</span>)}<span class="hero-dot hush-title-dot">.</span></span></span>
     </h1>
 
     <div class="hero-after-wrap">
@@ -55,7 +54,7 @@ const letters = (word: string) => [...word];
       <ul class="hero-socials hero-after" style="--i:2">
         {socials.map((s) => (
           <li>
-            <a class="btn btn-ghost" href={s.href} target="_blank" rel="noopener" aria-label={s.label}>
+            <a class="btn btn-ghost" href={s.href} target="_blank" rel="me noopener" aria-label={s.label}>
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={s.path} /></svg>
               {s.label}
             </a>

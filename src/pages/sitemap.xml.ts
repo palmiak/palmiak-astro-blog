@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { SITE } from '../utils/site';
 import { getPosts, PAGE_SIZE, xmlEscape } from '../utils/content';
+import { getTagInfo } from '../utils/tags';
 
 const day = (d: Date) => d.toISOString().slice(0, 10);
 
@@ -23,9 +24,10 @@ export const GET: APIRoute = async () => {
     urls.push({ loc: `/blog/${post.slug}/`, lastmod: day(post.data.updatedDate ?? post.data.pubDate) });
   }
 
-  const tags = new Map<string, typeof posts>();
-  for (const post of posts) for (const tag of post.data.tags) tags.set(tag, [...(tags.get(tag) ?? []), post]);
-  for (const [tag, list] of tags) {
+  // Tags with a handful of posts are noindex, so they stay out of the sitemap too
+  const tagInfo = (await getTagInfo()).filter((t) => t.indexed);
+  for (const { tag } of tagInfo) {
+    const list = posts.filter((p) => p.data.tags.includes(tag));
     const last = day(list[0].data.updatedDate ?? list[0].data.pubDate);
     urls.push({ loc: `/tags/${tag}/`, lastmod: last });
     for (let n = 2; n <= Math.ceil(list.length / PAGE_SIZE); n++) urls.push({ loc: `/tags/${tag}/${n}/`, lastmod: last });

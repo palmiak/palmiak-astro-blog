@@ -7,7 +7,8 @@
   "country": "Poland",
   "lat": 54.5189,
   "lon": 18.5305,
-  "talk": "Headless: does it really make sense? (in Polish)",
+  "talk": "Headless: does it really make sense?",
+  "talkOriginal": "Headless – czy to naprawdę ma sens?",
   "links": [
     {
       "label": "Video",

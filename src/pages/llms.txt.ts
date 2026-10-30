@@ -20,8 +20,9 @@ ${line('Home', `${SITE}/`, 'who I am, latest posts and talks')}
 ${line('Speaking', `${SITE}/speaking/`, 'talks on offer, every conference spoken at, speaker kit with bios in English and Polish and photos')}
 ${line('Contact', `${SITE}/contact-me/`, 'email, X and LinkedIn')}
 
-## Latest writing
-${posts.slice(0, 20).map((p) => line(p.data.title, `${SITE}/blog/${p.slug}/`, postDescription(p))).join('\n')}
+## Latest writing (Markdown versions)
+${posts.slice(0, 20).map((p) => line(p.data.title, `${SITE}/blog/${p.slug}.md`, postDescription(p))).join('\n')}
+${line('Full text of every post', `${SITE}/llms-full.txt`, `all ${posts.length} posts in one Markdown file`)}
 
 ## Speaking topics
 ${topics.map((t) => `- ${t.title}: ${t.summary}`).join('\n')}

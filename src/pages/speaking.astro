@@ -4,6 +4,8 @@ import SectionHeader from '../components/SectionHeader.astro';
 import EuropeMap from '../components/EuropeMap.astro';
 import { u } from '../utils/url';
 import { getAppearances, topics, mapPlaces, speakingStats, SESSIONIZE } from '../data/speaking';
+import { personJsonLd, personId } from '../utils/person';
+import { SITE } from '../utils/site';
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 
@@ -56,8 +58,40 @@ onSite.forEach((a) => cityCount.set(a.city!, (cityCount.get(a.city!) ?? 0) + 1))
 const topCities = [...cityCount.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 6);
 
 const roleLabel = { speaker: 'Speaker', organiser: 'Organiser', meetup: 'Meetup', online: 'Online' } as const;
+const pad = (n: number) => String(n).padStart(2, '0');
 const monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const years = [...new Set(appearances.map((a) => a.year))];
+
+// Structured data: the person, every event they appeared at, and the speaking topics
+const eventNode = (a: (typeof appearances)[number]) => {
+  const url = a.links.find((l) => l.label === 'Event' || l.label === 'Session')?.url;
+  const online = a.role === 'online';
+  return {
+    '@type': 'Event',
+    name: a.event,
+    startDate: a.month ? `${a.year}-${pad(a.month)}` : String(a.year),
+    eventAttendanceMode: online ? 'https://schema.org/OnlineEventAttendanceMode' : 'https://schema.org/OfflineEventAttendanceMode',
+    location: online
+      ? { '@type': 'VirtualLocation', url: url ?? `${SITE}/speaking/` }
+      : { '@type': 'Place', name: a.city, address: { '@type': 'PostalAddress', addressLocality: a.city, addressCountry: a.country } },
+    ...(url ? { url } : {}),
+    ...(a.talk ? { description: `Talk: ${a.talk}${a.talkOriginal ? ` (${a.talkOriginal})` : ''}` } : {}),
+    [a.role === 'organiser' ? 'organizer' : 'performer']: { '@id': personId },
+    ...(a.organiser ? { organizer: { '@id': personId } } : {}),
+  };
+};
+const speakingJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    personJsonLd(),
+    {
+      '@type': 'ItemList',
+      name: 'What Maciek Palmowski speaks about',
+      itemListElement: topics.map((t, i) => ({ '@type': 'ListItem', position: i + 1, name: t.title, description: t.summary })),
+    },
+    ...appearances.map(eventNode),
+  ],
+};
 const href = (url: string) => (url.startsWith('/') ? u(url) : url);
 
 // Gallery: drop photos into src/assets/gallery and they appear here (sorted by file name).
@@ -119,7 +153,7 @@ const gallery = Object.entries(galleryFiles)
               <h3 class="offer-title">{topic.title}</h3>
               <p class="offer-summary">{topic.summary}</p>
               {topic.example && (
-                <a class="offer-link" href={href(topic.example.url)} {...(topic.example.url.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>{topic.example.label}</a>
+                <a class="offer-link" href={href(topic.example.url)} {...(topic.example.url.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>{topic.example.label}<span class="sr-only">: {topic.title}</span></a>
               )}
             </div>
           </li>
@@ -168,8 +202,9 @@ const gallery = Object.entries(galleryFiles)
                     <div class="event-main">
                       <span class="event-name">{a.event}</span>
                       <span class="event-meta">
-                        {a.month ? `${monthName[a.month - 1]} · ` : ''}{a.city ? `${a.city}, ${a.country}` : 'Online'}
+                        {a.month && <><time datetime={`${a.year}-${pad(a.month)}`}>{monthName[a.month - 1]}</time> · </>}{a.city ? `${a.city}, ${a.country}` : 'Online'}
                         {a.talk && <> · {a.talk}</>}
+                        {a.talkOriginal && <> (Polish: <span lang="pl">{a.talkOriginal}</span>)</>}
                       </span>
                     </div>
                     <div class="event-side">
@@ -177,7 +212,7 @@ const gallery = Object.entries(galleryFiles)
                       {a.links && a.links.length > 0 && (
                         <span class="event-links">
                           {a.links.map((l) => (
-                            <a href={href(l.url)} {...(l.url.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}</a>
+                            <a href={href(l.url)} {...(l.url.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}<span class="sr-only">: {a.event}</span></a>
                           ))}
                         </span>
                       )}
@@ -303,6 +338,7 @@ const gallery = Object.entries(galleryFiles)
       </div>
     </div>
   </section>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(speakingJsonLd)} />
 </Layout>
 
 <script>

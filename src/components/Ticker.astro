@@ -3,15 +3,22 @@ interface Props {
   items: string[];
 }
 const { items } = Astro.props;
-// Repeat so a row always spans wider than the viewport
-const row = [...items, ...items, ...items];
+
+// Two rows, each its own half of the list, so every name appears once. Short lists repeat just enough
+// to keep a row wider than the screen.
+const half = Math.ceil(items.length / 2);
+const halves = [items.slice(0, half), items.slice(half)];
+const rows = halves.map((list) => {
+  const reps = Math.max(1, Math.ceil(10 / Math.max(list.length, 1)));
+  return Array.from({ length: reps }, () => list).flat();
+});
 ---
 <div class="ticker" aria-hidden="true">
   <div class="ticker-row ticker-a">
-    {row.map((name) => <span class="ticker-item">{name}<i class="ticker-sep"></i></span>)}
+    {rows[0].map((name) => <span class="ticker-item">{name}<i class="ticker-sep"></i></span>)}
   </div>
   <div class="ticker-row ticker-b">
-    {[...row].reverse().map((name) => <span class="ticker-item">{name}<i class="ticker-sep"></i></span>)}
+    {rows[1].map((name) => <span class="ticker-item">{name}<i class="ticker-sep"></i></span>)}
   </div>
 </div>
 
