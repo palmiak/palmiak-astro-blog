@@ -16,6 +16,10 @@ export default defineConfig({
     domains: ['checkoutsummit.com'],
   },
   output: 'static',
+  trailingSlash: 'always',
+  redirects: {
+    '/speaker': '/speaking/',
+  },
   markdown: {
     shikiConfig: {
       theme: 'tokyo-night',

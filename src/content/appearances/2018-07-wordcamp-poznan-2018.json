@@ -1,0 +1,16 @@
+{
+  "event": "WordCamp Poznań 2018",
+  "year": 2018,
+  "month": 7,
+  "role": "speaker",
+  "city": "Poznań",
+  "country": "Poland",
+  "lat": 52.4064,
+  "lon": 16.9252,
+  "links": [
+    {
+      "label": "Event",
+      "url": "https://crossweb.pl/wydarzenia/wordcamp-poznan-2018/"
+    }
+  ]
+}

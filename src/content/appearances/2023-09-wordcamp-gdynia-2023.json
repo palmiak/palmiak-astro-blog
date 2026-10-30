@@ -1,0 +1,21 @@
+{
+  "event": "WordCamp Gdynia 2023",
+  "year": 2023,
+  "month": 9,
+  "role": "speaker",
+  "city": "Gdynia",
+  "country": "Poland",
+  "lat": 54.5189,
+  "lon": 18.5305,
+  "talk": "Headless: does it really make sense? (in Polish)",
+  "links": [
+    {
+      "label": "Video",
+      "url": "https://wordpress.tv/2023/10/12/headless-czy-to-naprawde-ma-sens/"
+    },
+    {
+      "label": "Event",
+      "url": "https://crossweb.pl/wydarzenia/wordcamp-gdynia-2023-nextgen-wordpress-event/"
+    }
+  ]
+}

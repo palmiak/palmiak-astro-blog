@@ -1,0 +1,25 @@
+{
+  "event": "International PHP Conference 2024",
+  "year": 2024,
+  "month": 5,
+  "role": "speaker",
+  "city": "Berlin",
+  "country": "Germany",
+  "lat": 52.52,
+  "lon": 13.405,
+  "talk": "Give WordPress a try, it's not as bad as you think",
+  "links": [
+    {
+      "label": "Article",
+      "url": "/blog/give-wordpress-a-try-its-not-as-bad-as-you-think/"
+    },
+    {
+      "label": "Session",
+      "url": "https://phpconference.com/web-development/wordpress-cms-php/"
+    },
+    {
+      "label": "Event",
+      "url": "https://crossweb.pl/wydarzenia/international-php-conference-online-2024/"
+    }
+  ]
+}

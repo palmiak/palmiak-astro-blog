@@ -1,0 +1,35 @@
+---
+interface Props {
+  text: string;
+  /** Phrases to set in the accent colour */
+  keywords?: string[];
+}
+const { text, keywords = [] } = Astro.props;
+
+const words = text.split(/\s+/).filter(Boolean);
+const bare = (w: string) => w.replace(/[.,;:!?]+$/, '').toLowerCase();
+
+// Flag every word that belongs to a keyword phrase
+const marked = new Array(words.length).fill(false);
+for (const phrase of keywords) {
+  const parts = phrase.split(/\s+/).map((p) => p.toLowerCase());
+  for (let i = 0; i + parts.length <= words.length; i++) {
+    if (parts.every((p, j) => bare(words[i + j]) === p)) parts.forEach((_, j) => (marked[i + j] = true));
+  }
+}
+---
+<p class="scroll-lit">{words.map((w, i) => <><span class={marked[i] ? 'w k' : 'w'}>{w}</span>{i < words.length - 1 ? ' ' : ''}</>)}</p>
+
+<style>
+.scroll-lit {
+  font-family: var(--font-title);
+  font-weight: 300;
+  font-size: clamp(26px, 4.2vw, 48px);
+  line-height: 1.22;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  text-wrap: pretty;
+  max-width: 28em;
+}
+.scroll-lit .k { color: var(--accent); }
+</style>

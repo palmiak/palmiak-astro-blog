@@ -1,0 +1,16 @@
+{
+  "event": "WordUp Łódź #9",
+  "year": 2018,
+  "month": 5,
+  "role": "meetup",
+  "city": "Łódź",
+  "country": "Poland",
+  "lat": 51.7592,
+  "lon": 19.456,
+  "links": [
+    {
+      "label": "Event",
+      "url": "https://crossweb.pl/wydarzenia/wordup-lodz-9/"
+    }
+  ]
+}

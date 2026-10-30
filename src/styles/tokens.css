@@ -1,0 +1,69 @@
+/* Hush design tokens — see .claude/skills/hush-design-system/SKILL.md */
+:root {
+  color-scheme: dark;
+
+  /* Ground and surfaces */
+  --bg: #08090a;
+  --surface-100: #0e0f10;
+  --surface-200: #141517;
+  --surface-300: #1b1c1f;
+  --surface-400: #26272b;
+
+  /* Lines */
+  --border-subtle: #1d1e21;
+  --border: #2a2b2f;
+  --border-control: #70717a;
+
+  /* Text */
+  --ink: #ededee;
+  --ink-muted: #a3a4aa;
+  --ink-subtle: #85868d;
+
+  /* Accent */
+  --accent: #ff3d9a;
+  --accent-hover: #ff70b4;
+  --accent-tint: #ff3d9a1f;
+  --on-accent: #0a0a0b;
+
+  /* Status (always paired with a word or icon) */
+  --success: #5fd3a0;
+  --warning: #e8b44f;
+  --danger: #ff7a59;
+
+  /* Type */
+  --font-title: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-body: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Spacing (4px grid) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+
+  /* Motion */
+  --ease-in: cubic-bezier(0.2, 0, 0, 1);
+  --ease-out: cubic-bezier(0.4, 0, 1, 1);
+  --dur-hover: 100ms;
+  --dur-fade: 160ms;
+  --dur-panel: 240ms;
+
+  /* Layout */
+  --frame: 16px;
+  --header-h: 56px;
+  --col: 1080px;
+  --gutter: clamp(20px, 4vw, 48px);
+}
+
+@media (max-width: 640px) {
+  :root { --frame: 8px; }
+}

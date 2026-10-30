@@ -6,169 +6,212 @@ interface Props {
   isPost?: boolean;
 }
 const { isPost = false } = Astro.props;
+
+const path = Astro.url.pathname.replace(u('') , '') || '/';
+const nav = [
+  { label: 'Blog', href: u('/blog'), match: '/blog' },
+  { label: 'Speaking', href: u('/speaking'), match: '/speaking' },
+  { label: 'Newsletter', href: 'https://newsletter.maciekpalmowski.dev/', match: '', external: true },
+];
+const isActive = (match: string) => match !== '' && (path === match || path.startsWith(match + '/'));
 ---
 <header class="site-header">
-  <div class="header-inner">
-    <a href={u('/')} class="logo-link" aria-label="Return to the homepage">
-      <Logo />
-    </a>
+  <div class="header-bar">
+    <div class="header-inner">
+      <a href={u('/')} class="logo-link" aria-label="Return to the homepage">
+        <Logo />
+      </a>
 
-    <nav class="nav-r">
-      <a class="na" href={u('/blog')}>Blog</a>
-      <a class="na" href={u('/#speaking')}>Speaking</a>
-      <a class="na" href={u('/speaker')}>Speaker Kit</a>
-      <a class="na" href="https://newsletter.maciekpalmowski.dev/" target="_blank" rel="noopener">Newsletter</a>
-      <a class="nav-cta" href={u('/contact-me')}>Contact →</a>
-    </nav>
+      <nav class="nav" aria-label="Main">
+        {nav.map((item) => (
+          <a
+            class="nav-link"
+            href={item.href}
+            aria-current={isActive(item.match) ? 'page' : undefined}
+            {...(item.external ? { target: '_blank', rel: 'noopener' } : {})}
+          >{item.label}</a>
+        ))}
+      </nav>
 
-    <!-- Mobile hamburger toggle -->
-    <button
-      id="mobile-menu-btn"
-      class="mobile-btn"
-      aria-label="Open navigation menu"
-      aria-expanded="false"
-    >
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" aria-hidden="true">
-        <line x1="11" y1="9" x2="11" y2="11"/>
-        <line x1="21" y1="9" x2="21" y2="11"/>
-        <line x1="16" y1="8" x2="16" y2="10"/>
-        <path d="M27.8,14C26.9,8.3,21.9,4,16,4S5.1,8.3,4.2,14H27.8z"/>
-        <path d="M4,16l1.5,1c0.9,0.6,2.1,0.6,3,0l0,0c0.9-0.6,2.1-0.6,3,0l0,0c0.9,0.6,2.1,0.6,3,0l0,0c0.9-0.6,2.1-0.6,3,0l0,0c0.9,0.6,2.1,0.6,3,0l0,0c0.9-0.6,2.1-0.6,3,0l0,0c0.9,0.6,2.1,0.6,3,0l1.5-1"/>
-        <path d="M27,24H5c-1.1,0-2-0.9-2-2v0c0-1.1,0.9-2,2-2h22c1.1,0,2,0.9,2,2v0C29,23.1,28.1,24,27,24z"/>
-        <path d="M27,24v1.4c0,1.5-1.2,2.6-2.6,2.6H7.6C6.2,28,5,26.8,5,25.4V24"/>
-      </svg>
-    </button>
+      <div class="header-end">
+        <a class="btn btn-secondary cta" href={u('/contact-me')}>
+          Contact
+          <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></svg>
+        </a>
+        <button
+          id="mobile-menu-btn"
+          class="btn btn-ghost menu-btn"
+          aria-label="Open navigation menu"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <span class="icon" aria-hidden="true">
+            <!-- A hamburger: bun, sesame, lettuce, patty, bun -->
+            <svg class="burger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <g class="bun-top">
+                <path d="M4 10.5c0-3.6 3.6-6 8-6s8 2.4 8 6Z" />
+                <path d="M9 7.6h.01M12.5 6.5h.01M15.5 7.8h.01" stroke-width="2" />
+              </g>
+              <path class="lettuce" d="M4 13.2q2 1.6 4 0t4 0t4 0t4 0" />
+              <rect class="patty" x="4" y="15.2" width="16" height="2.4" rx="1.2" />
+              <path class="bun-bottom" d="M4 19.4h16c0 1.2-1 2-2.2 2H6.2C5 21.4 4 20.6 4 19.4Z" />
+            </svg>
+            <svg class="close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobile-menu" class="mobile-menu" inert>
+      {nav.map((item, i) => (
+        <a class="mobile-link" style={`--i:${i}`} href={item.href} aria-current={isActive(item.match) ? 'page' : undefined}>{item.label}</a>
+      ))}
+      <a class="mobile-link" style={`--i:${nav.length}`} href={u('/contact-me')}>Contact</a>
+    </div>
+
+    {isPost && <div id="progress" role="progressbar" aria-label="Reading progress"></div>}
   </div>
-
-  <!-- Mobile menu -->
-  <div id="mobile-menu" class="mobile-menu hidden">
-    <a class="mobile-na" href={u('/blog')}>Blog</a>
-    <a class="mobile-na" href={u('/#speaking')}>Speaking</a>
-    <a class="mobile-na" href={u('/speaker')}>Speaker Kit</a>
-    <a class="mobile-na" href="https://newsletter.maciekpalmowski.dev/" target="_blank" rel="noopener">Newsletter</a>
-    <a class="mobile-na" href={u('/contact-me')}>Contact</a>
-  </div>
-
-  {isPost && <div id="progress" role="progressbar" aria-label="progress"></div>}
 </header>
 
 <style>
 .site-header {
   position: sticky;
-  top: 0;
+  top: var(--frame);
   z-index: 40;
-  background: rgba(11,11,14,0.95);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--bd);
-}
-.header-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 32px;
-  height: 54px;
-}
-.logo-link {
-  text-decoration: none;
-  flex-shrink: 0;
-}
-.nav-r {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-}
-.na {
-  font-size: 13px;
-  color: var(--mid);
-  cursor: pointer;
-  text-decoration: none;
-  transition: color 0.15s;
-  position: relative;
-}
-.na::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: linear-gradient(90deg, #ff2d78, #a855f7);
-  transition: width 0.2s ease;
-}
-.na:hover {
-  color: var(--hi);
-}
-.na:hover::after {
-  width: 100%;
-}
-.nav-cta {
-  font-size: 10px;
-  font-family: 'IBM Plex Mono', monospace;
-  letter-spacing: 0.06em;
-  padding: 7px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  border: 1px solid rgba(168,85,247,0.45);
-  color: #c084fc;
-  background: rgba(168,85,247,0.07);
-  text-decoration: none;
-  transition: border-color 0.15s, background 0.15s, transform 0.15s;
-}
-.nav-cta:hover {
-  border-color: rgba(168,85,247,0.7);
-  background: rgba(168,85,247,0.12);
-  transform: translateY(-1px);
-}
-.mobile-btn {
-  display: none;
-  background: rgba(35, 31, 82, 0.6);
-  border: none;
-  color: white;
-  border-radius: 9999px;
-  padding: 10px;
-  cursor: pointer;
-  line-height: 0;
-}
-.mobile-btn svg {
-  width: 24px;
-  height: 24px;
-}
-.mobile-menu {
-  border-top: 1px solid var(--bd);
-  padding: 12px 24px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.mobile-menu.hidden {
-  display: none;
-}
-.mobile-na {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  color: var(--mid);
-  text-decoration: none;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--bd);
-  transition: color 0.15s;
-}
-.mobile-na:hover {
-  color: var(--hi);
-}
-.mobile-na:last-child {
-  border-bottom: none;
+  height: var(--header-h);
 }
 
-@media (max-width: 640px) {
-  .nav-r {
-    display: none;
-  }
-  .mobile-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+/* Resting look: full-width bar. On scroll it morphs into a container-width floating bar (motion.css) */
+.header-bar {
+  position: relative;
+  min-height: var(--header-h);
+  background: rgb(8 9 10 / 0.78);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid transparent;
+  border-bottom-color: var(--border-subtle);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+.header-inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  height: calc(var(--header-h) - 2px);
+  padding-inline: calc(var(--gutter) - 1px);
+  max-width: calc(var(--col) + var(--gutter) * 2);
+  margin: 0 auto;
+}
+.logo-link { justify-self: start; text-decoration: none; border-radius: var(--radius-md); }
+.header-end { justify-self: end; display: flex; align-items: center; gap: var(--space-2); }
+.nav { display: flex; align-items: center; gap: 4px; }
+.nav-link {
+  position: relative;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 500;
+  color: var(--ink-muted);
+  text-decoration: none;
+  transition: color var(--dur-hover) var(--ease-in), background-color var(--dur-hover) var(--ease-in);
+}
+.nav-link:hover { color: var(--ink); background: var(--surface-200); }
+.nav-link[aria-current='page'] { color: var(--ink); }
+.nav-link[aria-current='page']::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 1px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--accent);
+}
+
+.menu-btn { display: none; width: 32px; padding: 0; }
+.icon { position: relative; display: block; width: 22px; height: 22px; }
+.icon svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transition: opacity var(--dur-fade) var(--ease-in), transform var(--dur-panel) var(--ease-in);
+}
+.burger g, .burger path, .burger rect { transform-box: fill-box; transform-origin: center; transition: transform var(--dur-fade) var(--ease-in); }
+.close { opacity: 0; transform: rotate(-90deg) scale(0.6); }
+.menu-btn:hover .bun-top { transform: translateY(-1.2px); }
+.menu-btn:hover .bun-bottom { transform: translateY(1.2px); }
+.menu-btn[aria-expanded='true'] .burger { opacity: 0; transform: rotate(90deg) scale(0.6); }
+.menu-btn[aria-expanded='true'] .close { opacity: 1; transform: none; }
+
+/* Solid floating panel under the bar, with a staggered reveal */
+.mobile-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-2) var(--space-6) var(--space-4);
+  background: var(--surface-100);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 64px rgb(0 0 0 / 0.6);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  clip-path: inset(0 0 100% 0 round var(--radius-lg));
+  transition:
+    opacity var(--dur-fade) var(--ease-out),
+    transform var(--dur-panel) var(--ease-out),
+    clip-path var(--dur-panel) var(--ease-out),
+    visibility 0s linear var(--dur-panel);
+}
+.mobile-menu.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  clip-path: inset(0 0 0 0 round var(--radius-lg));
+  transition:
+    opacity var(--dur-fade) var(--ease-in),
+    transform 320ms var(--ease-in),
+    clip-path 360ms var(--ease-in),
+    visibility 0s;
+}
+.mobile-link {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-title);
+  font-weight: 300;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  text-decoration: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity var(--dur-fade) var(--ease-out), transform var(--dur-fade) var(--ease-out), color var(--dur-hover) var(--ease-in);
+}
+.mobile-menu.is-open .mobile-link {
+  opacity: 1;
+  transform: none;
+  transition: opacity 320ms var(--ease-in) calc(90ms + var(--i) * 45ms), transform 380ms var(--ease-in) calc(90ms + var(--i) * 45ms), color var(--dur-hover) var(--ease-in);
+}
+.mobile-link:hover { color: var(--accent-hover); }
+.mobile-link[aria-current='page']::after { content: "."; color: var(--accent); }
+.mobile-link:last-child { border-bottom: 0; }
+
+@media (max-width: 720px) {
+  .header-inner { display: flex; justify-content: space-between; }
+  .nav, .cta { display: none; }
+  .menu-btn { display: inline-flex; }
+}
+@media (min-width: 721px) {
+  .mobile-menu { display: none; }
 }
 </style>
 
@@ -176,16 +219,20 @@ const { isPost = false } = Astro.props;
   const btn = document.getElementById('mobile-menu-btn');
   const menu = document.getElementById('mobile-menu');
 
-  btn?.addEventListener('click', () => {
-    const isOpen = !menu?.classList.contains('hidden');
-    menu?.classList.toggle('hidden', isOpen);
-    btn.setAttribute('aria-expanded', String(!isOpen));
-  });
+  const setOpen = (open: boolean) => {
+    if (!btn || !menu) return;
+    menu.classList.toggle('is-open', open);
+    menu.inert = !open;
+    btn.setAttribute('aria-expanded', String(open));
+    btn.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+  };
+  const isOpen = () => menu?.classList.contains('is-open') ?? false;
 
+  btn?.addEventListener('click', () => setOpen(!isOpen()));
   document.addEventListener('click', (e) => {
-    if (btn && menu && !btn.contains(e.target as Node) && !menu.contains(e.target as Node)) {
-      menu.classList.add('hidden');
-      btn.setAttribute('aria-expanded', 'false');
-    }
+    if (btn && menu && !btn.contains(e.target as Node) && !menu.contains(e.target as Node)) setOpen(false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setOpen(false);
   });
 </script>

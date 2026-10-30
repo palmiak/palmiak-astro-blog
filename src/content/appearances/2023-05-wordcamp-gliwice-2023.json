@@ -1,0 +1,25 @@
+{
+  "event": "WordCamp Gliwice 2023",
+  "year": 2023,
+  "month": 5,
+  "role": "speaker",
+  "city": "Gliwice",
+  "country": "Poland",
+  "lat": 50.2945,
+  "lon": 18.6714,
+  "talk": "An Astro workshop and a talk on headless WordPress",
+  "links": [
+    {
+      "label": "Video",
+      "url": "https://wordpress.tv/2023/05/30/maciek-palmowski-headless-czy-to-naprawde-ma-sens/"
+    },
+    {
+      "label": "Recap",
+      "url": "/blog/i-was-at-wordcamp-gliwice-2023/"
+    },
+    {
+      "label": "Event",
+      "url": "https://crossweb.pl/wydarzenia/wordcamp-gliwice-2023/"
+    }
+  ]
+}

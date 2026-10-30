@@ -1,0 +1,17 @@
+{
+  "event": "WordCamp Prague 2020",
+  "year": 2020,
+  "month": 2,
+  "role": "speaker",
+  "city": "Prague",
+  "country": "Czechia",
+  "lat": 50.0755,
+  "lon": 14.4378,
+  "talk": "Creating Gutenberg blocks using ACF Blocks",
+  "links": [
+    {
+      "label": "Video",
+      "url": "https://wordpress.tv/2020/07/08/maciej-palmowski-creating-gutenberg-blocks-using-acf-blocks/"
+    }
+  ]
+}

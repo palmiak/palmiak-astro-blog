@@ -1,0 +1,15 @@
+{
+  "event": "CMS Conf 2026",
+  "year": 2026,
+  "role": "organiser",
+  "city": "Gdynia",
+  "country": "Poland",
+  "lat": 54.5189,
+  "lon": 18.5305,
+  "links": [
+    {
+      "label": "Why I'm organizing it",
+      "url": "/blog/why-im-organizing-cms-conf/"
+    }
+  ]
+}

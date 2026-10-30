@@ -1,0 +1,16 @@
+{
+  "event": "WordUp Kraków, spring 2019",
+  "year": 2019,
+  "month": 5,
+  "role": "meetup",
+  "city": "Kraków",
+  "country": "Poland",
+  "lat": 50.0647,
+  "lon": 19.945,
+  "links": [
+    {
+      "label": "Event",
+      "url": "https://crossweb.pl/wydarzenia/wordup-krakow-wiosna-2019/"
+    }
+  ]
+}

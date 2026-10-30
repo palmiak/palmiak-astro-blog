@@ -3,11 +3,16 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { u } from '../utils/url';
+import { SITE, SITE_NAME, abs, isPreview } from '../utils/site';
 
 interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  ogImageAlt?: string;
+  ogType?: 'website' | 'article';
+  article?: { published: Date; modified?: Date; tags?: string[] };
+  noindex?: boolean;
   isPost?: boolean;
 }
 
@@ -15,50 +20,68 @@ const {
   title,
   description = 'Web developer, public speaker, Open Source enthusiast.',
   ogImage,
+  ogImageAlt,
+  ogType = 'website',
+  article,
+  noindex = false,
   isPost = false,
 } = Astro.props;
 
-const siteName = 'Maciek Palmowski';
+const siteName = SITE_NAME;
 const fullTitle = title ? `${title} | ${siteName}` : siteName;
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const canonicalUrl = abs(Astro.url.pathname);
+const ogImageUrl = ogImage ? abs(ogImage) : undefined;
+const robots = noindex || isPreview
+  ? 'noindex, nofollow'
+  : 'index, follow, max-image-preview:large, max-snippet:-1';
 ---
 <!doctype html>
-<html lang="en" style="background:#0b0b0e;color-scheme:dark;">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="apple-touch-icon" sizes="180x180" href={u('/assets/fav/apple-touch-icon.png')} />
+  <link rel="icon" type="image/svg+xml" href={u('/assets/fav/icon.svg')} />
   <link rel="icon" type="image/png" sizes="32x32" href={u('/assets/fav/favicon-32x32.png')} />
   <link rel="icon" type="image/png" sizes="16x16" href={u('/assets/fav/favicon-16x16.png')} />
   <link rel="manifest" href={u('/assets/fav/site.webmanifest')} />
-  <link rel="mask-icon" href={u('/assets/fav/safari-pinned-tab.svg')} color="#0b0b0e" />
-  <meta name="msapplication-TileColor" content="#0b0b0e" />
-  <meta name="theme-color" content="#0b0b0e" />
+  <link rel="mask-icon" href={u('/assets/fav/safari-pinned-tab.svg')} color="#ff3d9a" />
+  <meta name="msapplication-TileColor" content="#ff3d9a" />
+  <meta name="theme-color" content="#ff3d9a" />
 
-  <link rel="preload" href={u('/fonts/unbounded-v7-latin-regular.woff2')} as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href={u('/fonts/unbounded-v7-latin-700.woff2')} as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href={u('/fonts/instrument-serif-italic.woff2')} as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href={u('/fonts/ibm-plex-mono-400.woff2')} as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href={u('/fonts/ibm-plex-mono-400-ext.woff2')} as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href={u('/fonts/inter-latin.woff2')} as="font" type="font/woff2" crossorigin />
-  {isPost && <link rel="preload" href={u('/fonts/inter-latin-ext.woff2')} as="font" type="font/woff2" crossorigin />}
+  <link rel="preload" href={u('/fonts/fraunces-latin.woff2')} as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href={u('/fonts/geist-latin.woff2')} as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href={u('/fonts/geist-mono-latin.woff2')} as="font" type="font/woff2" crossorigin />
 
   <title>{fullTitle}</title>
 
   <meta name="description" content={description} />
+  <meta name="robots" content={robots} />
   <link rel="canonical" href={canonicalUrl} />
+  <link rel="alternate" type="application/rss+xml" title={siteName} href={u('/rss.xml')} />
 
+  <meta property="og:type" content={ogType} />
+  <meta property="og:site_name" content={siteName} />
+  <meta property="og:locale" content="en_US" />
   <meta property="og:title" content={fullTitle} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonicalUrl} />
-  {ogImage && <meta property="og:image" content={new URL(ogImage, Astro.site)} />}
+  {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+  {ogImageUrl && <meta property="og:image:width" content="1200" />}
+  {ogImageUrl && <meta property="og:image:height" content="630" />}
+  {ogImageUrl && <meta property="og:image:alt" content={ogImageAlt ?? fullTitle} />}
+  {article && <meta property="article:published_time" content={article.published.toISOString()} />}
+  {article?.modified && <meta property="article:modified_time" content={article.modified.toISOString()} />}
+  {article && <meta property="article:author" content={SITE} />}
+  {article?.tags?.map((tag) => <meta property="article:tag" content={tag} />)}
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:creator" content="@palmiak_fp" />
   <meta name="twitter:title" content={fullTitle} />
   <meta name="twitter:description" content={description} />
-  {ogImage && <meta name="twitter:image" content={new URL(ogImage, Astro.site)} />}
+  {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+  {ogImageUrl && <meta name="twitter:image:alt" content={ogImageAlt ?? fullTitle} />}
 
   <script data-goatcounter="https://palmiak.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 
@@ -66,15 +89,19 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Maciek Palmowski',
-    url: Astro.site?.toString().replace(/\/$/, ''),
+    url: SITE,
+    inLanguage: 'en',
   })} />
 </head>
 
-<body style="background:var(--bg);color:var(--hi);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;">
+<body>
   <Header isPost={isPost} />
   <main>
     <slot />
   </main>
   <Footer />
+  <script>
+    import '../scripts/hush.ts';
+  </script>
 </body>
 </html>

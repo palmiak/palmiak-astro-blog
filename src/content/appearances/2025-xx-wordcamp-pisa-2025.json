@@ -1,0 +1,16 @@
+{
+  "event": "WordCamp Pisa 2025",
+  "year": 2025,
+  "role": "speaker",
+  "city": "Pisa",
+  "country": "Italy",
+  "lat": 43.7228,
+  "lon": 10.4017,
+  "talk": "How we closed almost 1000 plugins in a month",
+  "links": [
+    {
+      "label": "Video",
+      "url": "https://wordpress.tv/2025/12/28/how-we-closed-almost-1000-plugins-in-a-month-a-story-of-the-biggest-wordpress-bug-bounty-hunt-2/"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "event": "WordCamp Kraków 2025",
+  "year": 2025,
+  "month": 6,
+  "role": "speaker",
+  "city": "Kraków",
+  "country": "Poland",
+  "lat": 50.0647,
+  "lon": 19.945,
+  "talk": "How we closed almost 1000 plugins in a month",
+  "links": [
+    {
+      "label": "Video",
+      "url": "https://wordpress.tv/2025/07/09/how-we-closed-almost-1000-plugins-in-a-month-a-story-of-the-biggest-wordpress-bug-bounty-hunt/"
+    },
+    {
+      "label": "Event",
+      "url": "https://crossweb.pl/wydarzenia/wordcamp-krakow-2025/"
+    }
+  ]
+}

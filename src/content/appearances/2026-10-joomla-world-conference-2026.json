@@ -1,0 +1,21 @@
+{
+  "event": "Joomla! World Conference 2026",
+  "year": 2026,
+  "month": 10,
+  "role": "speaker",
+  "city": "Berlin",
+  "country": "Germany",
+  "lat": 52.52,
+  "lon": 13.405,
+  "talk": "Zero Server Costs, a Lot of Angry Slack Messages: Going Headless with Joomla + Astro",
+  "links": [
+    {
+      "label": "Session",
+      "url": "https://conference.joomla.org/sessions/sunday-18-october/11-00-11-45/zero-server-costs-a-lot-of-angry-slack-messages-going-headless-with-joomla-astro"
+    },
+    {
+      "label": "Speaker page",
+      "url": "https://conference.joomla.org/speakers/maciek-palmowski"
+    }
+  ]
+}

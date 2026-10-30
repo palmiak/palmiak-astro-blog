@@ -1,0 +1,17 @@
+{
+  "event": "CyberWiseCon 2025",
+  "year": 2025,
+  "month": 5,
+  "role": "speaker",
+  "city": "Vilnius",
+  "country": "Lithuania",
+  "lat": 54.6872,
+  "lon": 25.2797,
+  "talk": "A talk and a panel on GenAI and cybersecurity",
+  "links": [
+    {
+      "label": "Recap",
+      "url": "/blog/i-was-at-cyberwisecon-in-vilnius/"
+    }
+  ]
+}
