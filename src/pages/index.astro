@@ -28,8 +28,8 @@ const linkOf = (a: (typeof appearances)[number]) => {
 const eventNames = [...new Set(appearances.filter((a) => a.role === 'speaker' || a.role === 'organiser').map((a) => a.event.replace(/ 20\d{2}$/, '')))];
 ---
 <Layout
-  fullTitle="Maciek Palmowski: WordPress security, headless CMS and Astro"
-  description="Maciek Palmowski is a Growth Engineer at Patchstack in Łódź, Poland. He writes and speaks about WordPress security, headless CMS and Astro."
+  fullTitle="Maciek Palmowski, web developer and speaker"
+  description="I'm a Growth Engineer at Patchstack in Łódź, Poland. I write and speak about WordPress security, headless CMS and Astro."
   ogImage={u('/og/home.png')}
 >
   <Hero />
