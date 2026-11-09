@@ -18,6 +18,13 @@ function convert(segment: string): string {
       return [alt ? `*[Image: ${alt}]*` : '', caption ? `*${caption}*` : ''].filter(Boolean).join('\n');
     })
     .replace(/<YouTube\s+url="([^"]+)"\s*\/>/g, (_, url: string) => `[Embedded video](${url.replace('/embed/', '/watch?v=')})`)
+    // A chart wraps a Markdown table: keep the table, label it with the chart title
+    .replace(/<BarChart\b([^>]*)>/g, (_, attrs: string) => {
+      const title = attr(attrs, 'title');
+      const note = attr(attrs, 'note');
+      return title ? `**${title}**${note ? ` (${note})` : ''}` : '';
+    })
+    .replace(/<\/BarChart>/g, '')
     .replace(/<strong>([\s\S]*?)<\/strong>/g, '**$1**')
     .replace(/<a\b[^>]*?href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g, '[$2]($1)')
     .replace(/<Alert>([\s\S]*?)<\/Alert>/g, (_, body: string) =>
