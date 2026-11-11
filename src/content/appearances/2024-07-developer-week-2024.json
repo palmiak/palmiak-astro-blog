@@ -1,0 +1,16 @@
+{
+  "event": "Developer Week 2024",
+  "year": 2024,
+  "month": 7,
+  "role": "speaker",
+  "city": "Nuremberg",
+  "country": "Germany",
+  "lat": 49.4521,
+  "lon": 11.0767,
+  "links": [
+    {
+      "label": "Event",
+      "url": "https://www.developer-week.de"
+    }
+  ]
+}

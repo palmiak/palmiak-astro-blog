@@ -1,0 +1,16 @@
+{
+  "event": "WordUp! Kalisz #3",
+  "year": 2019,
+  "month": 5,
+  "role": "meetup",
+  "city": "Kalisz",
+  "country": "Poland",
+  "lat": 51.7611,
+  "lon": 18.091,
+  "links": [
+    {
+      "label": "Event",
+      "url": "https://crossweb.pl/wydarzenia/wordup-kalisz-3/"
+    }
+  ]
+}

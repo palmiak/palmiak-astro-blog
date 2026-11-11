@@ -1,0 +1,25 @@
+{
+  "event": "Open Source Day 2025",
+  "year": 2025,
+  "month": 3,
+  "role": "speaker",
+  "city": "Florence",
+  "country": "Italy",
+  "lat": 43.7696,
+  "lon": 11.2558,
+  "talk": "How we closed almost 1k plugins in a month",
+  "links": [
+    {
+      "label": "Video",
+      "url": "https://www.youtube.com/watch?v=Y3HsjvRAofk"
+    },
+    {
+      "label": "Recap",
+      "url": "/blog/i-was-at-open-source-day-2025-in-florence/"
+    },
+    {
+      "label": "Event",
+      "url": "https://2025.osday.dev/"
+    }
+  ]
+}

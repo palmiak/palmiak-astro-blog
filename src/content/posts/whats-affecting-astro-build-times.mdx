@@ -1,0 +1,292 @@
+---
+title: "What's affecting Astro build times"
+intro: "While working with bigger Astro websites, I started wondering what affects build times the most. So I ran a series of benchmarks on content size, images, content sources, Astro versions, runtimes, concurrency, incremental builds and parallel prerendering."
+excerpt: "Images, content sources and fetching data inside pages can change Astro build times from seconds to minutes. Here are the benchmarks that show what actually matters."
+description: "Astro build time benchmarks: how post count, image formats (AVIF, WebP, JPEG), Markdown vs MDX vs headless CMS, Astro 7, Bun, concurrency, incremental builds and parallel prerendering affect build speed."
+pubDate: 2026-10-31
+thumbnail: "arts/whats-affecting-astro-build-times/astro-build-times.png"
+tags:
+  - "astro"
+  - "development"
+  - "performance"
+  - "headless"
+---
+
+import BarChart from '../../components/mdx/BarChart.astro';
+
+While working with some bigger Astro websites, I started wondering how I can reduce the build times and what affects them the most. To do so, I decided to run a series of benchmarks to see what had the biggest impact.
+
+## Methodology
+
+I ran Astro 7.4.4 and 6.4.8 on an Apple M4 Pro (12 cores) with Node v24.18.0. Builds were cold, with caches cleared before every run. Each variant got one discarded warm-up build, and I report the median of the timed runs. On a laptop, small differences are noise. The same 10k-post cold build came out between 3.86 s and 4.16 s in different tables (about 8%), so I treat anything under ~10% as no real difference.
+
+Keep the hardware in mind, too. A 12-core M4 Pro is generous, and a 2–4 vCPU CI runner may show smaller gains from concurrency and parallel prerendering, and hit memory limits sooner. Treat the absolute numbers as a guide and rerun the tests that matter on your own setup.
+
+If you want to find out where *your* build spends its time before changing anything, Astro 7.4 added an [`astro build --timings`](https://astro.build/blog/astro-740/) flag. It prints a breakdown of build phases, Markdown processing, page rendering and images, and Astro calls it a good first step before trying flags like parallel prerendering or incremental builds.
+
+## Size matters
+
+That's a pretty obvious take, but the larger the website, the longer the build.
+
+For simple Markdown posts, it took:
+
+<BarChart title="Build time by number of posts" note="Simple Markdown posts, median">
+
+| Number of posts | Median      |
+| --------------- | -----------:|
+| 100             | **0.68 s**  |
+| 1,000           | **1.04 s**  |
+| 10,000          | **3.93 s**  |
+| 50,000          | **16.91 s** |
+
+</BarChart>
+
+While this naturally affects the build length, having 500 times more posts makes the build only ~25 times slower. The fixed startup cost dominates small sites, and the marginal cost is about 0.32 ms per extra post. Memory grows faster than time, though: peak usage went from 444 MB at 100 posts to 5.5 GB at 50,000.
+
+But the number of posts is only one part. What's also important is what's inside the post. More images and MDX with components can affect the build time a lot.
+
+## Images
+
+Heavy images are one of the main pain points of the internet. Luckily, Astro has some great tools for optimizing them. Using the `<Image>` or `<Picture>` components allows you to:
+
+- change the image format
+- resize it
+- add a loading strategy
+
+So, let's see what happens when we try to convert base images using the `<Picture>` component:
+
+<BarChart title="Build time by image format and size" note="Converted with the Picture component, median">
+
+| Variant        | Median      |
+| -------------- | -----------:|
+| 2 MP → JPEG    | **0.86 s**  |
+| 2 MP → WebP    | **1.82 s**  |
+| 2 MP → AVIF    | **11.53 s** |
+| 8 MP → JPEG    | **1.16 s**  |
+| 8 MP → WebP    | **3.97 s**  |
+| 8 MP → AVIF    | **34.43 s** |
+| 24 MP → JPEG   | **2.00 s**  |
+| 24 MP → WebP   | **23.48 s** |
+| 24 MP → AVIF   | **74.28 s** |
+
+</BarChart>
+
+Based on this, there are some clear findings:
+
+- While AVIF produces the smallest images, it affects the build time heavily. At 24 MP it took 74.28 s, compared to 2.00 s for JPEG. The smallest case I tested (0.5 MP to JPEG) took 0.60 s, which makes 24 MP AVIF about 125 times slower. The 24 MP WebP result (23.48 s) looks like an outlier: it's nearly 6 times slower than 8 MP for 3 times the pixels, and about 12 times slower than 24 MP JPEG.
+- Astro has an image cache that reduces that time greatly. In my test, converting an 8 MP image to WebP took 3.91 s with a cold cache and 0.48 s with a warm one (8 times faster). Per the [Astro docs](https://docs.astro.build/en/guides/images/), processed images are stored in `node_modules/.astro` by default (configurable with `cacheDir`), and "by preserving the cache directory between builds, processed assets are reused". Sadly, many CI/CD platforms delete everything on each run, so make sure yours keeps (or caches) that directory.
+- If your website is very image-heavy, outsourcing this to a CDN might be a better option.
+- Dropping raw images in might not be the best idea, especially when using AVIF. It's worth pre-optimizing them a bit.
+
+## MD vs MDX vs Headless CMS
+
+The content source is also a very important aspect that affects the build speed. To test this, I fetched 500 posts as Markdown, MDX, or from a mock API (fetch inside pages vs a content collection loader), at 20 ms and 100 ms API latency.
+
+<BarChart title="Build time by content source" note="500 posts, median">
+
+| Variant                                | Median      |
+| -------------------------------------- | -----------:|
+| Markdown collection                    | **0.90 s**  |
+| MDX collection                         | **1.64 s**  |
+| API, fetch in pages, 20 ms             | **26.37 s** |
+| API, content collection loader, 20 ms  | **0.76 s**  |
+| API, fetch in pages, 100 ms            | **107 s**   |
+| API, content collection loader, 100 ms | **0.93 s**  |
+
+</BarChart>
+
+The gap comes down to request count. Fetching inside pages made 1,002 requests, while the loader made 2. Build time with fetch-in-pages is roughly requests × latency (1,002 × 20 ms ≈ 20 s, 1,002 × 100 ms ≈ 100 s), which is close to what I measured. With a loader, latency barely registers. At matching latency, the loader was about 35 times faster at 20 ms and about 115 times faster at 100 ms. It even matched local Markdown (0.76 s and 0.93 s vs 0.90 s), probably because my mock API returns ready-to-use content, so there is no Markdown processing to do. MDX was 1.83 times slower than Markdown and used more memory (709 MB vs 498 MB).
+
+It's worth mentioning that MDX results may vary based on what sits inside the components. It doesn't change the fact that if you're aiming for quick builds, you should either use Markdown files or a properly built API with content collections.
+
+## Using the latest Astro version
+
+It's always worth following what the Astro developers are cooking. For example, Astro 7 improved build times by a lot.
+
+<BarChart title="Astro 6.4.8 vs 7.4.4" note="Synthetic test, median">
+
+| Variant     | Median      |
+| ----------- | -----------:|
+| Astro 6.4.8 | **18.92 s** |
+| Astro 7.4.4 | **4.09 s**  |
+
+</BarChart>
+
+In my synthetic test, using Astro 7 made the build over 4 times faster.
+
+A 4.6x jump is bigger than what Astro promises. In the [Astro 7 release post](https://astro.build/blog/astro-7/), the team reports builds that are 15–61% faster, thanks to Sätteri together with Vite 8 and its new Rolldown bundler. My test site is pure Markdown, and Astro 7 replaces the default Markdown and MDX pipeline with Sätteri, a Rust-based processor, so that's where it gains the most. The new Rust `.astro` compiler on its own improved docs.astro.build by only about 6%, because Markdown processing and bundling usually dominate build time.
+
+An independent test points the same way. [Bitdoze](https://www.bitdoze.com/astro-7-faster-builds/) rebuilt a 743-page site on Astro 6.1.9 and 7.0.4 and went from 103 s to 46.92 s (2.2x), with Cloudflare Pages deploys dropping from about 7 minutes to about 2.
+
+Astro's own benchmarks, run on an M4 Pro with 48 GB of memory, show the range on real websites:
+
+<BarChart title="Build time before and after Astro 7" note="Reported by Astro for real websites">
+
+| Website                                                                          | Before  | After   |
+| -------------------------------------------------------------------------------- | ------- | ------- |
+| [docs.astro.build](https://docs.astro.build/) (~6,313 pages)                     | 114.54s | 73.53s  |
+| [astro.build](https://astro.build/) (~308 pages)                                 | 62.70s  | 24.24s  |
+| [biomejs.dev](https://biomejs.dev/) (~6,488 pages)                               | 176.39s | 149.90s |
+| [developers.cloudflare.com](https://developers.cloudflare.com/) (8,431 pages)    | 386.89s | 261.94s |
+| [tauri.app](https://tauri.app/) (7,117 pages)                                    | 86.12s  | 55.33s  |
+| [aspire.dev](https://aspire.dev/) (13,275 pages)                                 | 385.84s | 326.11s |
+
+</BarChart>
+
+## Node vs Bun
+
+The runtime environment can affect the build time, too:
+
+<BarChart title="Node vs Bun: 10k Markdown posts" note="Median">
+
+| Variant            | Median     |
+| ------------------ | ----------:|
+| 10k md posts, Node | **3.86 s** |
+| 10k md posts, Bun  | **3.69 s** |
+
+</BarChart>
+
+And for images:
+
+<BarChart title="Node vs Bun: image conversion" note="Median">
+
+| Variant                       | Median     |
+| ----------------------------- | ----------:|
+| 16 x 2MP images to WebP, Node | **1.81 s** |
+| 16 x 2MP images to WebP, Bun  | **1.30 s** |
+
+</BarChart>
+
+On Markdown, the 4% gain is within the noise I mentioned earlier, and Bun used more memory (2.3 GB vs 1.6 GB peak). The real gain was in image encoding, where Bun was 1.39 times faster.
+
+## Build concurrency
+
+Concurrency (`build.concurrency`, available since Astro 4.16) is one of the settings that will probably bring little, apart from some unique cases. Even the [official documentation](https://docs.astro.build/en/reference/configuration-reference/) mentions:
+
+> **In most cases, you should not change the default value of `1`.**
+
+With simple Markdown files, the gain is small in absolute terms (4.13 s down to 2.90 s at best, about 30%), but it isn't zero:
+
+<BarChart title="Concurrency: 10k Markdown posts" note="Median">
+
+| Variant                      | Median     |
+| ---------------------------- | ----------:|
+| 10k md posts, concurrency 1  | **4.13 s** |
+| 10k md posts, concurrency 2  | **3.40 s** |
+| 10k md posts, concurrency 4  | **3.23 s** |
+| 10k md posts, concurrency 8  | **2.94 s** |
+| 10k md posts, concurrency 12 | **2.90 s** |
+
+</BarChart>
+
+Where it shines is when we're using fetch on pages, because the build spends most of its time waiting on the network. The number of requests stays the same (1,002), but they overlap. Keep in mind that this is fetching inside pages, which is the slow pattern from the previous sections. Here, concurrency is a mitigation for when you can't switch to a loader:
+
+<BarChart title="Concurrency: API fetch in pages" note="Median">
+
+| Variant                                       | Median      |
+| ---------------------------------------------:| -----------:|
+| API fetch-in-pages (500 posts), concurrency 1 | **25.13 s** |
+| API fetch-in-pages (500 posts), concurrency 8 | **4.18 s**  |
+
+</BarChart>
+
+## Incremental builds
+
+Incremental builds are one of those features that, in some cases, can do wonders, and sometimes just add problems to your stack with no real gains.
+
+They arrived as an experimental feature in [Astro 7.2](https://astro.build/blog/astro-720/) (`experimental.incrementalBuild`). A page is skipped only if its route returns a `cacheKey` from `getStaticPaths()` and the hash of its module graph hasn't changed. For content collections, the docs suggest using `entry.digest`. Paths without a `cacheKey` are always rendered. The [docs](https://docs.astro.build/en/reference/experimental-flags/incremental-build/) also list a few catches:
+
+- the cache lives in `cacheDir` (`node_modules/.astro/` by default), so in CI it has to be restored before `astro build`
+- it is disabled when `build.concurrency` is greater than `1`, so you can't combine it with the previous section
+- changes to your middleware don't invalidate cached pages (use `astro build --force` to ignore the cache)
+
+First, I tested simple and small Markdown pages:
+
+<BarChart title="Incremental builds: small Markdown pages" note="10k posts, median">
+
+| Variant                                            | Median     |
+| -------------------------------------------------- | ----------:|
+| 10k posts, cold build (incremental off)            | **4.16 s** |
+| 10k posts, warm rebuild, incremental off           | **3.81 s** |
+| 10k posts, incremental on, first (cold) build      | **5.49 s** |
+| 10k posts, incremental on, rebuild with no changes | **4.17 s** |
+| 10k posts, incremental on, 1% edited               | **4.70 s** |
+| 10k posts, incremental on, 10% edited              | **4.99 s** |
+
+</BarChart>
+
+In this case, the incremental cache didn't help, and the first build was slower. That's why I decided to test it on heavier Markdown pages:
+
+<BarChart title="Incremental builds: heavier Markdown pages" note="10k posts, 2 ms render work per page, median">
+
+| Variant                                                           | Median      |
+| ----------------------------------------------------------------- | -----------:|
+| 10k posts, 2 ms render work per page, cold build                  | **25.10 s** |
+| 10k posts, 2 ms per page, warm rebuild, incremental off           | **24.87 s** |
+| 10k posts, 2 ms per page, incremental on, rebuild with no changes | **4.12 s**  |
+| 10k posts, 2 ms per page, incremental on, 1% edited               | **4.87 s**  |
+| 10k posts, 2 ms per page, incremental on, 10% edited              | **6.97 s**  |
+
+</BarChart>
+
+Here, we can finally see how incremental builds can improve your flow a lot.
+
+Where they shine is again fetching inside pages, because the build spends most of its time waiting on the network. Skipped pages don't make their requests, so the cache cuts the API calls too (2 requests with no changes, 12 with 1% of pages edited, 102 with 10%). Keep in mind that this is the slow pattern from the previous sections, so incremental builds are a mitigation for when you can't switch to a loader:
+
+<BarChart title="Incremental builds: API fetch in pages" note="500 posts, 20 ms latency, median">
+
+| Variant                                                                        | Median      |
+| ------------------------------------------------------------------------------ | -----------:|
+| API fetch-in-pages (500 posts, 20 ms), cold build                              | **25.60 s** |
+| API fetch-in-pages (500 posts, 20 ms), incremental on, rebuild with no changes | **0.59 s**  |
+| API fetch-in-pages (500 posts, 20 ms), incremental on, 1% edited               | **0.85 s**  |
+| API fetch-in-pages (500 posts, 20 ms), incremental on, 10% edited              | **3.21 s**  |
+
+</BarChart>
+
+Incremental builds also depend entirely on a persisted cache. I made the same point about images, but here it matters even more: if your CI pipeline wipes `node_modules/.astro` (or `cacheDir`) before each build, every build is a cold one and you get no benefit at all, apart from the slower first build.
+
+## Experimental parallel prerendering
+
+This is something that [Astro introduced in 7.4](https://astro.build/blog/astro-740/) (`experimental.parallelPrerender`). It renders static pages in Node.js worker threads, which allows Astro to use more than just one core of your CPU. By default, it uses all available cores but one. On paper, it should improve the builds by a lot, but the first benchmark showed the opposite. When running the test on small Markdown pages, the gains are close to nothing:
+
+<BarChart title="Parallel prerendering: small Markdown pages" note="Median">
+
+| Variant              | Median     |
+| -------------------- | ----------:|
+| off (default)        | **3.92 s** |
+| on (default workers) | **3.78 s** |
+| workers: 2           | **4.38 s** |
+| workers: 4           | **4.03 s** |
+| workers: 8           | **3.71 s** |
+
+</BarChart>
+
+But like with incremental builds, it shines when we have many slow pages. This time I used the API with 20 ms latency:
+
+<BarChart title="Parallel prerendering: API fetch in pages" note="500 pages, 20 ms latency, median">
+
+| Variant                             | Median      |
+| ----------------------------------- | -----------:|
+| off (default), 500 API pages        | **24.42 s** |
+| on (default workers), 500 API pages | **3.18 s**  |
+| workers: 2, 500 API pages           | **13.13 s** |
+| workers: 4, 500 API pages           | **7.46 s**  |
+
+</BarChart>
+
+Two more things to keep in mind. Each worker adds to the memory your build uses. And per the [docs](https://docs.astro.build/en/reference/experimental-flags/parallel-prerender/), pages rendered in parallel don't share module-level variables, and `getStaticPaths()` props that can't be serialized (functions, class instances) can't be rendered in parallel.
+
+## So what does it mean?
+
+Astro gives us a lot of ways to optimize our build. But as you can see from this series of benchmarks, many of those are scenario-based. You'll need different tools if you're using Markdown compared to the ones you'll use when working with a headless CMS API.
+
+A rough order of what to try:
+
+- **Measure first** with `astro build --timings`.
+- **Fetching data?** Use a content collection loader instead of fetching inside pages. In my tests, that was the biggest difference of all (about 115 times at 100 ms latency).
+- **Lots of images?** Mind the output format and the source size, and keep `node_modules/.astro` between builds.
+- **Expensive pages you can't fix?** Incremental builds, parallel prerendering and higher concurrency are mitigations, not upgrades. Pick one of incremental builds or higher concurrency, since incremental builds are disabled above `build.concurrency` 1 (I tested them separately, not combined). Incremental builds also need a persisted `cacheDir` in CI.
+- **Mostly cheap text pages?** Upgrade Astro, and leave the rest at the defaults.
+
+The result that surprised me the most is that none of the flags I tested came close to one structural choice. Moving the data fetching from the pages into a content collection loader had the biggest impact of everything I measured, with no flags or special settings. So before you reach for a setting, check how your build gets its data.

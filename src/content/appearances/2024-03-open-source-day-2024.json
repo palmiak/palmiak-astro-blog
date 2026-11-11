@@ -1,0 +1,21 @@
+{
+  "event": "Open Source Day 2024",
+  "year": 2024,
+  "month": 3,
+  "role": "speaker",
+  "city": "Florence",
+  "country": "Italy",
+  "lat": 43.7696,
+  "lon": 11.2558,
+  "talk": "Is the headless architecture really the future for CMSs?",
+  "links": [
+    {
+      "label": "Recap",
+      "url": "/blog/i-was-at-open-source-day-2024-in-florence/"
+    },
+    {
+      "label": "Event",
+      "url": "https://2024.osday.dev/"
+    }
+  ]
+}

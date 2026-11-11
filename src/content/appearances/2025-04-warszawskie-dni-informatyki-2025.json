@@ -1,0 +1,16 @@
+{
+  "event": "Warszawskie Dni Informatyki 2025",
+  "year": 2025,
+  "month": 4,
+  "role": "speaker",
+  "city": "Warsaw",
+  "country": "Poland",
+  "lat": 52.2297,
+  "lon": 21.0122,
+  "links": [
+    {
+      "label": "Event",
+      "url": "https://crossweb.pl/wydarzenia/warszawskie-dni-informatyki-2025/"
+    }
+  ]
+}

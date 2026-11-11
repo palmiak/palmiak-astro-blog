@@ -19,15 +19,15 @@ You have a WordPress website and installed some plugins from the official plugin
 
 But what will happen if a plugin is vulnerable? In most cases, it will be closed - no one will be able to download it and there will be a nice explanation of why it happened. 
 
-<PostImage src="/assets/arts/closed-plugins/zrzut-ekranu-2024-06-18-114639.png" width="narrow" />
+<PostImage src="/assets/arts/closed-plugins/zrzut-ekranu-2024-06-18-114639.png" width="narrow" alt="WordPress.org plugin page for Easy Registration Forms with a red notice that the plugin was closed on 12 November 2021 for a security issue." />
 
 So where is the problem? Please, take a look at the plugin listing and tell me which plugin is the closed one. 
 
-<PostImage src="/assets/arts/closed-plugins/zrzut-ekranu-2024-06-18-114916.png" width="wide" />
+<PostImage src="/assets/arts/closed-plugins/zrzut-ekranu-2024-06-18-114916.png" width="wide" alt="WordPress admin plugin list with several plugins, one row marked in yellow as a closed plugin." />
 
 Let's also check the Site Health screen because there are some security tests
 
-<PostImage src="/assets/arts/closed-plugins/zrzut-ekranu-2024-06-18-115026.png" width="" />
+<PostImage src="/assets/arts/closed-plugins/zrzut-ekranu-2024-06-18-115026.png" width="" alt="WordPress Site Health screen with the status 'Good' and five recommended improvements, such as removing inactive plugins and themes." />
 
 Yes - it's impossible to guess which ones are closed without checking plugin after plugin manually.
 
@@ -87,7 +87,7 @@ Check the code [here](https://github.com/palmiak/closed-plugin-checker/).
 
 Here is what it does:
 
-<PostImage src="/assets/arts/closed-plugins/zrzut-ekranu-2024-06-18-115325.png" width="narrow" />
+<PostImage src="/assets/arts/closed-plugins/zrzut-ekranu-2024-06-18-115325.png" width="narrow" alt="WordPress Site Health screen reporting 'Should be improved' with a critical issue: some installed plugins are closed." />
 
 As I mentioned, it's a proof of concept - the API querying part should be solved in the background, probably using Cron or a library similar to the [WP Background Process](https://github.com/deliciousbrains/wp-background-processing). But this doesn't matter at the moment. What matters now is to talk about the problem and start a discussion about it. 
 

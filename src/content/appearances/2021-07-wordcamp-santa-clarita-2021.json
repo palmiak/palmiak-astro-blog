@@ -1,0 +1,17 @@
+{
+  "event": "WordCamp Santa Clarita 2021",
+  "year": 2021,
+  "month": 7,
+  "role": "online",
+  "talk": "Static WordPress: how to make WordPress faster and more secure?",
+  "links": [
+    {
+      "label": "Video",
+      "url": "https://wordpress.tv/2021/11/09/maciek-palmowski-static-wordpress-how-to-make-wordpress-faster-and-more-secure/"
+    },
+    {
+      "label": "Speaker page",
+      "url": "https://santaclarita.wordcamp.org/2021/speaker/maciek-palmowski/"
+    }
+  ]
+}

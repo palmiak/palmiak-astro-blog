@@ -1,0 +1,256 @@
+---
+// Wrap a Markdown table: first column is the label, every other column is a series of numbers.
+// The table stays in the page as the accessible "data" view, so the chart never hides the numbers.
+interface Props {
+  title: string;
+  note?: string;
+  /** Start on the log scale (the toggle is offered whenever the values span 20x or more) */
+  scale?: 'linear' | 'log';
+}
+
+const { title, note, scale = 'linear' } = Astro.props;
+
+const html = await Astro.slots.render('default');
+
+const text = (s: string) =>
+  s
+    .replace(/<[^>]+>/g, '')
+    .replace(/&#x26;|&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&#x27;|&#39;/g, "'")
+    .replace(/&quot;/g, '"')
+    .trim();
+
+const rows = [...html.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)].map((tr) =>
+  [...tr[1].matchAll(/<t[hd][^>]*>([\s\S]*?)<\/t[hd]>/g)].map((c) => c[1].trim())
+);
+const [head, ...body] = rows;
+const series = head.slice(1).map(text);
+
+const items = body.map(([label, ...cells]) => ({
+  label,
+  plain: text(label),
+  values: cells.map((c) => ({ text: text(c), n: parseFloat(text(c).replace(/,/g, '')) })),
+}));
+
+const all = items.flatMap((i) => i.values.map((v) => v.n)).filter((n) => n > 0);
+const max = Math.max(...all);
+const min = Math.min(...all);
+const logBase = min / 2;
+const canLog = max / min >= 20;
+const lin = (n: number) => n / max;
+const log = (n: number) => Math.log(n / logBase) / Math.log(max / logBase);
+
+const grouped = series.length > 1;
+const lead = items.map((i) => i.values[0].n);
+const fastest = Math.min(...lead);
+---
+<figure class="chart" data-chart data-scale={canLog && scale === 'log' ? 'log' : 'linear'} data-grouped={grouped ? '' : undefined}>
+  <figcaption class="chart-head">
+    <div class="chart-title">
+      <span class="chart-name">{title}</span>
+      {note && <span class="chart-note">{note}</span>}
+    </div>
+    {canLog && (
+      <div class="chart-seg" role="group" aria-label="Scale">
+        <button type="button" data-set-scale="linear" aria-pressed={scale === 'log' ? 'false' : 'true'}>Linear</button>
+        <button type="button" data-set-scale="log" aria-pressed={scale === 'log' ? 'true' : 'false'}>Log</button>
+      </div>
+    )}
+  </figcaption>
+
+  {grouped && (
+    <ul class="chart-legend" aria-hidden="true">
+      {series.map((s, i) => (
+        <li><i class={`key s${i}`}></i>{s}</li>
+      ))}
+    </ul>
+  )}
+
+  <ul class="chart-rows">
+    {items.map((item, r) => (
+      <li
+        class={`row${!grouped && item.values[0].n === fastest ? ' best' : ''}`}
+        tabindex="0"
+        data-row
+        data-detail={
+          grouped
+            ? (() => {
+                const [a, b] = item.values;
+                const change = Math.round(((b.n - a.n) / a.n) * 100);
+                return `${item.plain}: ${a.text} to ${b.text}, ${change < 0 ? `${Math.abs(change)}% faster` : `${change}% slower`}`;
+              })()
+            : `${item.plain}: ${item.values[0].text}${
+                item.values[0].n === fastest ? ', the fastest here' : `, ${(item.values[0].n / fastest).toFixed(item.values[0].n / fastest >= 10 ? 0 : 1)}x the fastest here`
+              }`
+        }
+      >
+        <span class="row-label" set:html={item.label} />
+        <span class="row-values">
+          {item.values.map((v, i) => (
+            <span class={`row-value s${i}`}>{v.text}</span>
+          ))}
+        </span>
+        <span class="row-bars" aria-hidden="true">
+          {item.values.map((v, i) => (
+            <span class="track">
+              <span class="grow">
+                <span class={`bar s${i}`} style={`--lin:${lin(v.n).toFixed(4)};--log:${log(v.n).toFixed(4)}`}></span>
+              </span>
+            </span>
+          ))}
+        </span>
+      </li>
+    ))}
+  </ul>
+
+  <p class="chart-readout" data-readout aria-live="polite">Hover or focus a row for details.</p>
+
+  <details class="chart-data">
+    <summary>Data table</summary>
+    <div class="chart-table"><Fragment set:html={html} /></div>
+  </details>
+</figure>
+
+<style>
+.chart {
+  margin: var(--space-6) 0;
+  padding: var(--space-4);
+  background: var(--surface-200);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-body);
+  --s0: var(--border-control);
+  --s1: var(--accent);
+  --single: var(--ink-muted);
+}
+/* Reset the prose figcaption rule (centred, with a top margin) */
+.chart-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4); margin: 0; text-align: left; }
+.chart-title { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.chart-name { font: 500 13px/16px var(--font-body); color: var(--ink); }
+.chart-note { font: 400 12px/16px var(--font-body); color: var(--ink-subtle); }
+
+/* Linear / log switch */
+.chart-seg { display: inline-flex; flex-shrink: 0; border: 1px solid var(--border-control); border-radius: var(--radius-md); overflow: hidden; }
+.chart-seg button {
+  height: 24px; padding: 0 10px; border: 0; background: transparent; cursor: pointer;
+  font: 500 12px/16px var(--font-body); color: var(--ink-muted);
+  transition: background var(--dur-hover) var(--ease-in), color var(--dur-hover) var(--ease-in);
+}
+.chart-seg button + button { border-left: 1px solid var(--border-control); }
+.chart-seg button:hover { background: var(--surface-300); color: var(--ink); }
+.chart-seg button[aria-pressed="true"] { background: var(--surface-400); color: var(--ink); }
+.chart-seg button:focus-visible, .chart-data summary:focus-visible, .row:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+
+.chart-legend { display: flex; gap: var(--space-4); margin: var(--space-3) 0 0; padding: 0; list-style: none; font: 400 12px/16px var(--font-body); color: var(--ink-muted); }
+.chart-legend li { display: flex; align-items: center; gap: 6px; margin: 0; padding: 0; }
+.chart-legend li::marker { content: none; }
+.key { width: 8px; height: 8px; border-radius: 2px; background: var(--s0); }
+.key.s1 { background: var(--s1); }
+
+.chart-rows { display: flex; flex-direction: column; gap: 2px; margin: var(--space-3) calc(var(--space-2) * -1) 0; padding: 0; list-style: none; }
+.row {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--space-4); row-gap: 6px;
+  margin: 0; padding: 6px var(--space-2); border-radius: var(--radius-md);
+  transition: background var(--dur-hover) var(--ease-in), opacity var(--dur-fade) var(--ease-in);
+}
+.row::marker { content: none; }
+.row-label { font: 400 13px/20px var(--font-body); color: var(--ink-muted); min-width: 0; }
+.row-label :global(a) { color: inherit; text-decoration: underline; text-decoration-color: var(--border-control); text-underline-offset: 3px; }
+.row-label :global(a:hover) { color: var(--accent-hover); }
+.row-values { display: flex; gap: var(--space-3); font: 500 12.5px/20px var(--font-mono); color: var(--ink); white-space: nowrap; }
+.row-value.s0 { color: var(--ink-subtle); }
+.chart:not([data-grouped]) .row-value { color: var(--ink); }
+.row-bars { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 3px; }
+.track { display: block; height: 6px; background: var(--surface-300); border-radius: var(--radius-sm); overflow: hidden; }
+.grow { display: block; height: 100%; transform-origin: left center; }
+.bar {
+  display: block; height: 100%; border-radius: var(--radius-sm);
+  background: var(--single); transform-origin: left center;
+  transform: scaleX(var(--lin));
+  transition: transform var(--dur-panel) var(--ease-in), background var(--dur-hover) var(--ease-in);
+}
+.chart[data-scale="log"] .bar { transform: scaleX(var(--log)); }
+.chart[data-grouped] .bar.s0 { background: var(--s0); }
+.chart[data-grouped] .bar.s1 { background: var(--s1); }
+/* Pink marks the fastest bar, or the "after" series in a before/after chart */
+.chart:not([data-grouped]) .row.best .bar { background: var(--accent); }
+
+/* Hover and focus: lift the row, dim the rest */
+.row:hover, .row:focus-visible { background: var(--surface-300); }
+.row:hover .bar, .row:focus-visible .bar { background: var(--accent); }
+.chart[data-grouped] .row:hover .bar.s0, .chart[data-grouped] .row:focus-visible .bar.s0 { background: var(--ink); }
+.chart[data-grouped] .row:hover .bar.s1, .chart[data-grouped] .row:focus-visible .bar.s1 { background: var(--accent-hover); }
+.chart-rows:has(.row:hover) .row:not(:hover),
+.chart-rows:has(.row:focus-visible) .row:not(:focus-visible) { opacity: 0.45; }
+
+.chart-readout { margin: var(--space-3) 0 0; min-height: 16px; font: 400 12px/16px var(--font-mono); color: var(--ink-subtle); }
+.chart-readout.live { color: var(--ink-muted); }
+
+/* The table behind the chart */
+.chart-data { margin-top: var(--space-3); border-top: 1px solid var(--border-subtle); padding-top: var(--space-3); }
+.chart-data summary {
+  display: inline-block; cursor: pointer; border-radius: var(--radius-sm);
+  font: 500 12px/16px var(--font-body); color: var(--ink-subtle); list-style: none;
+  transition: color var(--dur-hover) var(--ease-in);
+}
+.chart-data summary::-webkit-details-marker { display: none; }
+.chart-data summary:hover { color: var(--ink); }
+.chart-data summary::before { content: "+ "; font-family: var(--font-mono); }
+.chart-data[open] summary::before { content: "− "; }
+.chart-table { margin-top: var(--space-3); overflow-x: auto; }
+.chart-table :global(table) { font-size: 13px; line-height: 20px; }
+.chart-table :global(th), .chart-table :global(td) { padding: 6px 12px 6px 0; white-space: nowrap; }
+.chart-table :global(td:first-child) { white-space: normal; }
+.chart-table :global(strong) { font-family: var(--font-mono); font-weight: 500; font-size: 12.5px; }
+
+@media (max-width: 480px) {
+  .chart-head { flex-direction: column; gap: var(--space-3); }
+}
+
+/* Bars draw in as the chart scrolls into view; without support or with reduced motion they are simply there */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .grow {
+      animation: bar-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 10% entry 90%;
+    }
+  }
+}
+@keyframes bar-draw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+</style>
+
+<script>
+  // Scale switch and the readout under the chart
+  const setup = (chart: HTMLElement) => {
+    const readout = chart.querySelector<HTMLElement>('[data-readout]');
+    const idle = readout?.textContent ?? '';
+
+    chart.querySelectorAll<HTMLButtonElement>('[data-set-scale]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        chart.dataset.scale = btn.dataset.setScale;
+        chart.querySelectorAll('[data-set-scale]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      });
+    });
+
+    const show = (row: HTMLElement | null) => {
+      if (!readout) return;
+      readout.textContent = row?.dataset.detail ?? idle;
+      readout.classList.toggle('live', !!row);
+    };
+    chart.querySelectorAll<HTMLElement>('[data-row]').forEach((row) => {
+      row.addEventListener('pointerenter', () => show(row));
+      row.addEventListener('focus', () => show(row));
+      row.addEventListener('pointerleave', () => show(null));
+      row.addEventListener('blur', () => show(null));
+    });
+  };
+  document.querySelectorAll<HTMLElement>('[data-chart]').forEach(setup);
+</script>

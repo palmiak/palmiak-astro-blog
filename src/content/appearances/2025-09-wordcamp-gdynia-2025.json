@@ -1,0 +1,26 @@
+{
+  "event": "WordCamp Gdynia 2025",
+  "year": 2025,
+  "month": 9,
+  "role": "speaker",
+  "organiser": true,
+  "city": "Gdynia",
+  "country": "Poland",
+  "lat": 54.5189,
+  "lon": 18.5305,
+  "talk": "Automating the Patch: AI Agents for Code Security and Beyond (with Rashmi Nagpal)",
+  "links": [
+    {
+      "label": "Video",
+      "url": "https://wordpress.tv/2025/09/30/automating-the-patch-ai-agents-for-code-security-and-beyond/"
+    },
+    {
+      "label": "Lessons learned",
+      "url": "/blog/from-polish-only-to-bilingual-lessons-from-wordcamp-gdynia/"
+    },
+    {
+      "label": "Event",
+      "url": "https://crossweb.pl/wydarzenia/wordcamp-gdynia-2025-wordpress-conference/"
+    }
+  ]
+}

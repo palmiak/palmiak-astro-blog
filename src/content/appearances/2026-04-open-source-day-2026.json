@@ -1,0 +1,21 @@
+{
+  "event": "Open Source Day 2026",
+  "year": 2026,
+  "month": 4,
+  "role": "speaker",
+  "city": "Florence",
+  "country": "Italy",
+  "lat": 43.7696,
+  "lon": 11.2558,
+  "talk": "Build Once, Switch Anytime: CMS Freedom with Astro Collections",
+  "links": [
+    {
+      "label": "Resources",
+      "url": "/events/open-source-day-2026/"
+    },
+    {
+      "label": "Event",
+      "url": "https://osday.dev/"
+    }
+  ]
+}

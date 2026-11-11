@@ -1,0 +1,25 @@
+{
+  "event": "WordCamp Europe 2026",
+  "year": 2026,
+  "month": 6,
+  "role": "speaker",
+  "city": "Kraków",
+  "country": "Poland",
+  "lat": 50.0647,
+  "lon": 19.945,
+  "talk": "Testing the promise: does secure hosting deliver?",
+  "links": [
+    {
+      "label": "Video",
+      "url": "https://wordpress.tv/2026/06/08/testing-the-promise-does-secure-hosting-deliver/"
+    },
+    {
+      "label": "Resources",
+      "url": "/events/wordcamp-europe-2026/"
+    },
+    {
+      "label": "Event",
+      "url": "https://europe.wordcamp.org/2026/"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "event": "WordUp Warszawa Pro #1",
+  "year": 2019,
+  "month": 1,
+  "role": "meetup",
+  "city": "Warsaw",
+  "country": "Poland",
+  "lat": 52.2297,
+  "lon": 21.0122,
+  "links": [
+    {
+      "label": "Event",
+      "url": "https://crossweb.pl/wydarzenia/wordup-warszawa-pro-1-2019/"
+    }
+  ]
+}

@@ -9,20 +9,25 @@ interface Props {
   caption?: string;
 }
 
-const { src, alt = '', width = '', caption } = Astro.props;
+const { src, alt: altProp, width = '', caption } = Astro.props;
+// Always describe the image: the alt text, else the caption
+const alt = altProp ?? caption ?? '';
 
 // Strip /assets/ prefix to look up from src/assets/
 const assetPath = src.startsWith('/assets/') ? src.slice('/assets/'.length) : src;
 const isGif = assetPath.endsWith('.gif');
 
 const images = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/arts/**/*.{jpg,jpeg,png,webp,svg}'
+  '/src/assets/**/*.{jpg,jpeg,png,webp,svg}'
 );
+// Animated GIFs are served as-is (the image service would flatten them), but still fingerprinted by the build
+const gifs = import.meta.glob<{ default: ImageMetadata }>('/src/assets/**/*.gif');
 
 const lookupKey = `/src/assets/${assetPath}`;
 const imgMetadata = !isGif && images[lookupKey]
   ? (await images[lookupKey]()).default
   : null;
+const gifMetadata = isGif && gifs[lookupKey] ? (await gifs[lookupKey]()).default : null;
 
 const imgWidths = width === 'wide'
   ? [800, 1110]
@@ -52,6 +57,8 @@ const imgClass = width === 'narrow'
       }
       class={imgClass}
     />
+  ) : gifMetadata ? (
+    <img src={gifMetadata.src} width={gifMetadata.width} height={gifMetadata.height} alt={alt} loading="lazy" class={imgClass} />
   ) : (
     <img src={src} alt={alt} loading="lazy" class={imgClass} />
   )}
@@ -61,21 +68,18 @@ const imgClass = width === 'narrow'
 </figure>
 
 <style>
-.post-figure {
-  margin: 36px 0;
-}
+.post-figure { margin: 2.25rem 0; }
 .post-figure img {
   width: 100%;
-  border-radius: 6px;
+  border-radius: var(--radius-lg);
   display: block;
-  border: 1px solid var(--bd);
+  border: 1px solid var(--border);
 }
 .post-figcaption {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.08em;
-  color: var(--dim);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ink-subtle);
   text-align: center;
-  margin-top: 10px;
+  margin-top: var(--space-3);
 }
 </style>

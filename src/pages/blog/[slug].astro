@@ -4,7 +4,7 @@ import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import Layout from '../../layouts/Layout.astro';
 import { u } from '../../utils/url';
-import GradBar from '../../components/GradBar.astro';
+import { SITE, abs } from '../../utils/site';
 import Tag from '../../components/Tag.astro';
 import NewsletterBox from '../../components/NewsletterBox.astro';
 
@@ -17,12 +17,13 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await post.render();
+const { Content, headings } = await post.render();
+const outline = headings.filter((h) => h.depth === 2);
 
 const { title, intro, description, pubDate, updatedDate, thumbnail, tags } = post.data;
 
 const allImages = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/arts/**/*.{jpg,jpeg,png,webp,svg}'
+  '/src/assets/**/*.{jpg,jpeg,png,webp,svg}'
 );
 const thumbKey = thumbnail ? `/src/assets/${thumbnail}` : null;
 const thumbMetadata = thumbKey && allImages[thumbKey]
@@ -34,7 +35,7 @@ const dateStr = pubDate.toLocaleDateString('en-GB', {
   month: 'short',
   year: 'numeric',
 });
-const currentUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const currentUrl = abs(Astro.url.pathname);
 
 // Prev/next posts
 const allPosts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
@@ -44,7 +45,7 @@ const currentIndex = allPosts.findIndex((p) => p.slug === post.slug);
 const prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
 const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
 
-const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://maciekpalmowski.dev';
+const siteUrl = SITE;
 
 const articleJsonLd = JSON.stringify({
   '@context': 'https://schema.org',
@@ -66,7 +67,9 @@ const articleJsonLd = JSON.stringify({
     url: siteUrl,
   },
   mainEntityOfPage: { '@type': 'WebPage', '@id': currentUrl },
-  image: new URL(u(`/blog/${post.slug}/og.png`), Astro.site).toString(),
+  image: abs(u(`/blog/${post.slug}/og.png`)),
+  inLanguage: 'en',
+  articleSection: tags[0],
   keywords: tags.join(', '),
 });
 
@@ -74,8 +77,8 @@ const breadcrumbJsonLd = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
-    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${siteUrl}/blog` },
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${siteUrl}/blog/` },
     { '@type': 'ListItem', position: 3, name: title, item: currentUrl },
   ],
 });
@@ -84,74 +87,78 @@ const breadcrumbJsonLd = JSON.stringify({
   title={title}
   description={description}
   ogImage={u(`/blog/${post.slug}/og.png`)}
+  ogImageAlt={title}
+  ogType="article"
+  markdownUrl={abs(u(`/blog/${post.slug}.md`))}
+  article={{ published: pubDate, modified: updatedDate, tags }}
   isPost={true}
 >
-  <!-- Breadcrumb -->
-  <div class="crumb-bar">
-    <div class="col-narrow">
-      <div class="crumb-inner">
+  <header class="post-header">
+    <div class="wrap">
+      <nav class="crumb" aria-label="Breadcrumb">
         <a href={u('/')} class="crumb-link">Home</a>
-        <span>/</span>
+        <span aria-hidden="true">/</span>
         <a href={u('/blog')} class="crumb-link">Blog</a>
-        <span>/</span>
-        <span class="crumb-cur">{title}</span>
-      </div>
-    </div>
-  </div>
+      </nav>
 
-  <!-- Post header -->
-  <div class="post-header">
-    <div class="col-narrow">
       <div class="post-top">
+        <time class="post-date" datetime={pubDate.toISOString()}>{dateStr}</time>
         {tags.slice(0, 2).map((tag) => <Tag tag={tag} />)}
-        {tags.length > 0 && <span class="dot-sep">·</span>}
-        <span class="post-date">{dateStr}</span>
       </div>
-      <h1 class="post-title">{title}</h1>
+      <h1 class="post-title t-display">{title}</h1>
       {intro && <p class="post-lede">{intro}</p>}
     </div>
 
-    <!-- Hero image — wider than text column -->
     {thumbnail && (
-      <div class="hero-img-wrap col-wide">
-        {thumbMetadata ? (
-          <Image
-            src={thumbMetadata}
-            width={1360}
-            height={595}
-            alt={title}
-            class="hero-img"
-            loading="eager"
-          />
-        ) : (
-          <img src={`/assets/${thumbnail}`} width="1360" height="595" alt={title} class="hero-img" />
-        )}
+      <div class="wrap hero-img-wrap">
+        <div class="hero-img-frame">
+          {thumbMetadata ? (
+            <Image
+              src={thumbMetadata}
+              width={1360}
+              height={595}
+              alt={title}
+              class="hero-img"
+              loading="eager"
+              data-zoom
+            />
+          ) : (
+            <img src={`/assets/${thumbnail}`} width="1360" height="595" alt={title} class="hero-img" data-zoom />
+          )}
+        </div>
       </div>
     )}
-  </div>
+  </header>
 
-  <GradBar />
-
-  <!-- Two-column: article + sidebar -->
-  <div class="editorial-wrap">
+  <div class="wrap editorial-wrap">
     <div class="editorial-inner">
-      <!-- Main article content -->
       <article class="article-col">
         <div class="prose-post">
           <Content />
         </div>
       </article>
 
-      <!-- Sidebar -->
-      <aside class="article-sidebar">
-        <!-- Author card -->
+      <aside class="article-sidebar" aria-label="About this post">
         <div class="sidebar-section sidebar-author">
-          <img class="author-av" src={u('/assets/me.jpg')} alt="Maciek Palmowski" width="48" height="48" />
-          <div class="author-name">Maciek Palmowski</div>
-          <div class="author-role">mVDP Growth Manager<br/>Patchstack</div>
+          <img class="author-av" src={u('/assets/me.jpg')} alt="" width="40" height="40" />
+          <div>
+            <div class="author-name">Maciek Palmowski</div>
+            <div class="author-role">Growth Engineer, Patchstack</div>
+          </div>
         </div>
 
-        <!-- Date -->
+        {outline.length >= 2 && (
+          <div class="sidebar-section sidebar-toc" data-toc>
+            <div class="sidebar-label">On this page</div>
+            <nav class="toc-box" aria-label="On this page" data-lenis-prevent>
+              <span class="toc-marker" aria-hidden="true"></span>
+              <ol class="toc-list">
+                {outline.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}
+              </ol>
+            </nav>
+          </div>
+        )}
+
         <div class="sidebar-section">
           <div class="sidebar-label">Published</div>
           <div class="sidebar-value">{dateStr}</div>
@@ -162,9 +169,8 @@ const breadcrumbJsonLd = JSON.stringify({
           )}
         </div>
 
-        <!-- Tags -->
         {tags.length > 0 && (
-          <div class="sidebar-section sidebar-tags">
+          <div class="sidebar-section">
             <div class="sidebar-label">Topics</div>
             <div class="sidebar-tag-list">
               {tags.map((tag) => (
@@ -174,67 +180,55 @@ const breadcrumbJsonLd = JSON.stringify({
           </div>
         )}
 
-        <!-- Share -->
-        <div class="sidebar-section sidebar-share">
+        <div class="sidebar-section">
           <div class="sidebar-label">Share</div>
           <div class="share-row">
             <a
-              class="share-btn"
+              class="btn btn-secondary"
               href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(currentUrl)}`}
               target="_blank"
               rel="noopener"
-            >X / Twitter</a>
+            >Share on X</a>
             <a
-              class="share-btn"
+              class="btn btn-secondary"
               href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(currentUrl)}`}
               target="_blank"
               rel="noopener"
-            >LinkedIn</a>
+            >Share on LinkedIn</a>
           </div>
         </div>
 
-        <!-- Comments link -->
         <div class="sidebar-section">
-          <a href="#discussion" class="sidebar-comments-link">
-            <span class="sidebar-label" style="margin-bottom:0">Discussion</span>
-            <span class="sidebar-comments-arrow">↓ Leave a comment</span>
-          </a>
+          <a href="#discussion" class="btn btn-ghost jump">Jump to comments</a>
         </div>
       </aside>
     </div>
   </div>
 
-  <!-- Newsletter (right after reading) -->
   <NewsletterBox variant="post" />
 
-  <!-- Prev / Next nav -->
   {(prevPost || nextPost) && (
-    <div class="col-narrow">
+    <nav class="wrap post-nav-wrap" aria-label="More posts">
       <div class="post-nav">
         {prevPost ? (
           <a class="pnav prev" href={u(`/blog/${prevPost.slug}`)}>
-            <div class="pnav-dir">← Previous</div>
-            {prevPost.data.tags[0] && <div class="pnav-tag">{prevPost.data.tags[0]}</div>}
-            <div class="pnav-title">{prevPost.data.title}</div>
+            <div class="pnav-dir">Previous post</div>
+            <div class="pnav-title t-title-2">{prevPost.data.title}</div>
           </a>
-        ) : <div class="pnav prev empty"></div>}
+        ) : <div class="pnav empty"></div>}
 
         {nextPost ? (
           <a class="pnav next" href={u(`/blog/${nextPost.slug}`)}>
-            <div class="pnav-dir">Next →</div>
-            {nextPost.data.tags[0] && <div class="pnav-tag">{nextPost.data.tags[0]}</div>}
-            <div class="pnav-title">{nextPost.data.title}</div>
+            <div class="pnav-dir">Next post</div>
+            <div class="pnav-title t-title-2">{nextPost.data.title}</div>
           </a>
-        ) : <div class="pnav next empty"></div>}
+        ) : <div class="pnav empty"></div>}
       </div>
-    </div>
+    </nav>
   )}
 
-  <GradBar />
-
-  <!-- Comments -->
-  <div class="col-narrow comments-section" id="discussion">
-    <h2 class="comments-title">Share your thoughts</h2>
+  <section class="wrap wrap-narrow comments-section hairline" id="discussion">
+    <h2 class="t-title-2 comments-title">Share your thoughts</h2>
     <script
       src="https://giscus.app/client.js"
       data-repo="palmiak/blog-comments"
@@ -252,396 +246,152 @@ const breadcrumbJsonLd = JSON.stringify({
       crossorigin="anonymous"
       async
     ></script>
-  </div>
+  </section>
 
   <script type="application/ld+json" is:inline set:html={articleJsonLd} />
   <script type="application/ld+json" is:inline set:html={breadcrumbJsonLd} />
 
   <script>
     import '../../scripts/main.ts';
+    import '../../scripts/toc.ts';
   </script>
 </Layout>
 
 <style>
-/* Columns */
-.col-narrow {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
-
-.col-wide {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
-
-/* Breadcrumb */
-.crumb-bar {
-  padding: 18px 0;
-  border-bottom: 1px solid var(--bd);
-}
-.crumb-inner {
+/* Header */
+.post-header { padding-top: clamp(32px, 5vw, 56px); }
+.crumb {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  color: var(--dim);
-  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-size: 13px;
+  line-height: 16px;
+  color: var(--ink-subtle);
+  margin-bottom: clamp(32px, 6vw, 72px);
 }
-.crumb-link {
-  color: var(--dim);
-  text-decoration: none;
-  transition: color 0.15s;
-}
-.crumb-link:hover { color: var(--mid); }
-.crumb-cur { color: var(--mid); }
-
-/* Post header */
-.post-header {
-  padding: 56px 0 0;
-}
-.post-top {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 28px;
-  flex-wrap: wrap;
-}
-.dot-sep { color: var(--dim); font-size: 10px; }
-.post-date {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  color: var(--mid);
-  letter-spacing: 0.05em;
-}
-.post-title {
-  font-family: 'Unbounded', sans-serif;
-  font-size: clamp(28px, 5vw, 48px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-  color: var(--hi);
-  margin-bottom: 24px;
-}
+.crumb-link { color: var(--ink-muted); text-decoration: none; transition: color var(--dur-hover) var(--ease-in); }
+.crumb-link:hover { color: var(--ink); }
+.post-top { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-6); flex-wrap: wrap; }
+.post-date { font-family: var(--font-mono); font-size: 12.5px; line-height: 20px; color: var(--ink-subtle); }
+.post-title { max-width: 18ch; font-size: clamp(40px, 7vw, 72px); }
 .post-lede {
-  font-family: 'Instrument Serif', serif;
-  font-size: clamp(20px, 2.5vw, 26px);
-  font-style: italic;
-  line-height: 1.55;
-  color: var(--mid);
-  max-width: 640px;
-  margin-bottom: 44px;
+  max-width: 56ch;
+  margin-top: var(--space-6);
+  font-size: clamp(17px, 2vw, 20px);
+  line-height: 1.6;
+  color: var(--ink-muted);
 }
 
 /* Hero image */
-.hero-img-wrap {
-  margin-top: 0;
+.hero-img-wrap { margin-top: clamp(32px, 5vw, 56px); }
+.hero-img-frame {
   overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
 }
-.hero-img {
-  width: 100%;
-  aspect-ratio: 16 / 7;
-  object-fit: cover;
-  display: block;
-  border: 1px solid var(--bd);
-  border-radius: 4px;
-}
+.hero-img { width: 100%; aspect-ratio: 16 / 7; object-fit: cover; display: block; }
 
-/* Editorial two-column layout */
-.editorial-wrap {
-  padding: 0 24px;
-}
+/* Two columns: article + sidebar */
 .editorial-inner {
-  max-width: 1100px;
-  margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 280px;
-  gap: 64px;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: clamp(40px, 6vw, 88px);
   align-items: start;
-  padding: 56px 0 64px;
+  padding-block: clamp(40px, 6vw, 72px) clamp(48px, 7vw, 88px);
 }
+.article-col { min-width: 0; max-width: 700px; }
+.article-col :global(.image.wide) { position: static; left: 0; transform: none; width: 100%; }
 
-/* Article column */
-.article-col {
-  min-width: 0;
-}
-
-/* Wide PostImages break out via transform in global.css — reset to full column width */
-.article-col :global(.image.wide) {
-  position: static;
-  left: 0;
-  transform: none;
-  width: 100%;
-}
-
-/* Sidebar */
 .article-sidebar {
   position: sticky;
-  /* 54px sticky header + 24px breathing room */
-  top: calc(54px + 24px);
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+  top: calc(var(--frame) + var(--header-h) + 24px);
+  order: 2;
 }
+.sidebar-section { padding: var(--space-4) 0; border-top: 1px solid var(--border-subtle); }
+.sidebar-section:first-child { border-top: 0; padding-top: 0; }
+.sidebar-label { font-size: 12px; line-height: 16px; color: var(--ink-subtle); margin-bottom: var(--space-2); }
+.sidebar-value { font-family: var(--font-mono); font-size: 12.5px; line-height: 20px; color: var(--ink); }
+.sidebar-updated { color: var(--ink-subtle); }
 
-.sidebar-section {
-  padding: 20px 0;
-  border-bottom: 1px solid var(--bd);
-}
-.sidebar-section:first-child {
-  border-top: 1px solid var(--bd);
-}
+.sidebar-author { display: flex; align-items: center; gap: var(--space-3); }
+.author-av { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; object-position: center top; border: 1px solid var(--border); flex-shrink: 0; }
+.author-name { font-size: 14px; line-height: 20px; font-weight: 500; color: var(--ink); }
+.author-role { font-size: 12px; line-height: 16px; color: var(--ink-subtle); }
 
-.sidebar-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.14em;
-  color: var(--dim);
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
-.sidebar-value {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  color: var(--mid);
-  letter-spacing: 0.04em;
-}
-.sidebar-updated {
-  margin-top: 4px;
-  color: var(--dim);
-  font-size: 10px;
-}
+.sidebar-tag-list { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.sidebar-tag-link { text-decoration: none; border-radius: var(--radius-sm); }
+.sidebar-tag-link :global(.badge) { transition: background-color var(--dur-hover) var(--ease-in), color var(--dur-hover) var(--ease-in); }
+.sidebar-tag-link:hover :global(.badge) { background: var(--surface-200); color: var(--ink); }
 
-/* Sidebar author */
-.sidebar-author {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.author-av {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  object-fit: cover;
-  object-position: center top;
-  border: 1px solid var(--bd2);
-  margin-bottom: 4px;
-}
-.author-name {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--hi);
-  line-height: 1.3;
-}
-.author-role {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  color: var(--dim);
-  letter-spacing: 0.04em;
-  line-height: 1.6;
-}
+.share-row { display: flex; flex-direction: column; gap: var(--space-2); align-items: stretch; }
+.jump { margin-left: -12px; }
 
-/* Sidebar tags */
-.sidebar-tag-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+/* On this page */
+.toc-box {
+  position: relative;
+  max-height: max(160px, calc(100vh - 460px));
+  overflow-y: auto;
+  scrollbar-width: none;
+  border-left: 1px solid var(--border);
 }
-.sidebar-tag-link { text-decoration: none; }
-
-/* Share */
-.share-row {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.share-btn {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  padding: 7px 12px;
-  border-radius: 3px;
-  border: 1px solid var(--bd2);
-  color: var(--mid);
-  background: transparent;
-  cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
+.toc-box::-webkit-scrollbar { display: none; }
+.toc-list { list-style: none; }
+.toc-list :global(a) {
+  display: block;
+  padding: 4px 0 4px 12px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-subtle);
   text-decoration: none;
-  text-align: center;
+  transition: color var(--dur-hover) var(--ease-in);
 }
-.share-btn:hover { color: var(--hi); border-color: rgba(255,255,255,0.25); }
+.toc-list :global(a:hover) { color: var(--ink-muted); }
+.toc-list :global(a[aria-current]) { color: var(--ink); }
+.toc-marker {
+  position: absolute;
+  left: -1px;
+  top: 0;
+  width: 2px;
+  height: 20px;
+  background: var(--accent);
+  border-radius: 1px;
+  opacity: 0;
+  transition: transform var(--dur-panel) var(--ease-in), height var(--dur-panel) var(--ease-in), opacity var(--dur-fade) var(--ease-in);
+}
 
-/* Prev / Next */
-.post-nav {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  border-top: 1px solid var(--bd);
-  border-bottom: 1px solid var(--bd);
-}
+/* Prev / next */
+.post-nav-wrap { padding-bottom: var(--space-12); }
+.post-nav { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 .pnav {
-  padding: 28px 20px;
-  transition: background 0.12s;
-  border-right: 1px solid var(--bd);
+  display: block;
+  padding: var(--space-8) var(--space-6);
   text-decoration: none;
   color: inherit;
-  display: block;
+  transition: background-color var(--dur-hover) var(--ease-in);
 }
-.pnav.next {
-  border-right: none;
-  text-align: right;
-}
-.pnav.empty {
-  background: transparent;
-}
-.pnav:not(.empty):hover { background: var(--bg1); }
-.pnav:not(.empty):hover .pnav-title { color: var(--hi); }
-.pnav-dir {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  color: var(--dim);
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.pnav.next .pnav-dir { justify-content: flex-end; }
-.pnav-tag {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  color: var(--dim);
-  margin-bottom: 6px;
-}
-.pnav-title {
-  font-family: 'Unbounded', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: var(--mid);
-  line-height: 1.4;
-  transition: color 0.12s;
-}
-
-/* Comments link in sidebar */
-.sidebar-comments-link {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  text-decoration: none;
-}
-.sidebar-comments-link:hover .sidebar-comments-arrow {
-  color: var(--hi);
-}
-.sidebar-comments-arrow {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  color: var(--mid);
-  letter-spacing: 0.04em;
-  transition: color 0.15s;
-}
+.pnav + .pnav { border-left: 1px solid var(--border); }
+.pnav.next { text-align: right; }
+.pnav:not(.empty):hover { background: var(--surface-100); }
+.pnav-dir { font-size: 12px; line-height: 16px; color: var(--ink-subtle); margin-bottom: var(--space-3); }
+.pnav-title { transition: color var(--dur-hover) var(--ease-in); }
+.pnav:not(.empty):hover .pnav-title { color: var(--accent-hover); }
 
 /* Comments */
-.comments-section {
-  padding: 48px 24px;
-  scroll-margin-top: calc(54px + 16px);
+.comments-section { padding-block: var(--space-12) clamp(64px, 10vw, 112px); scroll-margin-top: calc(var(--frame) + var(--header-h)); }
+.comments-title { margin-bottom: var(--space-6); }
+
+@media (max-width: 960px) {
+  .editorial-inner { grid-template-columns: minmax(0, 1fr); }
+  .article-sidebar { position: static; order: -1; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-8); border-block: 1px solid var(--border-subtle); padding-block: var(--space-4); }
+  .sidebar-section { border-top: 0; padding: 0; }
+  .sidebar-section:nth-last-child(-n+2) { display: none; }
+  .sidebar-toc { display: none; }
+  .sidebar-author { flex-basis: 100%; }
 }
-.comments-title {
-  font-family: 'Unbounded', sans-serif;
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--hi);
-  margin-bottom: 24px;
-}
-
-/* Responsive: collapse to single column below 900px */
-@media (max-width: 900px) {
-  .editorial-inner {
-    grid-template-columns: 1fr;
-    gap: 40px;
-    padding: 40px 0 48px;
-  }
-
-  .article-sidebar {
-    position: static;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0;
-    border-top: 1px solid var(--bd);
-    border-bottom: 1px solid var(--bd);
-  }
-
-  .sidebar-section {
-    flex: 1 1 200px;
-    border-bottom: none;
-    border-right: 1px solid var(--bd);
-    padding: 16px 20px;
-  }
-  .sidebar-section:first-child {
-    border-top: none;
-  }
-  .sidebar-section:last-child {
-    border-right: none;
-  }
-
-  .sidebar-author {
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
-    flex: 100%;
-    border-right: none !important;
-    border-bottom: 1px solid var(--bd) !important;
-  }
-  .author-av {
-    width: 36px;
-    height: 36px;
-    margin-bottom: 0;
-    flex-shrink: 0;
-  }
-
-  .share-row {
-    flex-direction: row;
-  }
-
-  .post-title {
-    font-size: clamp(26px, 6vw, 40px);
-  }
-}
-
 @media (max-width: 640px) {
-  .post-nav {
-    grid-template-columns: 1fr;
-  }
-  .pnav {
-    border-right: none;
-    border-bottom: 1px solid var(--bd);
-    padding: 16px 0;
-  }
-  .pnav.next {
-    text-align: left;
-  }
-  .pnav.next .pnav-dir {
-    justify-content: flex-start;
-  }
-
-  .article-sidebar {
-    flex-direction: column;
-  }
-  .sidebar-section {
-    flex: none;
-    border-right: none;
-    border-bottom: 1px solid var(--bd);
-    padding: 14px 0;
-  }
-  .sidebar-section:first-child {
-    border-top: 1px solid var(--bd);
-  }
-  .sidebar-author {
-    border-bottom: 1px solid var(--bd) !important;
-  }
+  .post-nav { grid-template-columns: 1fr; }
+  .pnav + .pnav { border-left: 0; border-top: 1px solid var(--border); }
+  .pnav.next { text-align: left; }
+  .pnav.empty { display: none; }
 }
 </style>

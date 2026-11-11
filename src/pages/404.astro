@@ -1,0 +1,35 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import PostRow from '../components/PostRow.astro';
+import { getPosts, postDescription } from '../utils/content';
+import { u } from '../utils/url';
+
+const latest = (await getPosts()).slice(0, 3);
+---
+<Layout title="Page not found" description="This page doesn't exist or has moved." noindex>
+  <header class="wrap page-head">
+    <SectionHeader page title="Page not found" lede="The address may have changed, or the page never existed. Start from the home page or pick a recent post." />
+    <div class="actions">
+      <a class="btn btn-primary" href={u('/')}>Go to the home page</a>
+      <a class="btn btn-secondary" href={u('/blog')}>Browse all posts</a>
+    </div>
+  </header>
+
+  <div class="wrap posts-list">
+    {latest.map((post) => (
+      <PostRow
+        title={post.data.title}
+        slug={post.slug}
+        tags={post.data.tags}
+        excerpt={postDescription(post)}
+        pubDate={post.data.pubDate}
+      />
+    ))}
+  </div>
+</Layout>
+
+<style>
+.actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-6); }
+.posts-list { padding-bottom: clamp(64px, 10vw, 120px); }
+</style>

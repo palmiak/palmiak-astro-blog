@@ -1,0 +1,16 @@
+{
+  "event": "4Developers Łódź 2024",
+  "year": 2024,
+  "month": 12,
+  "role": "speaker",
+  "city": "Łódź",
+  "country": "Poland",
+  "lat": 51.7592,
+  "lon": 19.456,
+  "links": [
+    {
+      "label": "Event",
+      "url": "https://crossweb.pl/wydarzenia/4developers-lodz-2024/"
+    }
+  ]
+}

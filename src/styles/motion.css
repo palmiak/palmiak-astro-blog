@@ -1,0 +1,187 @@
+/*
+ * Scroll-driven motion. Progressive enhancement: without
+ * animation-timeline support, or with reduced motion, everything
+ * renders in its finished state.
+ */
+
+/* One orchestrated load sequence for the home hero */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-line > span {
+    display: block;
+    transform: translateY(105%);
+    animation: line-up 900ms var(--ease-in) forwards;
+    animation-delay: calc(120ms + var(--i, 0) * 110ms);
+  }
+  .hero-dot {
+    opacity: 0;
+    animation: fade-in-up 400ms var(--ease-in) 620ms forwards;
+  }
+  .hero-after {
+    opacity: 0;
+    animation: fade-in-up 700ms var(--ease-in) forwards;
+    animation-delay: calc(560ms + var(--i, 0) * 90ms);
+  }
+}
+
+@keyframes line-up {
+  to { transform: translateY(0); }
+}
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* Generic reveal: rise and fade as the element enters */
+    [data-reveal] {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+
+    /* Hairlines draw left to right */
+    [data-rule] { position: relative; border-top: 0 !important; }
+    [data-rule]::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 1px;
+      background: var(--border);
+      transform-origin: left center;
+      animation: rule-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 90%;
+    }
+
+    /* Header: full-width at the top, morphs into a container-width floating bar */
+    .header-bar {
+      animation: header-morph linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 90px;
+    }
+    .header-inner {
+      animation: header-inner-morph linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 90px;
+    }
+
+    /* Hero stays pinned; the bio leaves first, the name recedes as the next section arrives */
+    .hero {
+      position: sticky;
+      top: calc(var(--frame) + var(--header-h));
+      animation: hero-gone linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 56vh;
+    }
+    .hero-title {
+      animation: hero-title-out linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 56vh;
+    }
+    .hero-after-wrap {
+      animation: hero-after-out linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 20vh;
+    }
+
+    /* Words light up as the paragraph passes through the viewport */
+    .scroll-lit .w {
+      color: var(--ink-subtle);
+      animation: word-lit linear both;
+      animation-timeline: view();
+      animation-range: cover 16% cover 40%;
+    }
+    .scroll-lit .w.k {
+      animation-name: word-lit-accent;
+    }
+
+    /* Sign-off wipes in */
+    .signoff-title {
+      animation: wipe linear both;
+      animation-timeline: view();
+      animation-range: entry 10% entry 100%;
+    }
+
+    /* Images settle from slightly zoomed */
+    [data-zoom] {
+      animation: zoom-settle linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+  }
+}
+
+@keyframes header-morph {
+  from {
+    margin-inline: 0;
+    transform: translateY(0);
+    background-color: rgb(8 9 10 / 0);
+    border-color: transparent;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    -webkit-backdrop-filter: blur(0);
+    backdrop-filter: blur(0);
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0);
+  }
+  to {
+    margin-inline: max(12px, calc((100% - var(--col) - 50px) / 2));
+    transform: translateY(12px);
+    background-color: rgb(14 15 16 / 0.82);
+    border-color: var(--border);
+    border-radius: var(--radius-lg);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.5);
+  }
+}
+/* Keeps the logo and button on the page column while the bar narrows */
+@keyframes header-inner-morph {
+  from {
+    max-width: calc(var(--col) + var(--gutter) * 2);
+    padding-inline: calc(var(--gutter) - 1px);
+  }
+  to {
+    max-width: calc(var(--col) + 50px);
+    padding-inline: min(24px, max(calc(var(--gutter) - 13px), 8px));
+  }
+}
+@keyframes hero-gone {
+  to { visibility: hidden; }
+}
+@keyframes hero-title-out {
+  35% { opacity: 0.9; }
+  to { opacity: 0; transform: translateY(-6vh) scale(0.95); filter: blur(8px); }
+}
+@keyframes hero-after-out {
+  to { opacity: 0; transform: translateY(-3vh); }
+}
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes rule-draw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes word-lit {
+  to { color: var(--ink); }
+}
+@keyframes word-lit-accent {
+  to { color: var(--accent); }
+}
+@keyframes wipe {
+  from { clip-path: inset(0 100% 0 0); opacity: 0.4; }
+  to   { clip-path: inset(0 0 0 0); opacity: 1; }
+}
+@keyframes zoom-settle {
+  from { transform: scale(1.08); }
+  to   { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

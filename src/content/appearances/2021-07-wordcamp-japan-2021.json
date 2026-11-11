@@ -1,0 +1,13 @@
+{
+  "event": "WordCamp Japan 2021",
+  "year": 2021,
+  "month": 7,
+  "role": "online",
+  "talk": "Static WordPress: how to make WordPress faster and more secure?",
+  "links": [
+    {
+      "label": "Video",
+      "url": "https://wordpress.tv/2021/07/05/maciej-palmowski-static-wordpress-how-to-make-wordpress-faster-and-more-secure/"
+    }
+  ]
+}

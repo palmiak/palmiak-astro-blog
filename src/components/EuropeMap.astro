@@ -1,0 +1,116 @@
+---
+import { europe } from '../data/europe-grid';
+
+interface Place {
+  city: string;
+  country: string;
+  lat: number;
+  lon: number;
+  events: string[];
+}
+interface Props {
+  places: Place[];
+}
+const { places } = Astro.props;
+
+const CELL = 8;
+const W = europe.cols * CELL;
+const H = europe.rows * CELL;
+const cosPhi = Math.cos((europe.phi * Math.PI) / 180);
+const project = (lon: number, lat: number) => [
+  ((lon - europe.lon0) * cosPhi / europe.s) * CELL,
+  ((europe.lat1 - lat) / europe.s) * CELL,
+];
+
+// Land as one path of zero-length round-capped strokes (a dot per cell)
+let land = '';
+europe.grid.forEach((row, j) => {
+  [...row].forEach((c, i) => {
+    if (c === '1') land += `M${i * CELL + CELL / 2} ${j * CELL + CELL / 2}h0`;
+  });
+});
+
+// Label placement per city: [side, vertical nudge]. Polish cities sit close together, so they are set by hand.
+const placement: Record<string, ['start' | 'end', number]> = {
+  Pisa: ['end', 2], Florence: ['start', 2], Prague: ['end', 0], Nuremberg: ['end', 0], Berlin: ['end', 0],
+  Gdynia: ['end', 0], Gliwice: ['end', 6], 'Kraków': ['start', 11], Warsaw: ['start', 0], 'Łódź': ['start', 12],
+  Kalisz: ['end', 3], 'Poznań': ['end', 0], 'Wrocław': ['end', 3], Lublin: ['start', 0], Porto: ['start', 0],
+};
+
+const total = places.length;
+---
+<figure class="europe-map" style={`--ratio:${W} / ${H}`}>
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Map of Europe with ${total} cities where Maciek has spoken: ${places.map((p) => p.city).join(', ')}`}>
+    <path class="land" d={land} />
+    <g class="cities" aria-hidden="true">
+      {places.map((p, i) => {
+        const [x, y] = project(p.lon, p.lat);
+        const [anchor, nudge] = placement[p.city] ?? ['start', 0];
+        const dx = anchor === 'start' ? 8 : -8;
+        const dy = 3.5 + nudge;
+        return (
+          <g class="city" style={`--i:${i}`}>
+            <title>{`${p.city}, ${p.country}: ${p.events.join(', ')}`}</title>
+            <circle class="ring" cx={x} cy={y} r="6.5" />
+            <circle class="dot" cx={x} cy={y} r="3" />
+            <text x={x + dx} y={y + dy} text-anchor={anchor}>{p.city}</text>
+          </g>
+        );
+      })}
+    </g>
+  </svg>
+</figure>
+
+<style>
+.europe-map {
+  margin: 0;
+  container-type: inline-size;
+  view-timeline: --map block;
+}
+svg { width: 100%; height: auto; display: block; overflow: visible; }
+
+.land {
+  fill: none;
+  stroke: var(--ink-subtle);
+  stroke-opacity: 0.7;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+}
+.ring { fill: none; stroke: var(--accent); stroke-opacity: 0.4; stroke-width: 1; transform-box: fill-box; transform-origin: center; }
+.dot { fill: var(--accent); transform-box: fill-box; transform-origin: center; }
+.city text {
+  font: 500 8.2px/1 var(--font-body);
+  fill: var(--ink-muted);
+  paint-order: stroke;
+  stroke: var(--bg);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  transition: fill var(--dur-hover) var(--ease-in);
+}
+.city:hover text { fill: var(--ink); }
+
+/* The map draws in as it scrolls into view: land sweeps west to east, then cities land one by one */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .land {
+      animation: sweep linear both;
+      animation-timeline: --map;
+      animation-range: entry 0% entry 55%;
+    }
+    .city {
+      animation: pin linear both;
+      animation-timeline: --map;
+      animation-range: entry calc(38% + var(--i) * 2.6%) entry calc(52% + var(--i) * 2.6%);
+    }
+  }
+}
+@keyframes sweep {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+@keyframes pin {
+  from { opacity: 0; transform: scale(0.4); }
+  to { opacity: 1; transform: none; }
+}
+.city { transform-box: fill-box; transform-origin: center; }
+</style>

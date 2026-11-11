@@ -3,139 +3,54 @@ interface Props {
   variant?: 'home' | 'post';
 }
 const { variant = 'home' } = Astro.props;
+const href = 'https://newsletter.maciekpalmowski.dev/subscribe';
 ---
 
 {variant === 'home' ? (
-  <div class="nl-home">
-    <div class="col">
-      <div class="nl-label"><span class="nl-dot"></span>Newsletter</div>
-      <div class="nl-title">Stay in the loop</div>
-      <div class="nl-sub">Weekly signal from the WordPress and web world. No noise, no spam — just things worth reading.</div>
-      <a class="nl-btn" href="https://newsletter.maciekpalmowski.dev/subscribe">Subscribe →</a>
-      <div class="nl-note">Unsubscribe anytime · No spam</div>
-    </div>
-  </div>
-) : (
-  <div class="nl-post col">
-    <div class="nl-inner">
-      <div>
-        <div class="nl-label"><span class="nl-dot"></span>Newsletter</div>
-        <div class="nl-title-sm">Enjoyed this post?</div>
-        <div class="nl-sub-sm">Get new posts straight to your inbox. No spam, ever.</div>
+  <section class="nl-home section hairline">
+    <div class="wrap nl-grid">
+      <h2 class="t-title-1" data-reveal>Get new posts by email</h2>
+      <div class="nl-side" data-reveal>
+        <p class="nl-sub">Posts and links from the WordPress and web world, about once a week. No spam, and you can leave any time.</p>
+        <a class="btn btn-accent" href={href}>Subscribe</a>
       </div>
-      <a class="nl-btn-sm" href="https://newsletter.maciekpalmowski.dev/subscribe">Subscribe →</a>
+    </div>
+  </section>
+) : (
+  <div class="nl-post wrap wrap-narrow">
+    <div class="nl-inner" data-reveal>
+      <div>
+        <h2 class="t-title-3">Enjoyed this post?</h2>
+        <p class="nl-sub-sm">New posts straight to your inbox. No spam.</p>
+      </div>
+      <a class="btn btn-accent" href={href}>Subscribe</a>
     </div>
   </div>
 )}
 
 <style>
-/* Home variant */
-.nl-home {
-  padding: 52px 0;
-  border-bottom: 1px solid var(--bd);
+.nl-grid {
+  display: grid;
+  gap: var(--space-8);
+  align-items: end;
 }
-.col {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
-.nl-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  color: var(--mid);
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.nl-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #ff2d78, #a855f7);
-  flex-shrink: 0;
-}
-.nl-title {
-  font-family: 'Unbounded', sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: var(--hi);
-  margin-bottom: 10px;
-}
-.nl-sub {
-  font-size: 15px;
-  color: var(--mid);
-  line-height: 1.7;
-  font-weight: 300;
-  margin-bottom: 24px;
-}
-.nl-btn {
-  display: inline-block;
-  font-size: 11px;
-  padding: 11px 20px;
-  border-radius: 4px;
-  font-family: 'IBM Plex Mono', monospace;
-  letter-spacing: 0.08em;
-  border: 1px solid rgba(168,85,247,0.4);
-  color: #c084fc;
-  background: rgba(168,85,247,0.07);
-  cursor: pointer;
-  white-space: nowrap;
-  text-decoration: none;
-  transition: border-color 0.15s, background 0.15s;
-}
-.nl-btn:hover { border-color: rgba(168,85,247,0.65); background: rgba(168,85,247,0.12); }
-.nl-note {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  color: var(--dim);
-  letter-spacing: 0.1em;
-  margin-top: 12px;
+.nl-side { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-6); }
+.nl-sub { max-width: 44ch; font-size: 15px; line-height: 24px; color: var(--ink-muted); }
+@media (min-width: 860px) {
+  .nl-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr); gap: var(--space-12); }
 }
 
-/* Post variant */
-.nl-post {
-  padding: 48px 24px;
-  border-bottom: 1px solid var(--bd);
-}
+.nl-post { padding-block: var(--space-12); }
 .nl-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 40px;
+  gap: var(--space-6);
   flex-wrap: wrap;
+  padding: var(--space-6);
+  background: var(--surface-200);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
 }
-.nl-title-sm {
-  font-family: 'Unbounded', sans-serif;
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--hi);
-  margin-bottom: 6px;
-}
-.nl-sub-sm {
-  font-size: 14px;
-  color: var(--mid);
-  font-weight: 300;
-  line-height: 1.6;
-}
-.nl-btn-sm {
-  display: inline-block;
-  font-size: 11px;
-  padding: 10px 18px;
-  border-radius: 4px;
-  font-family: 'IBM Plex Mono', monospace;
-  letter-spacing: 0.08em;
-  border: 1px solid rgba(168,85,247,0.4);
-  color: #c084fc;
-  background: rgba(168,85,247,0.07);
-  cursor: pointer;
-  white-space: nowrap;
-  text-decoration: none;
-  flex-shrink: 0;
-  transition: border-color 0.15s, background 0.15s;
-}
-.nl-btn-sm:hover { border-color: rgba(168,85,247,0.65); background: rgba(168,85,247,0.12); }
+.nl-sub-sm { margin-top: 4px; font-size: 13px; line-height: 20px; color: var(--ink-muted); }
 </style>

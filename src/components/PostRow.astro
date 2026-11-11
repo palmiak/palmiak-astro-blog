@@ -18,100 +18,85 @@ const dateStr = pubDate.toLocaleDateString('en-GB', {
   year: 'numeric',
 });
 ---
-<a class="post-row" href={u(`/blog/${slug}`)}>
-  <div class="post-row-inner">
-    <div class="post-row-top">
+<a class="post-row" href={u(`/blog/${slug}`)} data-rule>
+  <div class="post-row-inner" data-reveal>
+    <div class="post-meta">
+      <time class="post-date" datetime={pubDate.toISOString()}>{dateStr}</time>
       {tags.slice(0, 1).map((tag) => <Tag tag={tag} />)}
-      {tags.length > 0 && <span class="dot-sep">·</span>}
-      <span class="post-date">{dateStr}</span>
     </div>
-    <div class="post-row-title">{title}</div>
-    {excerpt && <div class="post-row-excerpt">{excerpt}</div>}
-    <div class="read-more">
-      <span class="rm-dot"></span>
-      Read more
+    <div class="post-body">
+      <h3 class="post-row-title t-title-2">{title}</h3>
+      {excerpt && <p class="post-row-excerpt">{excerpt}</p>}
     </div>
+    <svg class="post-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M5 12h14" />
+      <path d="m13 6 6 6-6 6" />
+    </svg>
   </div>
 </a>
 
 <style>
 .post-row {
-  border-top: 1px solid var(--bd);
-  cursor: pointer;
-  transition: background 0.15s;
-  text-decoration: none;
   display: block;
+  border-top: 1px solid var(--border);
+  text-decoration: none;
   color: inherit;
-  margin: 0 -20px;
+  margin-inline: calc(var(--space-6) * -1);
+  border-radius: 0;
+  transition: background-color var(--dur-hover) var(--ease-in);
 }
-.post-row:last-child {
-  border-bottom: 1px solid var(--bd);
-}
-.post-row:hover {
-  background: var(--bg1);
-}
+.post-row:last-child { border-bottom: 1px solid var(--border); }
+.post-row:hover { background: var(--surface-100); }
+
 .post-row-inner {
-  padding: 28px 20px;
-  transition: transform 0.18s ease;
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr) 24px;
+  gap: var(--space-6);
+  align-items: start;
+  padding: var(--space-8) var(--space-6);
 }
-.post-row:hover .post-row-inner {
-  transform: translateX(4px);
-}
-.post-row-top {
+.post-meta {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-.dot-sep {
-  color: var(--dim);
-  font-size: 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding-top: 6px;
 }
 .post-date {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  color: var(--mid);
-  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ink-subtle);
 }
-.post-row-title {
-  font-family: 'Unbounded', sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  color: var(--hi);
-  line-height: 1.4;
-  margin-bottom: 10px;
-}
+.post-row-title { transition: transform var(--dur-fade) var(--ease-in); }
+.post-row:hover .post-row-title { transform: translateX(4px); }
 .post-row-excerpt {
-  font-size: 15px;
-  line-height: 1.75;
-  color: var(--mid);
-  font-weight: 300;
-  margin-bottom: 14px;
+  margin-top: var(--space-3);
+  max-width: 62ch;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-muted);
 }
-.read-more {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  color: var(--mid);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: color 0.12s;
+.post-arrow {
+  width: 20px;
+  height: 20px;
+  margin-top: 8px;
+  color: var(--ink-subtle);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity var(--dur-fade) var(--ease-in), transform var(--dur-fade) var(--ease-in), color var(--dur-fade) var(--ease-in);
 }
-.post-row:hover .read-more {
-  color: var(--hi);
-}
-.rm-dot {
-  width: 12px;
-  height: 1px;
-  background: linear-gradient(90deg, #ff2d78, #a855f7);
-  display: inline-block;
-  margin-bottom: 1px;
-  flex-shrink: 0;
-  transition: width 0.2s ease;
-}
-.post-row:hover .rm-dot {
-  width: 24px;
+.post-row:hover .post-arrow,
+.post-row:focus-visible .post-arrow { opacity: 1; transform: none; color: var(--accent); }
+
+@media (max-width: 720px) {
+  .post-row { margin-inline: calc(var(--gutter) * -1); }
+  .post-row-inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-3);
+    padding: var(--space-6) var(--gutter);
+  }
+  .post-meta { flex-direction: row; align-items: center; gap: var(--space-3); padding-top: 0; }
+  .post-arrow { display: none; }
 }
 </style>

@@ -27,7 +27,7 @@ I decided to give it a try and I liked it. It has all the features that a headle
 - Extendability using plugins (or building your own)
 - SDK, REST, or GraphQL APIs
 
-<PostImage src="/assets/arts/flotiq-cms-x-astro/zrzut-ekranu_6-4-2025_12183_editor.flotiq.com.jpeg" width="wide" />
+<PostImage src="/assets/arts/flotiq-cms-x-astro/zrzut-ekranu_6-4-2025_12183_editor.flotiq.com.jpeg" width="wide" alt="Flotiq's 'Edit Blog Post object' screen with a hero image, title, description and version history." />
 
 ### What do I enjoy about it?
 
@@ -70,7 +70,7 @@ We'll later connect it to Astro's default blog theme.
 
 To achieve this we'll need to go to the **Definition Builder**, select **Add Content Type Definition**, and name it `Blog Post`.
 
-<PostImage src="/assets/arts/flotiq-cms-x-astro/zrzut-ekranu_6-4-2025_122037_editor.flotiq.com.jpeg" width="wide" />
+<PostImage src="/assets/arts/flotiq-cms-x-astro/zrzut-ekranu_6-4-2025_122037_editor.flotiq.com.jpeg" width="wide" alt="Flotiq's content type builder for a Blog Post type, listing the properties Hero Image, Title, Description, Content and Slug." />
 
 Next, we have to add all the required fields:
 
@@ -82,7 +82,7 @@ Next, we have to add all the required fields:
 
 After doing this, you need to go to **Plugins**, install the **Slugs** plugin, and configure it by selecting a proper content type, selecting `title` as source field and `slug` as a target field.
 
-<PostImage src="/assets/arts/flotiq-cms-x-astro/zrzut-ekranu_6-4-2025_122110_editor.flotiq.com.jpeg" width="wide" />
+<PostImage src="/assets/arts/flotiq-cms-x-astro/zrzut-ekranu_6-4-2025_122110_editor.flotiq.com.jpeg" width="wide" alt="Flotiq's 'Slug settings' dialog with the content type, the slug source field 'title' and the target field 'slug'." />
 
 Now it's time to connect this with **Astro 🚀**
 
@@ -214,7 +214,7 @@ import { Image } from 'astro:assets';
 
 in the frontmatter part and replacing the `<img src...` with `<Image src...` (rest of parameters stay the same).
 
-<PostImage src="/assets/arts/flotiq-cms-x-astro/zrzut-ekranu_6-4-2025_122228_localhost.jpeg" width="narrow" />
+<PostImage src="/assets/arts/flotiq-cms-x-astro/zrzut-ekranu_6-4-2025_122228_localhost.jpeg" width="narrow" alt="Front end of the Astro blog showing an article titled 'Coffee: Aromatic Elixir of Energy and Delight' with a green abstract hero image." />
 
 ## Summary
 
